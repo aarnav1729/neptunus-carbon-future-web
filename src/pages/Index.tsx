@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { ChevronDown, ArrowRight, Mail, Phone, MapPin, ExternalLink, ChevronLeft, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const Index = () => {
   const [animatedNumbers, setAnimatedNumbers] = useState({
@@ -16,8 +16,6 @@ const Index = () => {
   });
   const [navScrolled, setNavScrolled] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [selectedPerson, setSelectedPerson] = useState<number | null>(null);
-  const [selectedStakeholder, setSelectedStakeholder] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Handle scroll for navigation
@@ -70,7 +68,7 @@ const Index = () => {
       id: "services",
       title: "Services",
       subtitle: "Comprehensive Maritime Solutions",
-      image: "/lovable-uploads/photo-1488590528505-98d2b5aba04b.jpg",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
       layout: "image-left",
       content: [
         {
@@ -87,13 +85,6 @@ const Index = () => {
             "Green-steel feedstock: Melted in EAFs to reduce carbon by 1.6–2.3 t CO₂/t",
             "Traceability: End-to-end chain-of-custody, digital certificates for buyers"
           ]
-        },
-        {
-          subtitle: "Shipbuilding & Repair",
-          details: [
-            "Climate-resilient design: Corrosion-resistant alloys, modular hulls",
-            "Value recovery: Salvage revenue share for owners; scrap income for Neptunus"
-          ]
         }
       ]
     },
@@ -101,7 +92,7 @@ const Index = () => {
       id: "partners",
       title: "Partners & Affiliations",
       subtitle: "Global Network & Certifications",
-      image: "/lovable-uploads/photo-1500673922987-e212871fec22.jpg",
+      image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
       layout: "image-right",
       content: [
         {
@@ -124,7 +115,7 @@ const Index = () => {
       id: "impact",
       title: "Global Impact & Case Studies",
       subtitle: "Environmental Leadership in Action",
-      image: "/lovable-uploads/photo-1506744038136-46273834b3fb.jpg",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
       layout: "image-top",
       content: [
         {
@@ -133,15 +124,6 @@ const Index = () => {
             "Repurposing steel from old ships combats climate change by reducing virgin steel production",
             "Environmental hazards traditional beaching poses—and how Neptunus' green refurbishing addresses human and ecological risks"
           ]
-        },
-        {
-          subtitle: "Success Stories",
-          details: [
-            "Carbon saved vs virgin steel",
-            "Safe worker retention",
-            "Community benefits",
-            "Technical insights: IHM, decontamination, EAF steel rolling"
-          ]
         }
       ]
     },
@@ -149,7 +131,7 @@ const Index = () => {
       id: "policy",
       title: "Policy & Initiative Highlights",
       subtitle: "Alignment with National Programs",
-      image: "/lovable-uploads/photo-1501854140801-50d01698950b.jpg",
+      image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
       layout: "image-bottom",
       content: [
         {
@@ -157,20 +139,8 @@ const Index = () => {
           details: ["Battery-electric yard equipment cuts diesel use by 40%"]
         },
         {
-          subtitle: "National Clean Energy Fund",
-          details: ["10 MW rooftop solar + 2 MW wind-solar mini-grid slashes grid draw by 60%"]
-        },
-        {
           subtitle: "Swachh Bharat Mission",
           details: ["On-site TSDF/incinerator for hazardous & municipal waste"]
-        },
-        {
-          subtitle: "Atmanirbhar Bharat",
-          details: ["≥ 80% local sourcing empowering Odisha & West Bengal MSMEs"]
-        },
-        {
-          subtitle: "India's Net-Zero 2070",
-          details: ["35% carbon-intensity cut by 2030 via renewables"]
         }
       ]
     }
@@ -179,37 +149,37 @@ const Index = () => {
   const certifications = [
     { 
       name: "ISO 14001", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/ISO_14001.svg/200px-ISO_14001.svg.png", 
+      logo: "https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", 
       description: "Environmental Management System",
       details: "Internationally recognized standard for environmental management systems ensuring continuous improvement in environmental performance"
     },
     { 
       name: "ISO 45001", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/ISO_45001.svg/200px-ISO_45001.svg.png", 
+      logo: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", 
       description: "Occupational Health & Safety",
       details: "Global standard for occupational health and safety management systems, protecting workers and visitors"
     },
     { 
       name: "UN Global Compact", 
-      logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/UN_Global_Compact_logo.svg/200px-UN_Global_Compact_logo.svg.png", 
+      logo: "https://images.unsplash.com/photo-1569025743873-ea3a9ade89f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", 
       description: "Corporate Sustainability",
       details: "World's largest corporate sustainability initiative with 10 principles covering human rights, labor, environment and anti-corruption"
     },
     { 
       name: "Bureau of International Recycling", 
-      logo: "https://www.bir.org/images/logo.png", 
+      logo: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", 
       description: "Recycling Standards",
       details: "Leading international trade association promoting sustainable recycling practices and circular economy principles"
     },
     { 
       name: "GRIHA 5-Star", 
-      logo: "https://grihaindia.org/images/griha-logo.png", 
+      logo: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", 
       description: "Green Building Rating",
       details: "India's premier green building rating system promoting energy efficiency and environmental sustainability"
     },
     { 
       name: "BEE 5-Star", 
-      logo: "https://beeindia.gov.in/sites/default/files/BEE_Logo.png", 
+      logo: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80", 
       description: "Energy Efficiency",
       details: "Bureau of Energy Efficiency certification ensuring optimal energy performance and reduced carbon footprint"
     }
@@ -221,7 +191,7 @@ const Index = () => {
       position: "CEO & Founder", 
       description: "20+ years in maritime industry", 
       expertise: "Strategic Leadership",
-      image: "/lovable-uploads/photo-1581090464777-f3220bbe1b8b.jpg",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       details: "Led multiple successful maritime ventures with focus on sustainable practices. Expert in international maritime law and environmental compliance. Holds MBA from IIM Ahmedabad and B.Tech in Naval Architecture.",
       achievements: ["Founded 3 successful maritime companies", "Led $500M+ in sustainable infrastructure projects", "Keynote speaker at 50+ international conferences"]
     },
@@ -230,7 +200,7 @@ const Index = () => {
       position: "CTO", 
       description: "Expert in sustainable technology", 
       expertise: "Technology Innovation",
-      image: "/lovable-uploads/photo-1523712999610-f77fbcfc3843.jpg",
+      image: "https://images.unsplash.com/photo-1494790108755-2616c273e11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       details: "PhD in Environmental Engineering from MIT. Pioneer in green steel production technologies and circular economy solutions. 15+ patents in sustainable manufacturing processes.",
       achievements: ["15+ patents in green technology", "Published 50+ research papers", "Winner of Green Innovation Award 2023"]
     },
@@ -239,7 +209,7 @@ const Index = () => {
       position: "Head of Operations", 
       description: "Specialist in ship recycling", 
       expertise: "Operational Excellence",
-      image: "/lovable-uploads/photo-1482938289607-e9573fc25ebb.jpg",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       details: "15+ years in ship dismantling operations. Expert in hazardous waste management and safety protocols. Certified in OSHA and ISO 45001 standards.",
       achievements: ["Zero-accident record for 8 consecutive years", "Reduced operational costs by 35%", "Implemented industry-first safety protocols"]
     },
@@ -248,7 +218,7 @@ const Index = () => {
       position: "Environmental Director", 
       description: "Environmental compliance expert", 
       expertise: "Sustainability",
-      image: "/lovable-uploads/photo-1469474968028-56623f02e42e.jpg",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       details: "Former environmental regulator with deep expertise in maritime environmental protection and carbon footprint reduction. M.Sc. in Environmental Science from JNU.",
       achievements: ["Reduced carbon emissions by 40%", "Achieved 100% waste recycling rate", "Led environmental compliance for 200+ projects"]
     }
@@ -256,81 +226,77 @@ const Index = () => {
 
   const stakeholders = [
     { 
-      name: "Ship Owners", 
-      percentage: 20, 
+      name: "Ship Owners & Shipping Lines", 
       color: "hsl(204, 94%, 74%)", 
-      description: "Fast, safe disposal with 40% credit note on new-build contracts", 
       icon: "🚢",
-      details: {
-        benefits: ["40% credit note on new-build contracts", "Full IHM and regulatory certification", "Peace of mind with compliant recycling"],
-        value: "Turn sustainable disposal into future savings"
-      }
+      benefits: [
+        "Fast, safe disposal of end-of-life vessels with full IHM and regulatory certification (HKGS, EUSSR)",
+        "40% credit note on new-build contracts—turning sustainable disposal into future savings",  
+        "Peace of mind: no more costly reflagging or beaching risks; a single partner for compliant, carbon-friendly recycling"
+      ]
     },
     { 
-      name: "Steel Manufacturers", 
-      percentage: 18, 
+      name: "Steel Manufacturers & Re-rollers", 
       color: "hsl(180, 100%, 60%)", 
-      description: "Guaranteed low-carbon feedstock with digital chain-of-custody", 
       icon: "⚒️",
-      details: {
-        benefits: ["Guaranteed low-carbon feedstock", "Digital chain-of-custody certification", "One-stop shop for dismantling + re-rolling"],
-        value: "Reduce portfolio carbon footprint via EAF processing"
-      }
+      benefits: [
+        "Guaranteed low-carbon feedstock: secure contracts for millions of tonnes of scrap steel, all traceable via digital chain-of-custody",
+        "One-stop shop: certified dismantling + re-rolling under one roof—streamlining logistics and quality control",
+        "ESG uplift: every tonne you melt reduces your portfolio's carbon footprint via EAF processing"
+      ]
     },
     { 
-      name: "Investors", 
-      percentage: 16, 
+      name: "Investors & Financial Institutions", 
       color: "hsl(270, 100%, 60%)", 
-      description: "First-mover advantage in world's largest green-steel facility", 
       icon: "💼",
-      details: {
-        benefits: ["First-mover advantage", "Robust returns with government support", "30% green-steel mandate market lock-in"],
-        value: "Back the world's largest UN-certified green-steel facility"
-      }
+      benefits: [
+        "First-mover advantage: back the world's largest green-steel facility, UN-certified from day one",
+        "Robust returns: lifecycle CO₂-reduction estimates and IRR case studies underpinned by government support", 
+        "Guaranteed market: with India's '30% green-steel mandate,' one in three tonnes must be recycled—locking in future buyers",
+        "Strategic hedge: shipping lines face mounting costs to reflag; our solution lets them comply without expense"
+      ]
     },
     { 
-      name: "Local Communities", 
-      percentage: 15, 
+      name: "Local Communities & Workforce", 
       color: "hsl(30, 100%, 50%)", 
-      description: "Safe jobs, capacity building, and community uplift programs", 
       icon: "🏘️",
-      details: {
-        benefits: ["Safe, skilled jobs with zero-accident pledge", "On-site training and apprenticeships", "Community uplift with schools and clinics"],
-        value: "70% local hire target with capacity building"
-      }
+      benefits: [
+        "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
+        "Capacity building: on-site training programs, apprenticeships, and an aspirational '70% local hire' target",
+        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
+        "Pride of place: become part of Odisha's green-industry revolution and global climate story"
+      ]
     },
     { 
-      name: "Regulators", 
-      percentage: 12, 
+      name: "Regulators & NGOs", 
       color: "hsl(120, 100%, 50%)", 
-      description: "Full transparency with real-time environmental dashboards", 
       icon: "⚖️",
-      details: {
-        benefits: ["Real-time environmental dashboards", "Third-party audits and public reports", "Basel/UNEP alignment"],
-        value: "Iron-clad compliance with full transparency"
-      }
+      benefits: [
+        "Full transparency: real-time environmental dashboards, periodic third-party audits, and public sustainability reports",
+        "Iron-clad compliance: Basel/UNEP alignment, IMO/EU Ship Recycling Regulation, plus local EIA and CRZ clearances",
+        "True partnership: collaborate on best practices and shape a blueprint for safe, circular-economy growth"
+      ]
     },
     { 
-      name: "Global Partners", 
-      percentage: 10, 
+      name: "Global Partners & Climate Advocates", 
       color: "hsl(300, 100%, 60%)", 
-      description: "Leadership showcase and R&D pipeline collaboration", 
       icon: "🌍",
-      details: {
-        benefits: ["Leadership showcase platform", "R&D pipeline collaboration", "Joint thought-leadership opportunities"],
-        value: "Highlight India's circular-economy triumph"
-      }
+      benefits: [
+        "Leadership showcase: highlight India's circular-economy triumph alongside EU, Japan, and Polish collaborators",
+        "R&D pipelines: co-develop next-gen recycling technologies and green-hydrogen integration",
+        "Storytelling: joint press and thought-leadership platforms to amplify impact and attract co-investment"
+      ]
     },
     { 
-      name: "Government", 
-      percentage: 9, 
+      name: "Government & Policy Makers", 
       color: "hsl(60, 100%, 50%)", 
-      description: "New industrial cluster catalyzing rural prosperity", 
       icon: "🏛️",
-      details: {
-        benefits: ["New industrial cluster development", "₹1,624 Cr budget leverage", "DBFOT model with performance incentives"],
-        value: "Catalyze Ganjam's transformation into maritime-green hub"
-      }
+      benefits: [
+        "New industrial cluster: catalyze Ganjam's transformation into a maritime-green hub, driving rural prosperity",
+        "Budget leverage: tap into ₹1,624 Cr over five years under the Ship-Flagging Subsidy (Union Budget 2021-22)",
+        "Legislative alignment: deliver on the Recycling of Ships Act 2019 (4.5 M LDT capacity by 2024) and Maritime India Vision 2030",
+        "PPP excellence: structured as a DBFOT model with performance-based incentives—sharing risk, reward, and regulatory ease"
+      ]
     }
   ];
 
@@ -344,6 +310,7 @@ const Index = () => {
 
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    setMobileMenuOpen(false);
   };
 
   const getCardLayout = (service: typeof services[0]) => {
@@ -449,7 +416,7 @@ const Index = () => {
       {/* Enhanced Navigation */}
       <nav className={`fixed top-0 z-50 transition-all duration-700 ease-in-out ${
         navScrolled 
-          ? 'right-6 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100' 
+          ? 'right-6 top-1/2 -translate-y-1/2 opacity-30 hover:opacity-100' 
           : 'left-1/2 top-8 -translate-x-1/2 opacity-100'
       }`}>
         <div className={`glass-panel flex items-center transition-all duration-700 ${
@@ -463,24 +430,9 @@ const Index = () => {
             className={`transition-all duration-700 ${navScrolled ? 'h-6 w-auto' : 'h-8 w-auto'}`}
           />
           
-          {!navScrolled && (
-            <div className="hidden md:flex space-x-6 text-sm">
-              {services.map((service) => (
-                <button
-                  key={service.id}
-                  onClick={() => scrollToSection(service.id)}
-                  className="text-text-secondary hover:text-primary transition-colors"
-                >
-                  {service.title}
-                </button>
-              ))}
-            </div>
-          )}
-          
+          {/* Hamburger Menu - Always visible */}
           <button
-            className={`md:hidden transition-all duration-700 ${
-              navScrolled ? 'order-2' : ''
-            }`}
+            className="transition-all duration-700"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -495,15 +447,14 @@ const Index = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 glass-panel rounded-2xl p-4 md:hidden">
+          <div className={`absolute mt-2 glass-panel rounded-2xl p-4 ${
+            navScrolled ? 'top-full right-0' : 'top-full left-0 right-0'
+          }`}>
             <div className="flex flex-col space-y-3">
               {services.map((service) => (
                 <button
                   key={service.id}
-                  onClick={() => {
-                    scrollToSection(service.id);
-                    setMobileMenuOpen(false);
-                  }}
+                  onClick={() => scrollToSection(service.id)}
                   className="text-text-secondary hover:text-primary transition-colors text-left"
                 >
                   {service.title}
@@ -619,11 +570,11 @@ const Index = () => {
                 <HoverCard key={index}>
                   <HoverCardTrigger asChild>
                     <div className="flex-shrink-0 w-64 h-64 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
-                      <div className="w-20 h-20 mb-6 flex items-center justify-center">
+                      <div className="w-20 h-20 mb-6 flex items-center justify-center overflow-hidden rounded-lg">
                         <img 
                           src={cert.logo} 
                           alt={cert.name}
-                          className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
                       <div className="text-center px-4">
@@ -727,92 +678,81 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="relative min-h-[600px] flex items-center justify-center">
+          <div className="relative min-h-[800px] flex items-center justify-center">
             {/* Central Unity Symbol */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-40 h-40 bg-gradient-to-br from-brand-blue to-brand-teal rounded-full flex items-center justify-center text-6xl animate-glow shadow-2xl">
-                🤝
+              <div className="w-32 h-32 bg-gradient-to-br from-brand-blue to-brand-teal rounded-full flex items-center justify-center animate-glow shadow-2xl">
+                <div className="text-2xl font-bold text-background">UNITY</div>
               </div>
             </div>
             
-            {/* Animated Orbiting Stakeholders */}
-            {stakeholders.map((stakeholder, index) => {
-              const angle = (index * 360) / stakeholders.length;
-              const radius = 220;
-              const x = Math.cos((angle * Math.PI) / 180) * radius;
-              const y = Math.sin((angle * Math.PI) / 180) * radius;
-              
-              return (
-                <div
-                  key={index}
-                  className="absolute cursor-pointer"
-                  style={{
-                    left: `calc(50% + ${x}px)`,
-                    top: `calc(50% + ${y}px)`,
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                >
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <div
-                        className="w-20 h-20 rounded-full flex items-center justify-center text-3xl transition-all duration-300 hover:scale-125 hover:shadow-2xl animate-float shadow-lg"
-                        style={{
-                          backgroundColor: stakeholder.color,
-                          animationDelay: `${index * 0.5}s`
-                        }}
-                      >
-                        <span className="filter drop-shadow-lg">{stakeholder.icon}</span>
-                      </div>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
-                      <div className="space-y-4">
-                        <div className="flex items-center space-x-3">
-                          <div
-                            className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
-                            style={{ backgroundColor: stakeholder.color }}
-                          >
-                            {stakeholder.icon}
-                          </div>
-                          <div>
-                            <h4 className="font-semibold text-text-primary">{stakeholder.name}</h4>
-                            <p className="text-sm text-brand-blue">{stakeholder.percentage}% Involvement</p>
-                          </div>
+            {/* Interactive Stakeholder Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-6xl">
+              {stakeholders.map((stakeholder, index) => (
+                <Dialog key={index}>
+                  <DialogTrigger asChild>
+                    <Card className="gradient-border hover-lift cursor-pointer group transition-all duration-300 hover:scale-105 animate-float" style={{animationDelay: `${index * 0.3}s`}}>
+                      <CardContent className="p-6 text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-2xl shadow-lg"
+                             style={{ backgroundColor: stakeholder.color }}>
+                          <span className="text-background font-bold">
+                            {stakeholder.name.split(' ').map(word => word[0]).join('').slice(0, 2)}
+                          </span>
                         </div>
-                        <div>
-                          <p className="text-sm text-text-secondary mb-3">{stakeholder.details.value}</p>
-                          <h5 className="font-medium text-text-primary mb-2">Key Benefits:</h5>
-                          <ul className="space-y-1">
-                            {stakeholder.details.benefits.map((benefit, idx) => (
-                              <li key={idx} className="text-xs text-text-secondary flex items-start">
-                                <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                {benefit}
-                              </li>
-                            ))}
-                          </ul>
+                        <h3 className="text-sm font-semibold text-text-primary mb-2 leading-tight">
+                          {stakeholder.name}
+                        </h3>
+                        <div className="text-xs text-text-secondary">
+                          Click to explore benefits
                         </div>
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
-                  
-                  {/* Connecting Lines */}
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center space-x-3 text-xl">
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
+                             style={{ backgroundColor: stakeholder.color }}>
+                          <span className="text-background font-bold">
+                            {stakeholder.name.split(' ').map(word => word[0]).join('').slice(0, 2)}
+                          </span>
+                        </div>
+                        <span>{stakeholder.name}</span>
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-6">
+                      <h4 className="font-semibold text-brand-blue text-lg">What's in it for you?</h4>
+                      <ul className="space-y-3">
+                        {stakeholder.benefits.map((benefit, idx) => (
+                          <li key={idx} className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-brand-teal rounded-full mt-2 flex-shrink-0"></div>
+                            <span className="text-text-secondary leading-relaxed">{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              ))}
+            </div>
+            
+            {/* Connecting Lines Animation */}
+            <div className="absolute inset-0 pointer-events-none">
+              {stakeholders.map((_, index) => {
+                const angle = (index * 360) / stakeholders.length;
+                return (
                   <div
-                    className="absolute w-0.5 bg-gradient-to-r from-brand-blue/30 to-transparent origin-bottom opacity-60"
+                    key={index}
+                    className="absolute w-px h-24 bg-gradient-to-t from-brand-blue/20 to-transparent origin-bottom animate-pulse"
                     style={{
-                      height: `${radius - 80}px`,
-                      transform: `rotate(${angle + 180}deg)`,
                       left: '50%',
                       top: '50%',
-                      transformOrigin: 'bottom center'
+                      transform: `rotate(${angle}deg) translateY(-100px)`,
+                      animationDelay: `${index * 0.2}s`
                     }}
                   />
-                </div>
-              );
-            })}
-            
-            {/* Pulse Rings */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-80 h-80 border border-brand-blue/20 rounded-full animate-ping"></div>
-              <div className="absolute w-96 h-96 border border-brand-teal/20 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+                );
+              })}
             </div>
           </div>
         </div>
