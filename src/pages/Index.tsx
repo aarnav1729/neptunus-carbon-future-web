@@ -1,1200 +1,884 @@
-import { useEffect, useState } from "react";
-import {
-  ChevronDown,
-  ArrowRight,
-  Mail,
-  Phone,
-  MapPin,
-  ExternalLink,
-  ChevronLeft,
-  Menu,
-  X,
-} from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Menu, X, ChevronLeft, ChevronRight, Users, Award, Target, Globe, Star, TrendingUp, Building, Home, Facebook, Twitter, Linkedin, Instagram, Phone, MapPin, Mail, Factory, Anchor, Shield, Recycle } from 'lucide-react';
+
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  company: z.string().min(2, "Company name must be at least 2 characters"),
+  designation: z.string().min(2, "Designation must be at least 2 characters"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const Index = () => {
-  const [animatedNumbers, setAnimatedNumbers] = useState({
-    steel: 0,
-    gdp: 0,
-    jobs: 0,
-    carbon: 0,
-  });
-  const [navScrolled, setNavScrolled] = useState(false);
-  const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNavTransformed, setIsNavTransformed] = useState(false);
+  const [selectedStakeholder, setSelectedStakeholder] = useState(null);
+  const [selectedCertification, setSelectedCertification] = useState(null);
+  const [selectedTeamMember, setSelectedTeamMember] = useState(null);
+  const [currentCertIndex, setCurrentCertIndex] = useState(0);
+  const [currentTeamIndex, setCurrentTeamIndex] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const heroRef = useRef(null);
+  const contactRef = useRef(null);
+  const { toast } = useToast();
 
-  // Handle scroll for navigation
+  const form = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      designation: "",
+      message: "",
+    },
+  });
+
+  const scrollToContact = () => {
+    contactRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const onSubmit = async (data: ContactFormData) => {
+    setIsSubmitting(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    toast({
+      title: "Message sent successfully!",
+      description: "We'll get back to you within 24 hours.",
+    });
+    
+    form.reset();
+    setIsSubmitting(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
-      const heroHeight = window.innerHeight * 0.8;
-      setNavScrolled(window.scrollY > heroHeight);
+      if (heroRef.current) {
+        const heroBottom = heroRef.current.offsetTop + heroRef.current.offsetHeight;
+        const scrollPosition = window.scrollY;
+        setIsNavTransformed(scrollPosition > heroBottom - 100);
+      }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Animation for numbers
   useEffect(() => {
-    const animateNumber = (
-      key: keyof typeof animatedNumbers,
-      target: number,
-      duration: number
-    ) => {
-      let start = 0;
-      const increment = target / (duration / 50);
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= target) {
-          start = target;
-          clearInterval(timer);
-        }
-        setAnimatedNumbers((prev) => ({ ...prev, [key]: Math.floor(start) }));
-      }, 50);
-    };
+    const timer = setInterval(() => {
+      setCurrentCertIndex((prev) => (prev + 1) % certifications.length);
+    }, 1500); // Faster carousel - 1.5 seconds
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.target.id === "metrics") {
-          animateNumber("steel", 5, 2000);
-          animateNumber("gdp", 3, 2000);
-          animateNumber("jobs", 2200, 2000);
-          animateNumber("carbon", 835, 2000);
-        }
-      });
-    });
+    return () => clearInterval(timer);
+  }, []);
 
-    const metricsElement = document.getElementById("metrics");
-    if (metricsElement) {
-      observer.observe(metricsElement);
-    }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTeamIndex((prev) => (prev + 1) % teamMembers.length);
+    }, 3000);
 
-    return () => observer.disconnect();
+    return () => clearInterval(timer);
   }, []);
 
   const services = [
     {
-      id: "services",
-      title: "Services",
-      subtitle: "Comprehensive Maritime Solutions",
-      image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-left",
-      content: [
-        {
-          subtitle: "Ship Recycling & Dismantling",
-          details: [
-            "Phased expansion: 60 total bays (Phase 1: 30 bays → Phase 2: +30 bays)",
-            "Annual throughput: Up to 500 ships dismantled",
-            "Hazardous-waste management: 13,000 tpa capacity for oils, asbestos, PCBs",
-          ],
-        },
-        {
-          subtitle: "Low-Carbon Steel Re-Rolling",
-          details: [
-            "Green-steel feedstock: Melted in EAFs to reduce carbon by 1.6–2.3 t CO₂/t",
-            "Traceability: End-to-end chain-of-custody, digital certificates for buyers",
-          ],
-        },
-      ],
+      id: 1,
+      title: "Ship Recycling",
+      description: "Environmentally responsible ship breaking and recycling services with full compliance to international standards.",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=800&h=600&fit=crop",
+      features: ["Green Recycling", "Full Compliance", "Environmental Safety"],
+      route: "/ship-recycling"
     },
     {
-      id: "partners",
-      title: "Partners & Affiliations",
-      subtitle: "Global Network & Certifications",
-      image:
-        "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-right",
-      content: [
-        {
-          subtitle: "Strategic Partners",
-          details: [
-            "MoU with Gujarat Maritime Board/JICA (modeled after Alang improvements)",
-          ],
-        },
-        {
-          subtitle: "Key Memberships",
-          details: [
-            "UN Global Compact",
-            "Bureau of International Recycling",
-            "Local labor NGOs",
-          ],
-        },
-      ],
+      id: 2,
+      title: "Steel Manufacturing",
+      description: "High-quality steel production from recycled materials, contributing to sustainable manufacturing practices.",
+      image: "https://images.unsplash.com/photo-1565464027194-7957a2295fb7?w=800&h=600&fit=crop",
+      features: ["Recycled Steel", "Quality Assurance", "Sustainable Production"],
+      route: "/steel-manufacturing"
     },
     {
-      id: "impact",
-      title: "Global Impact & Case Studies",
-      subtitle: "Environmental Leadership in Action",
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-top",
-      content: [
-        {
-          subtitle: "Climate Impact",
-          details: [
-            "Repurposing steel from old ships combats climate change by reducing virgin steel production",
-            "Environmental hazards traditional beaching poses—and how Neptunus' green refurbishing addresses human and ecological risks",
-          ],
-        },
-      ],
+      id: 3,
+      title: "Environmental Compliance",
+      description: "Comprehensive environmental monitoring and compliance services for maritime and industrial operations.",
+      image: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=800&h=600&fit=crop",
+      features: ["Monitoring", "Reporting", "Compliance"],
+      route: "/environmental-compliance"
     },
     {
-      id: "policy",
-      title: "Policy & Initiative Highlights",
-      subtitle: "Alignment with National Programs",
-      image:
-        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-bottom",
-      content: [
-        {
-          subtitle: "National Electric Mobility Mission",
-          details: ["Battery-electric yard equipment cuts diesel use by 40%"],
-        },
-        {
-          subtitle: "Swachh Bharat Mission",
-          details: ["On-site TSDF/incinerator for hazardous & municipal waste"],
-        },
-      ],
-    },
+      id: 4,
+      title: "Logistics & Supply Chain",
+      description: "End-to-end logistics solutions for maritime recycling and steel manufacturing operations.",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop",
+      features: ["Supply Chain", "Transportation", "Warehousing"],
+      route: "/logistics"
+    }
   ];
 
   const certifications = [
     {
+      id: 1,
       name: "ISO 14001",
-      logo: "https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Environmental Management System",
-      details:
-        "Internationally recognized standard for environmental management systems ensuring continuous improvement in environmental performance",
+      logo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+      description: "Environmental Management System certification ensuring sustainable practices.",
+      standards: ["Environmental Management", "Sustainability", "Compliance"]
     },
     {
-      name: "ISO 45001",
-      logo: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Occupational Health & Safety",
-      details:
-        "Global standard for occupational health and safety management systems, protecting workers and visitors",
+      id: 2,
+      name: "IMO Certification",
+      logo: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=150&h=150&fit=crop",
+      description: "International Maritime Organization certification for ship recycling.",
+      standards: ["Maritime Safety", "Ship Recycling", "International Standards"]
     },
     {
-      name: "UN Global Compact",
-      logo: "https://images.unsplash.com/photo-1569025743873-ea3a9ade89f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Corporate Sustainability",
-      details:
-        "World's largest corporate sustainability initiative with 10 principles covering human rights, labor, environment and anti-corruption",
+      id: 3,
+      name: "Hong Kong Convention",
+      logo: "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?w=150&h=150&fit=crop",
+      description: "Compliance with Hong Kong International Convention for ship recycling.",
+      standards: ["Ship Recycling", "Environmental Protection", "Safety"]
     },
     {
-      name: "Bureau of International Recycling",
-      logo: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Recycling Standards",
-      details:
-        "Leading international trade association promoting sustainable recycling practices and circular economy principles",
+      id: 4,
+      name: "EU Ship Recycling",
+      logo: "https://images.unsplash.com/photo-1565464027194-7957a2295fb7?w=150&h=150&fit=crop",
+      description: "European Union Ship Recycling Regulation compliance.",
+      standards: ["EU Regulation", "Environmental Safety", "Quality Assurance"]
     },
     {
-      name: "GRIHA 5-Star",
-      logo: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Green Building Rating",
-      details:
-        "India's premier green building rating system promoting energy efficiency and environmental sustainability",
-    },
-    {
-      name: "BEE 5-Star",
-      logo: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Energy Efficiency",
-      details:
-        "Bureau of Energy Efficiency certification ensuring optimal energy performance and reduced carbon footprint",
-    },
+      id: 5,
+      name: "Basel Convention",
+      logo: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=150&h=150&fit=crop",
+      description: "Basel Convention on hazardous waste management.",
+      standards: ["Waste Management", "Hazardous Materials", "International Law"]
+    }
   ];
 
   const teamMembers = [
     {
+      id: 1,
       name: "Rajesh Kumar",
-      position: "CEO & Founder",
-      description: "20+ years in maritime industry",
-      expertise: "Strategic Leadership",
-      image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      details:
-        "Led multiple successful maritime ventures with focus on sustainable practices. Expert in international maritime law and environmental compliance. Holds MBA from IIM Ahmedabad and B.Tech in Naval Architecture.",
-      achievements: [
-        "Founded 3 successful maritime companies",
-        "Led $500M+ in sustainable infrastructure projects",
-        "Keynote speaker at 50+ international conferences",
-      ],
+      position: "Chief Executive Officer",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop",
+      bio: "25+ years in maritime industry with expertise in sustainable shipping solutions.",
+      expertise: ["Maritime Strategy", "Sustainable Development", "Global Operations"],
+      achievements: "Led 50+ successful ship recycling projects worth $2B+"
     },
     {
-      name: "Priya Sharma",
-      position: "CTO",
-      description: "Expert in sustainable technology",
-      expertise: "Technology Innovation",
-      image:
-        "https://images.unsplash.com/photo-1494790108755-2616c273e11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      details:
-        "PhD in Environmental Engineering from MIT. Pioneer in green steel production technologies and circular economy solutions. 15+ patents in sustainable manufacturing processes.",
-      achievements: [
-        "15+ patents in green technology",
-        "Published 50+ research papers",
-        "Winner of Green Innovation Award 2023",
-      ],
+      id: 2,
+      name: "Dr. Priya Sharma",
+      position: "Chief Technology Officer",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b0fc?w=300&h=300&fit=crop",
+      bio: "PhD in Environmental Engineering with focus on green steel production technologies.",
+      expertise: ["Green Technology", "Environmental Engineering", "Innovation"],
+      achievements: "Patented 12 green steel production technologies"
     },
     {
-      name: "Amit Patel",
+      id: 3,
+      name: "Captain Arjun Singh",
       position: "Head of Operations",
-      description: "Specialist in ship recycling",
-      expertise: "Operational Excellence",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      details:
-        "15+ years in ship dismantling operations. Expert in hazardous waste management and safety protocols. Certified in OSHA and ISO 45001 standards.",
-      achievements: [
-        "Zero-accident record for 8 consecutive years",
-        "Reduced operational costs by 35%",
-        "Implemented industry-first safety protocols",
-      ],
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop",
+      bio: "Former ship captain with 30+ years maritime experience and safety expertise.",
+      expertise: ["Maritime Operations", "Safety Management", "Logistics"],
+      achievements: "Zero-accident record across 100+ ship recycling operations"
     },
     {
-      name: "Sunita Rao",
-      position: "Environmental Director",
-      description: "Environmental compliance expert",
-      expertise: "Sustainability",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      details:
-        "Former environmental regulator with deep expertise in maritime environmental protection and carbon footprint reduction. M.Sc. in Environmental Science from JNU.",
-      achievements: [
-        "Reduced carbon emissions by 40%",
-        "Achieved 100% waste recycling rate",
-        "Led environmental compliance for 200+ projects",
-      ],
-    },
+      id: 4,
+      name: "Ms. Kavya Patel",
+      position: "Head of Sustainability",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop",
+      bio: "Environmental scientist specializing in circular economy and waste management.",
+      expertise: ["Circular Economy", "Waste Management", "ESG Compliance"],
+      achievements: "Reduced carbon footprint by 40% across all operations"
+    }
   ];
 
   const stakeholders = [
     {
-      name: "Ship Owners & Shipping Lines",
-      color: "hsl(204, 94%, 74%)",
-      icon: "🚢",
+      id: 1,
+      title: "Ship-Owners & Shipping Lines",
+      icon: Anchor,
       benefits: [
         "Fast, safe disposal of end-of-life vessels with full IHM and regulatory certification (HKGS, EUSSR)",
         "40% credit note on new-build contracts—turning sustainable disposal into future savings",
-        "Peace of mind: no more costly reflagging or beaching risks; a single partner for compliant, carbon-friendly recycling",
-      ],
+        "Peace of mind: no more costly reflagging or beaching risks; a single partner for compliant, carbon-friendly recycling"
+      ]
     },
     {
-      name: "Steel Manufacturers & Re-rollers",
-      color: "hsl(180, 100%, 60%)",
-      icon: "⚒️",
+      id: 2,
+      title: "Steel Manufacturers & Re-rollers",
+      icon: Factory,
       benefits: [
         "Guaranteed low-carbon feedstock: secure contracts for millions of tonnes of scrap steel, all traceable via digital chain-of-custody",
         "One-stop shop: certified dismantling + re-rolling under one roof—streamlining logistics and quality control",
-        "ESG uplift: every tonne you melt reduces your portfolio's carbon footprint via EAF processing",
-      ],
+        "ESG uplift: every tonne you melt reduces your portfolio's carbon footprint via EAF processing"
+      ]
     },
     {
-      name: "Investors & Financial Institutions",
-      color: "hsl(270, 100%, 60%)",
-      icon: "💼",
+      id: 3,
+      title: "Investors & Financial Institutions",
+      icon: TrendingUp,
       benefits: [
         "First-mover advantage: back the world's largest green-steel facility, UN-certified from day one",
         "Robust returns: lifecycle CO₂-reduction estimates and IRR case studies underpinned by government support",
-        "Guaranteed market: with India's '30% green-steel mandate,' one in three tonnes must be recycled—locking in future buyers",
-        "Strategic hedge: shipping lines face mounting costs to reflag; our solution lets them comply without expense",
-      ],
+        "Guaranteed market: with India's '30% green-steel mandate,' one in three tonnes must be recycled—locking in future buyers"
+      ]
     },
     {
-      name: "Local Communities & Workforce",
-      color: "hsl(30, 100%, 50%)",
-      icon: "🏘️",
+      id: 4,
+      title: "Local Communities & Workforce",
+      icon: Users,
       benefits: [
         "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
         "Capacity building: on-site training programs, apprenticeships, and an aspirational '70% local hire' target",
-        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
-        "Pride of place: become part of Odisha's green-industry revolution and global climate story",
-      ],
+        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress"
+      ]
     },
     {
-      name: "Regulators & NGOs",
-      color: "hsl(120, 100%, 50%)",
-      icon: "⚖️",
+      id: 5,
+      title: "Regulators & NGOs",
+      icon: Shield,
       benefits: [
         "Full transparency: real-time environmental dashboards, periodic third-party audits, and public sustainability reports",
         "Iron-clad compliance: Basel/UNEP alignment, IMO/EU Ship Recycling Regulation, plus local EIA and CRZ clearances",
-        "True partnership: collaborate on best practices and shape a blueprint for safe, circular-economy growth",
-      ],
+        "True partnership: collaborate on best practices and shape a blueprint for safe, circular-economy growth"
+      ]
     },
     {
-      name: "Global Partners & Climate Advocates",
-      color: "hsl(300, 100%, 60%)",
-      icon: "🌍",
-      benefits: [
-        "Leadership showcase: highlight India's circular-economy triumph alongside EU, Japan, and Polish collaborators",
-        "R&D pipelines: co-develop next-gen recycling technologies and green-hydrogen integration",
-        "Storytelling: joint press and thought-leadership platforms to amplify impact and attract co-investment",
-      ],
-    },
-    {
-      name: "Government & Policy Makers",
-      color: "hsl(60, 100%, 50%)",
-      icon: "🏛️",
+      id: 6,
+      title: "Government & Policy Makers",
+      icon: Building,
       benefits: [
         "New industrial cluster: catalyze Ganjam's transformation into a maritime-green hub, driving rural prosperity",
         "Budget leverage: tap into ₹1,624 Cr over five years under the Ship-Flagging Subsidy (Union Budget 2021-22)",
-        "Legislative alignment: deliver on the Recycling of Ships Act 2019 (4.5 M LDT capacity by 2024) and Maritime India Vision 2030",
-        "PPP excellence: structured as a DBFOT model with performance-based incentives—sharing risk, reward, and regulatory ease",
-      ],
-    },
+        "Legislative alignment: deliver on the Recycling of Ships Act 2019 (4.5 M LDT capacity by 2024) and Maritime India Vision 2030"
+      ]
+    }
   ];
 
-  const navigateCards = (direction: "left" | "right") => {
-    if (direction === "left") {
-      setCurrentCardIndex((prev) =>
-        prev === 0 ? services.length - 1 : prev - 1
-      );
-    } else {
-      setCurrentCardIndex((prev) =>
-        prev === services.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-    setMobileMenuOpen(false);
-  };
-
-  const getCardLayout = (service: (typeof services)[0]) => {
-    switch (service.layout) {
-      case "image-left":
-        return "grid-cols-1 lg:grid-cols-2";
-      case "image-right":
-        return "grid-cols-1 lg:grid-cols-2";
-      case "image-top":
-        return "grid-cols-1";
-      case "image-bottom":
-        return "grid-cols-1";
-      default:
-        return "grid-cols-1 lg:grid-cols-2";
-    }
-  };
-
-  const renderCardContent = (service: (typeof services)[0]) => {
-    const imageElement = (
-      <div className="relative h-80 lg:h-auto overflow-hidden">
-        <img
-          src={service.image}
-          alt={service.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/60 to-transparent" />
-      </div>
-    );
-
-    const contentElement = (
-      <div className="p-12">
-        <div className="mb-8">
-          <div className="text-caption text-brand-blue mb-3">
-            {service.subtitle}
-          </div>
-          <h3
-            className="text-title mb-6 text-text-primary font-medium"
-            id={service.id}
-          >
-            {service.title}
-          </h3>
-        </div>
-
-        <div className="space-y-8 mb-8">
-          {service.content.map((item, idx) => (
-            <div key={idx}>
-              <h4 className="text-lg font-semibold mb-4 text-text-primary">
-                {item.subtitle}
-              </h4>
-              <ul className="space-y-3">
-                {item.details.map((detail, detailIdx) => (
-                  <li
-                    key={detailIdx}
-                    className="text-body text-text-secondary flex items-start"
-                  >
-                    <div className="w-2 h-2 bg-brand-teal rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                    {detail}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <Button className="btn-primary group">
-          Read More
-          <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-        </Button>
-      </div>
-    );
-
-    switch (service.layout) {
-      case "image-left":
-        return (
-          <>
-            {imageElement}
-            {contentElement}
-          </>
-        );
-      case "image-right":
-        return (
-          <>
-            {contentElement}
-            {imageElement}
-          </>
-        );
-      case "image-top":
-        return (
-          <div className="space-y-0">
-            {imageElement}
-            {contentElement}
-          </div>
-        );
-      case "image-bottom":
-        return (
-          <div className="space-y-0">
-            {contentElement}
-            {imageElement}
-          </div>
-        );
-      default:
-        return (
-          <>
-            {imageElement}
-            {contentElement}
-          </>
-        );
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Enhanced Navigation */}
-
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-4/5"
-            : "left-1/2 top-8 -translate-x-1/2"
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <nav 
+        className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+          isNavTransformed 
+            ? 'right-0 top-1/2 transform -translate-y-1/2 w-auto bg-primary/80 backdrop-blur-sm hover:bg-primary/95 rounded-l-2xl shadow-2xl' 
+            : 'bg-gradient-to-r from-primary/80 to-secondary/80 backdrop-blur-sm'
         }`}
       >
-        <div
-          className={`glass-panel transition-all duration-1000 ease-out ${
-            navScrolled
-              ? "flex items-center justify-between py-4 px-6 rounded-lg"
-              : "flex items-center space-x-8 py-3 px-8 rounded-full"
-          }`}
-        >
-          {/* Logo */}
-          <img
-            src="/assets/logo.png"
-            alt="Neptunus Logo"
-            className={`transition-all duration-700 ${
-              navScrolled ? "h-10" : "h-12"
-            } w-auto`}
-          />
-
-          {/* Hamburger + Contact */}
-          {navScrolled ? (
-            <div className="flex items-center space-x-4">
-              <button
-                className="transition-all duration-700"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu className="w-5 h-5" />
-                )}
-              </button>
-              <Button className="btn-primary text-xs px-4 py-2 transition-all duration-700">
-                Contact
-              </Button>
+        <div className={`${
+          isNavTransformed 
+            ? 'flex flex-col items-center p-4 space-y-4' 
+            : 'container mx-auto px-6 flex items-center justify-between h-16'
+        }`}>
+          {!isNavTransformed && (
+            <div className="flex items-center justify-center flex-1">
+              <img 
+                src="/lovable-uploads/531242ac-b981-4ac8-9615-867b96127f68.png" 
+                alt="Neptunus Logo" 
+                className="h-8 w-auto brightness-0 invert"
+              />
             </div>
-          ) : (
-            <>
-              <button
-                className="transition-all duration-700"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu className="w-5 h-5" />
-                )}
-              </button>
-              <Button className="btn-primary text-sm px-6 py-2 transition-all duration-700">
-                Contact
-              </Button>
-            </>
           )}
-        </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div
-            className={`absolute mt-2 glass-panel rounded-2xl p-4 ${
-              navScrolled ? "top-full right-0" : "top-full left-0 right-0"
-            }`}
-          >
-            <div className="flex flex-col space-y-3">
-              {services.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => scrollToSection(s.id)}
-                  className="text-text-secondary hover:text-primary transition-colors text-left"
-                >
-                  {s.title}
-                </button>
-              ))}
-            </div>
+          
+          <div className={`flex ${isNavTransformed ? 'flex-col space-y-4' : 'items-center gap-4'}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-white hover:bg-white/10"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </Button>
+            
+            <Button 
+              onClick={scrollToContact}
+              className={`${
+                isNavTransformed 
+                  ? 'bg-white/10 hover:bg-white/20 text-white border-white/20 px-3 py-2 text-sm' 
+                  : 'hidden sm:block bg-white/10 hover:bg-white/20 text-white border-white/20'
+              }`}
+            >
+              Contact
+            </Button>
           </div>
-        )}
+        </div>
       </nav>
 
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-primary/95 backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center h-full space-y-8 text-white">
+            <Button variant="ghost" className="text-2xl">Home</Button>
+            <Button variant="ghost" className="text-2xl">Services</Button>
+            <Button variant="ghost" className="text-2xl">About</Button>
+            <Button variant="ghost" className="text-2xl" onClick={scrollToContact}>Contact</Button>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
-      <div className="relative h-screen flex items-center justify-center video-container">
-        <video
-          autoPlay
-          loop
-          muted
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary"></div>
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          className="absolute inset-0 w-full h-full object-cover opacity-30"
         >
-          <source
-            src="/assets/hero.mp4"
-            type="video/mp4"
-          />
+          <source src="/public/assets/hero.mp4" type="video/mp4" />
         </video>
-
-        <div className="relative z-10 text-center max-w-6xl px-8 animate-fade-in-up">
-          <h1 className="text-display mb-8 text-gradient font-light">
-            Neptunus Ship Builders and Recyclers
+        
+        <div className="relative z-10 text-center text-white px-6 max-w-6xl mx-auto">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+            Building Tomorrow's <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Green Economy</span>
           </h1>
-          <p className="text-body-large text-text-secondary mb-12 max-w-4xl mx-auto leading-relaxed">
-            Pioneering India's carbon-negative future through sustainable ship
-            recycling and circular steel production.
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+            Transforming end-of-life vessels into sustainable steel through innovative recycling technology, creating a circular economy for the maritime industry.
           </p>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-3 animate-float">
-          <ChevronDown className="w-6 h-6 text-brand-blue animate-bounce" />
-          <span className="text-caption text-text-tertiary">
-            Scroll to Explore
-          </span>
-        </div>
-      </div>
-
-      {/* Services Section */}
-      <section
-        className="section-padding bg-surface-elevated/20"
-        id="services-section"
-      >
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Our Capabilities
-            </h2>
-            <p className="text-body-large text-text-secondary max-w-3xl mx-auto">
-              Comprehensive solutions for sustainable maritime operations
-            </p>
-          </div>
-
-          {/* Card Navigation */}
-          <div className="flex justify-center items-center mb-12 space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateCards("left")}
-              className="rounded-full hover:bg-surface-elevated"
-            >
-              <ChevronLeft className="w-5 h-5" />
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="bg-white text-primary hover:bg-white/90 font-semibold">
+              Learn More
             </Button>
-
-            <div className="flex space-x-2">
-              {services.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentCardIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentCardIndex
-                      ? "bg-brand-blue"
-                      : "bg-surface-elevated"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateCards("right")}
-              className="rounded-full hover:bg-surface-elevated"
-            >
-              <ArrowRight className="w-5 h-5" />
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
+              Our Services
             </Button>
           </div>
-
-          {/* Service Cards with Varied Layouts */}
-          <div className="relative overflow-hidden">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
-            >
-              {services.map((service, index) => (
-                <Card
-                  key={service.id}
-                  className="min-w-full gradient-border hover-lift mx-4"
-                >
-                  <CardContent className="p-0">
-                    <div className={`grid gap-0 ${getCardLayout(service)}`}>
-                      {renderCardContent(service)}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+        </div>
+        
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="flex flex-col items-center text-white/80">
+            <span className="text-sm mb-2">Scroll to explore</span>
+            <ChevronRight className="rotate-90" size={20} />
           </div>
         </div>
       </section>
 
-      {/* Enhanced Certifications Carousel */}
-      <section className="section-padding" id="certifications">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Certifications & Standards
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Maintaining the highest industry standards and compliance
+      {/* Certifications Carousel */}
+      <section className="py-16 bg-card">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Certifications</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Recognized by leading international bodies for our commitment to quality and sustainability
             </p>
           </div>
-
-          <div className="overflow-hidden">
-            <div className="flex animate-scroll-smooth space-x-12">
-              {[...certifications, ...certifications].map((cert, index) => (
-                <HoverCard key={index}>
-                  <HoverCardTrigger asChild>
-                    <div className="flex-shrink-0 w-64 h-64 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
-                      <div className="w-20 h-20 mb-6 flex items-center justify-center overflow-hidden rounded-lg">
-                        <img
-                          src={cert.logo}
-                          alt={cert.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="text-center px-4">
-                        <div className="font-semibold text-text-primary mb-2">
-                          {cert.name}
-                        </div>
-                        <div className="text-sm text-text-secondary">
-                          {cert.description}
-                        </div>
-                      </div>
-                    </div>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-80">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-text-primary">
-                        {cert.name}
-                      </h4>
-                      <p className="text-sm text-text-secondary">
-                        {cert.details}
-                      </p>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Team Carousel - Pillars of Neptunus */}
-      <section className="section-padding bg-surface-elevated/20" id="team">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Pillars of Neptunus
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Experienced professionals driving sustainable innovation
-            </p>
-          </div>
-
-          <div className="overflow-hidden">
-            <div className="flex animate-scroll-smooth-reverse space-x-8">
-              {[...teamMembers, ...teamMembers].map((member, index) => (
-                <HoverCard key={index}>
-                  <HoverCardTrigger asChild>
-                    <Card className="flex-shrink-0 w-80 gradient-border hover-lift group cursor-pointer transition-all duration-500 hover:scale-105">
-                      <CardContent className="p-0">
-                        <div className="relative h-48 overflow-hidden rounded-t-lg">
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                        </div>
-                        <div className="p-6">
-                          <h3 className="text-xl font-bold mb-2 text-text-primary">
-                            {member.name}
-                          </h3>
-                          <p className="text-brand-blue font-medium mb-3">
-                            {member.position}
-                          </p>
-                          <p className="text-body text-text-secondary mb-4">
-                            {member.description}
-                          </p>
-                          <div className="inline-block px-4 py-2 bg-brand-blue/10 rounded-full text-sm text-brand-blue">
-                            {member.expertise}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-96">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-4">
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-16 h-16 object-cover rounded-full"
-                        />
-                        <div>
-                          <h4 className="font-semibold text-text-primary">
-                            {member.name}
-                          </h4>
-                          <p className="text-sm text-brand-blue">
-                            {member.position}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="text-sm text-text-secondary leading-relaxed">
-                        {member.details}
-                      </p>
-                      <div>
-                        <h5 className="font-medium text-text-primary mb-2">
-                          Key Achievements:
-                        </h5>
-                        <ul className="space-y-1">
-                          {member.achievements.map((achievement, idx) => (
-                            <li
-                              key={idx}
-                              className="text-xs text-text-secondary flex items-start"
-                            >
-                              <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              {achievement}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Redesigned Stakeholder Unity Section */}
-      <section className="section-padding" id="stakeholders">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              United Under One Vision
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Collaborative ecosystem bringing all stakeholders together for
-              sustainable maritime future
-            </p>
-          </div>
-
-          <div className="relative min-h-[800px] flex items-center justify-center">
-            {/* Central Unity Symbol */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-32 bg-gradient-to-br from-brand-blue to-brand-teal rounded-full flex items-center justify-center animate-glow shadow-2xl">
-                <div className="text-2xl font-bold text-background">UNITY</div>
-              </div>
-            </div>
-
-            {/* Interactive Stakeholder Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-6xl">
-              {stakeholders.map((stakeholder, index) => (
-                <Dialog key={index}>
-                  <DialogTrigger asChild>
-                    <Card
-                      className="gradient-border hover-lift cursor-pointer group transition-all duration-300 hover:scale-105 animate-float"
-                      style={{ animationDelay: `${index * 0.3}s` }}
-                    >
-                      <CardContent className="p-6 text-center">
-                        <div
-                          className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-2xl shadow-lg"
-                          style={{ backgroundColor: stakeholder.color }}
-                        >
-                          <span className="text-background font-bold">
-                            {stakeholder.name
-                              .split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </span>
-                        </div>
-                        <h3 className="text-sm font-semibold text-text-primary mb-2 leading-tight">
-                          {stakeholder.name}
-                        </h3>
-                        <div className="text-xs text-text-secondary">
-                          Click to explore benefits
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="flex items-center space-x-3 text-xl">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-                          style={{ backgroundColor: stakeholder.color }}
-                        >
-                          <span className="text-background font-bold">
-                            {stakeholder.name
-                              .split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </span>
-                        </div>
-                        <span>{stakeholder.name}</span>
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-6">
-                      <h4 className="font-semibold text-brand-blue text-lg">
-                        What's in it for you?
-                      </h4>
-                      <ul className="space-y-3">
-                        {stakeholder.benefits.map((benefit, idx) => (
-                          <li key={idx} className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-brand-teal rounded-full mt-2 flex-shrink-0"></div>
-                            <span className="text-text-secondary leading-relaxed">
-                              {benefit}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              ))}
-            </div>
-
-            {/* Connecting Lines Animation */}
-            <div className="absolute inset-0 pointer-events-none">
-              {stakeholders.map((_, index) => {
-                const angle = (index * 360) / stakeholders.length;
+          
+          <div className="relative max-w-6xl mx-auto">
+            <div className="flex justify-center items-center space-x-4 md:space-x-8 overflow-hidden">
+              {certifications.map((cert, index) => {
+                const isActive = index === currentCertIndex;
+                const isPrev = index === (currentCertIndex - 1 + certifications.length) % certifications.length;
+                const isNext = index === (currentCertIndex + 1) % certifications.length;
+                const isVisible = isActive || isPrev || isNext;
+                
                 return (
                   <div
-                    key={index}
-                    className="absolute w-px h-24 bg-gradient-to-t from-brand-blue/20 to-transparent origin-bottom animate-pulse"
-                    style={{
-                      left: "50%",
-                      top: "50%",
-                      transform: `rotate(${angle}deg) translateY(-100px)`,
-                      animationDelay: `${index * 0.2}s`,
-                    }}
-                  />
+                    key={cert.id}
+                    className={`transition-all duration-500 cursor-pointer ${
+                      isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75 hidden md:block'
+                    } ${
+                      isActive ? 'scale-110 z-10' : 'scale-90'
+                    }`}
+                    onClick={() => setSelectedCertification(cert)}
+                    onMouseEnter={() => setSelectedCertification(cert)}
+                    onMouseLeave={() => setSelectedCertification(null)}
+                  >
+                    <div className="relative bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow border border-border">
+                      <img 
+                        src={cert.logo} 
+                        alt={cert.name}
+                        className="w-20 h-20 mx-auto object-cover rounded-lg mb-4"
+                      />
+                      <h3 className="text-lg font-semibold text-center text-primary">{cert.name}</h3>
+                      
+                      {selectedCertification?.id === cert.id && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl p-4 z-20 border">
+                          <p className="text-sm text-muted-foreground mb-2">{cert.description}</p>
+                          <div className="flex flex-wrap gap-1">
+                            {cert.standards.map((standard, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {standard}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 );
               })}
             </div>
+            
+            <button
+              onClick={() => setCurrentCertIndex((prev) => (prev - 1 + certifications.length) % certifications.length)}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            
+            <button
+              onClick={() => setCurrentCertIndex((prev) => (prev + 1) % certifications.length)}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg"
+            >
+              <ChevronRight size={24} />
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Key Metrics */}
-      <section id="metrics" className="section-padding bg-surface-elevated/20">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Impact Metrics
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Measurable results driving sustainable change
+      {/* Services Section - Smaller Cards */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Services</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Comprehensive solutions for sustainable maritime recycling and green steel production
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
-              <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
-                  {animatedNumbers.steel}M
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, index) => (
+              <Card key={service.id} className={`group hover:shadow-xl transition-all duration-300 overflow-hidden h-64 ${
+                index % 4 === 0 ? 'md:col-span-2 lg:col-span-1' : 
+                index % 4 === 1 ? 'md:row-span-1' :
+                index % 4 === 2 ? 'lg:col-span-2' : ''
+              }`}>
+                <div className="aspect-video overflow-hidden h-24">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <div className="text-body font-medium text-text-primary mb-2">
-                  MT Steel Recovered
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Annual processing capacity
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
-              <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
-                  ${animatedNumbers.gdp}B+
-                </div>
-                <div className="text-body font-medium text-text-primary mb-2">
-                  GDP Contribution
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Economic impact to Odisha
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
-              <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
-                  {animatedNumbers.jobs.toLocaleString()}
-                </div>
-                <div className="text-body font-medium text-text-primary mb-2">
-                  Direct Jobs
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Employment opportunities
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
-              <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
-                  {(animatedNumbers.carbon / 100).toFixed(1)}M
-                </div>
-                <div className="text-body font-medium text-text-primary mb-2">
-                  T CO₂ Avoided
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Annual carbon reduction
-                </div>
-              </CardContent>
-            </Card>
+                <CardContent className="p-4 h-40 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2">{service.title}</h3>
+                    <p className="text-muted-foreground text-sm mb-3 line-clamp-2">{service.description}</p>
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {service.features.slice(0, 2).map((feature, idx) => (
+                        <Badge key={idx} variant="secondary" className="text-xs">
+                          {feature}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                  <Button className="w-full" variant="outline" size="sm">
+                    Learn More
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Mission & Vision */}
-      <section className="section-padding">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <Card className="gradient-border p-12 hover-lift">
-              <CardContent className="p-0">
-                <div className="text-caption text-brand-blue mb-4">
-                  OUR MISSION
-                </div>
-                <h3 className="text-title mb-6 text-text-primary font-medium">
-                  Integrity and Commitment
-                </h3>
-                <p className="text-body-large font-medium mb-6 text-text-primary">
-                  Combating climate change through sustainable practices.
-                </p>
-                <p className="text-body text-text-secondary leading-relaxed">
-                  "To create a vertically integrated ship recycling facility
-                  while upholding the highest labour safety and environmental
-                  sustainability standards."
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="gradient-border p-12 hover-lift">
-              <CardContent className="p-0">
-                <div className="text-caption text-brand-teal mb-4">
-                  OUR VISION
-                </div>
-                <h3 className="text-title mb-6 text-text-primary font-medium">
-                  Leading India's Future
-                </h3>
-                <p className="text-body-large font-medium mb-6 text-text-primary">
-                  Transition to a carbon-secure future through innovation.
-                </p>
-                <p className="text-body text-text-secondary leading-relaxed">
-                  "To position India as a global leader in sustainable ship
-                  recycling by building the world's most advanced,
-                  environmentally responsible, and socially conscious maritime
-                  industrial facility."
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Contact Form */}
-      <section className="section-padding bg-surface-elevated/20">
-        <div className="container-custom max-w-4xl">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Get In Touch
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Ready to be part of India's sustainable maritime future?
+      {/* Metrics Section */}
+      <section className="py-20 bg-primary text-primary-foreground">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact</h2>
+            <p className="text-primary-foreground/80 max-w-2xl mx-auto">
+              Measurable results in sustainability and economic growth
             </p>
           </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { number: "5M+", label: "Tonnes Steel Recycled", icon: Recycle },
+              { number: "40%", label: "Carbon Reduction", icon: Globe },
+              { number: "2200+", label: "Jobs Created", icon: Users },
+              { number: "₹835Cr", label: "Economic Impact", icon: TrendingUp }
+            ].map((metric, index) => (
+              <div key={index} className="text-center">
+                <metric.icon className="mx-auto mb-4 text-secondary" size={48} />
+                <div className="text-3xl md:text-4xl font-bold mb-2">{metric.number}</div>
+                <div className="text-primary-foreground/80">{metric.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <Card className="gradient-border p-12">
-            <CardContent className="p-0">
-              <form className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Name
-                    </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
-                  </div>
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Email
-                    </label>
-                    <Input
-                      type="email"
-                      className="bg-surface-elevated border-border/40 text-text-primary h-12"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Phone Number
-                    </label>
-                    <Input
-                      type="tel"
-                      className="bg-surface-elevated border-border/40 text-text-primary h-12"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Company
-                    </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Designation
-                    </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
-                  </div>
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Subject
-                    </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
-                  </div>
-                </div>
-
+      {/* Mission & Vision Section */}
+      <section className="py-20 bg-secondary text-secondary-foreground">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-8">Our Mission & Vision</h2>
+              <div className="space-y-8">
                 <div>
-                  <label className="block text-body font-medium mb-3 text-text-primary">
-                    Message
-                  </label>
-                  <Textarea className="bg-surface-elevated border-border/40 text-text-primary h-32 resize-none" />
+                  <h3 className="text-2xl font-semibold mb-4 flex items-center">
+                    <Target className="mr-3" size={28} />
+                    Mission
+                  </h3>
+                  <p className="text-lg opacity-90">
+                    To revolutionize the maritime recycling industry by providing sustainable, compliant, and profitable solutions that transform end-of-life vessels into valuable resources while protecting our environment.
+                  </p>
                 </div>
-                <Button className="w-full btn-primary h-14 text-lg">
-                  Send Message <ExternalLink className="ml-2 w-5 h-5" />
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                <div>
+                  <h3 className="text-2xl font-semibold mb-4 flex items-center">
+                    <Globe className="mr-3" size={28} />
+                    Vision
+                  </h3>
+                  <p className="text-lg opacity-90">
+                    To become the global leader in sustainable maritime recycling, creating a circular economy that benefits all stakeholders while setting new standards for environmental responsibility.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop" 
+                alt="Mission & Vision"
+                className="rounded-2xl shadow-2xl"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stakeholder Benefits - Interactive */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">United Under One Vision</h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">
+              Bringing together diverse stakeholders to create a sustainable maritime ecosystem that benefits everyone
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {stakeholders.map((stakeholder) => (
+              <Card 
+                key={stakeholder.id}
+                className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 border-2 border-transparent hover:border-primary/20"
+                onClick={() => setSelectedStakeholder(stakeholder)}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <stakeholder.icon className="text-primary" size={32} />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{stakeholder.title}</h3>
+                  <p className="text-muted-foreground text-sm">Click to explore benefits</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stakeholder Dialog */}
+      <Dialog open={!!selectedStakeholder} onOpenChange={() => setSelectedStakeholder(null)}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-3">
+              {selectedStakeholder && (
+                <>
+                  <selectedStakeholder.icon className="text-primary" size={32} />
+                  {selectedStakeholder.title}
+                </>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <h4 className="font-semibold text-primary">What's in it for you?</h4>
+            {selectedStakeholder?.benefits.map((benefit, index) => (
+              <div key={index} className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                <p className="text-muted-foreground">{benefit}</p>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Team Carousel - Pillars of Neptunus */}
+      <section className="py-20 bg-card">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Pillars of Neptunus</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Meet the visionary leaders driving our mission forward
+            </p>
+          </div>
+          
+          <div className="relative max-w-6xl mx-auto">
+            <div className="flex justify-center items-center space-x-4 md:space-x-8 overflow-hidden">
+              {teamMembers.map((member, index) => {
+                const isActive = index === currentTeamIndex;
+                const isPrev = index === (currentTeamIndex - 1 + teamMembers.length) % teamMembers.length;
+                const isNext = index === (currentTeamIndex + 1) % teamMembers.length;
+                const isVisible = isActive || isPrev || isNext;
+                
+                return (
+                  <div
+                    key={member.id}
+                    className={`transition-all duration-500 cursor-pointer ${
+                      isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75 hidden md:block'
+                    } ${
+                      isActive ? 'scale-110 z-10' : 'scale-90'
+                    }`}
+                    onClick={() => setSelectedTeamMember(member)}
+                    onMouseEnter={() => setSelectedTeamMember(member)}
+                    onMouseLeave={() => setSelectedTeamMember(null)}
+                  >
+                    <div className="relative bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className="w-24 h-24 mx-auto object-cover rounded-full mb-4"
+                      />
+                      <h3 className="text-lg font-semibold text-center">{member.name}</h3>
+                      <p className="text-sm text-muted-foreground text-center">{member.position}</p>
+                      
+                      {selectedTeamMember?.id === member.id && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl p-4 z-20 border w-80">
+                          <p className="text-sm text-muted-foreground mb-3">{member.bio}</p>
+                          <div className="mb-3">
+                            <h4 className="font-semibold text-sm mb-1">Expertise:</h4>
+                            <div className="flex flex-wrap gap-1">
+                              {member.expertise.map((skill, idx) => (
+                                <Badge key={idx} variant="secondary" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-sm mb-1">Key Achievement:</h4>
+                            <p className="text-xs text-muted-foreground">{member.achievements}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            <button
+              onClick={() => setCurrentTeamIndex((prev) => (prev - 1 + teamMembers.length) % teamMembers.length)}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            
+            <button
+              onClick={() => setCurrentTeamIndex((prev) => (prev + 1) % teamMembers.length)}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-3 shadow-lg"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section ref={contactRef} className="py-20 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Get In Touch</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Ready to partner with us? Let's discuss how we can help transform your maritime recycling needs.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div>
+                <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <Building className="text-primary" size={20} />
+                    <span>Neptunus Carbon Future</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <MapPin className="text-primary" size={20} />
+                    <span>Ganjam, Odisha, India</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Mail className="text-primary" size={20} />
+                    <span>info@neptunuscarbon.com</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Phone className="text-primary" size={20} />
+                    <span>+91 98765 43210</span>
+                  </div>
+                </div>
+              </div>
+              
+              <Card className="p-6">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="name">Name *</Label>
+                      <Input 
+                        id="name" 
+                        placeholder="Your name"
+                        {...form.register("name")}
+                        className={form.formState.errors.name ? "border-destructive" : ""}
+                      />
+                      {form.formState.errors.name && (
+                        <p className="text-destructive text-sm mt-1">{form.formState.errors.name.message}</p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="email">Email *</Label>
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="your@email.com"
+                        {...form.register("email")}
+                        className={form.formState.errors.email ? "border-destructive" : ""}
+                      />
+                      {form.formState.errors.email && (
+                        <p className="text-destructive text-sm mt-1">{form.formState.errors.email.message}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="phone">Phone *</Label>
+                      <Input 
+                        id="phone" 
+                        placeholder="Your phone number"
+                        {...form.register("phone")}
+                        className={form.formState.errors.phone ? "border-destructive" : ""}
+                      />
+                      {form.formState.errors.phone && (
+                        <p className="text-destructive text-sm mt-1">{form.formState.errors.phone.message}</p>
+                      )}
+                    </div>
+                    <div>
+                      <Label htmlFor="company">Company *</Label>
+                      <Input 
+                        id="company" 
+                        placeholder="Your company"
+                        {...form.register("company")}
+                        className={form.formState.errors.company ? "border-destructive" : ""}
+                      />
+                      {form.formState.errors.company && (
+                        <p className="text-destructive text-sm mt-1">{form.formState.errors.company.message}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="designation">Designation *</Label>
+                    <Input 
+                      id="designation" 
+                      placeholder="Your designation"
+                      {...form.register("designation")}
+                      className={form.formState.errors.designation ? "border-destructive" : ""}
+                    />
+                    {form.formState.errors.designation && (
+                      <p className="text-destructive text-sm mt-1">{form.formState.errors.designation.message}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="message">Message *</Label>
+                    <Textarea 
+                      id="message" 
+                      placeholder="Tell us about your project..." 
+                      rows={4}
+                      {...form.register("message")}
+                      className={form.formState.errors.message ? "border-destructive" : ""}
+                    />
+                    {form.formState.errors.message && (
+                      <p className="text-destructive text-sm mt-1">{form.formState.errors.message.message}</p>
+                    )}
+                  </div>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Sending...</span>
+                      </div>
+                    ) : (
+                      "Send Message"
+                    )}
+                  </Button>
+                </form>
+              </Card>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-surface-elevated border-t border-border/20 section-padding">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <img
-                src="/lovable-uploads/531242ac-b981-4ac8-9615-867b96127f68.png"
-                alt="Neptunus Logo"
-                className="h-12 w-auto mb-6"
+      <footer className="bg-primary text-primary-foreground py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <img 
+                src="/lovable-uploads/531242ac-b981-4ac8-9615-867b96127f68.png" 
+                alt="Neptunus Logo" 
+                className="h-12 w-auto mb-4 brightness-0 invert"
               />
-              <p className="text-text-secondary leading-relaxed">
-                Pioneering India's carbon-negative future through sustainable
-                ship recycling and circular steel production.
+              <p className="text-primary-foreground/80 mb-6">
+                Leading the transformation of maritime recycling through sustainable technology and responsible practices.
               </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-6 text-text-primary">Services</h4>
-              <ul className="space-y-3 text-text-secondary">
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  Ship Recycling
-                </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  Steel Re-Rolling
-                </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  Shipbuilding & Repair
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-6 text-text-primary">Company</h4>
-              <ul className="space-y-3 text-text-secondary">
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  About Us
-                </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  Our Team
-                </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  Certifications
-                </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
-                  Sustainability
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-6 text-text-primary">Contact</h4>
-              <div className="space-y-4 text-text-secondary">
-                <div className="flex items-center space-x-3 hover:text-brand-blue cursor-pointer transition-colors">
-                  <Mail className="w-5 h-5" />
-                  <span>info@neptunus.in</span>
-                </div>
-                <div className="flex items-center space-x-3 hover:text-brand-blue cursor-pointer transition-colors">
-                  <Phone className="w-5 h-5" />
-                  <span>+91 xxx xxx xxxx</span>
-                </div>
-                <div className="flex items-center space-x-3 hover:text-brand-blue cursor-pointer transition-colors">
-                  <MapPin className="w-5 h-5" />
-                  <span>Odisha, India</span>
-                </div>
+              <div className="flex space-x-4">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  <Facebook size={24} />
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  <Twitter size={24} />
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  <Linkedin size={24} />
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors">
+                  <Instagram size={24} />
+                </a>
               </div>
             </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Services</h4>
+              <ul className="space-y-2 text-primary-foreground/80">
+                <li>Ship Recycling</li>
+                <li>Steel Manufacturing</li>
+                <li>Environmental Compliance</li>
+                <li>Logistics Solutions</li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-primary-foreground/80">
+                <li>About Us</li>
+                <li>Careers</li>
+                <li>News</li>
+                <li>Contact</li>
+              </ul>
+            </div>
           </div>
-
-          <div className="border-t border-border/20 pt-8 text-center">
-            <p className="text-text-secondary">
-              &copy; 2024 Neptunus Ship Builders and Recyclers. All rights
-              reserved.
-            </p>
+          
+          <Separator className="my-8 bg-primary-foreground/20" />
+          
+          <div className="text-center text-primary-foreground/60">
+            <p>&copy; 2024 Neptunus Carbon Future. All rights reserved.</p>
           </div>
         </div>
       </footer>
