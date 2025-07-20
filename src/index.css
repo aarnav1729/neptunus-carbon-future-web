@@ -6,26 +6,26 @@
 /* Palantir-inspired Design System */
 @layer base {
   :root {
-    --background: 0 0% 4%;
-    --foreground: 210 40% 98%;
+    --background: 50 14% 91%;
+    --foreground: 120 28% 18%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 210 40% 98%;
+    --card: 50 14% 91%;
+    --card-foreground: 120 28% 18%;
 
-    --popover: 0 0% 6%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 50 14% 91%;
+    --popover-foreground: 120 28% 18%;
 
-    --primary: 204 94% 94%;
-    --primary-foreground: 220 13% 9%;
+    --primary: 120 28% 18%;
+    --primary-foreground: 50 14% 91%;
 
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 86 55% 28%;
+    --secondary-foreground: 50 14% 91%;
 
-    --muted: 215 28% 17%;
-    --muted-foreground: 217 11% 65%;
+    --muted: 50 8% 85%;
+    --muted-foreground: 120 15% 45%;
 
-    --accent: 215 28% 17%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 86 55% 28%;
+    --accent-foreground: 50 14% 91%;
 
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
