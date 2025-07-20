@@ -392,7 +392,7 @@ const Index = () => {
 
   const renderCardContent = (service: (typeof services)[0]) => {
     const imageElement = (
-      <div className="relative h-80 lg:h-auto overflow-hidden">
+      <div className="relative h-48 lg:h-auto overflow-hidden">
         <img
           src={service.image}
           alt={service.title}
@@ -403,32 +403,32 @@ const Index = () => {
     );
 
     const contentElement = (
-      <div className="p-12">
-        <div className="mb-8">
-          <div className="text-caption text-brand-blue mb-3">
+      <div className="p-6">
+        <div className="mb-4">
+          <div className="text-caption text-brand-blue mb-2">
             {service.subtitle}
           </div>
           <h3
-            className="text-title mb-6 text-text-primary font-medium"
+            className="text-lg mb-3 text-text-primary font-medium"
             id={service.id}
           >
             {service.title}
           </h3>
         </div>
 
-        <div className="space-y-8 mb-8">
+        <div className="space-y-4 mb-4">
           {service.content.map((item, idx) => (
             <div key={idx}>
-              <h4 className="text-lg font-semibold mb-4 text-text-primary">
+              <h4 className="text-md font-semibold mb-2 text-text-primary">
                 {item.subtitle}
               </h4>
-              <ul className="space-y-3">
-                {item.details.map((detail, detailIdx) => (
+              <ul className="space-y-2">
+                {item.details.slice(0, 2).map((detail, detailIdx) => (
                   <li
                     key={detailIdx}
-                    className="text-body text-text-secondary flex items-start"
+                    className="text-sm text-text-secondary flex items-start"
                   >
-                    <div className="w-2 h-2 bg-brand-teal rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                    <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
                     {detail}
                   </li>
                 ))}
@@ -437,9 +437,9 @@ const Index = () => {
           ))}
         </div>
 
-        <Button className="btn-primary group">
+        <Button className="btn-primary group text-sm">
           Read More
-          <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1" />
         </Button>
       </div>
     );
@@ -690,8 +690,8 @@ const Index = () => {
               {[...certifications, ...certifications].map((cert, index) => (
                 <HoverCard key={index}>
                   <HoverCardTrigger asChild>
-                    <div className="flex-shrink-0 w-64 h-64 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
-                      <div className="w-20 h-20 mb-6 flex items-center justify-center overflow-hidden rounded-lg">
+                    <div className="flex-shrink-0 w-64 h-40 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
+                      <div className="w-16 h-16 mb-3 flex items-center justify-center overflow-hidden rounded-lg">
                         <img
                           src={cert.logo}
                           alt={cert.name}

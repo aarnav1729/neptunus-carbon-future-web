@@ -214,11 +214,11 @@
 }
 
 .animate-scroll-smooth {
-  animation: scroll-smooth 60s linear infinite;
+  animation: scroll-smooth 20s linear infinite;
 }
 
 .animate-scroll-smooth-reverse {
-  animation: scroll-smooth-reverse 60s linear infinite;
+  animation: scroll-smooth-reverse 20s linear infinite;
 }
 
 /* Video background */
