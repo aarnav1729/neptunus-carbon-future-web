@@ -9,6 +9,10 @@ import {
   ChevronLeft,
   Menu,
   X,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,8 +30,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
   const [animatedNumbers, setAnimatedNumbers] = useState({
     steel: 0,
     gdp: 0,
@@ -37,6 +43,16 @@ const Index = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    designation: "",
+    message: "",
+  });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handle scroll for navigation
   useEffect(() => {
@@ -87,69 +103,117 @@ const Index = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Form validation
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) errors.name = "Name is required";
+    if (!formData.email.trim()) errors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Invalid email format";
+    if (!formData.phone.trim()) errors.phone = "Phone number is required";
+    if (!formData.company.trim()) errors.company = "Company is required";
+    if (!formData.designation.trim()) errors.designation = "Designation is required";
+    if (!formData.message.trim()) errors.message = "Message is required";
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (formErrors[field]) {
+      setFormErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    toast({
+      title: "Message sent successfully!",
+      description: "We'll get back to you within 24 hours.",
+    });
+    
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      designation: "",
+      message: "",
+    });
+    setIsSubmitting(false);
+  };
+
   const services = [
     {
       id: "services",
-      title: "Services",
+      title: "Ship Recycling & Dismantling",
       subtitle: "Comprehensive Maritime Solutions",
-      image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-left",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
-          subtitle: "Ship Recycling & Dismantling",
+          subtitle: "Phased Expansion Strategy",
           details: [
-            "Phased expansion: 60 total bays (Phase 1: 30 bays → Phase 2: +30 bays)",
+            "60 total bays (Phase 1: 30 bays → Phase 2: +30 bays)",
             "Annual throughput: Up to 500 ships dismantled",
-            "Hazardous-waste management: 13,000 tpa capacity for oils, asbestos, PCBs",
           ],
         },
         {
-          subtitle: "Low-Carbon Steel Re-Rolling",
+          subtitle: "Hazardous Waste Management",
           details: [
-            "Green-steel feedstock: Melted in EAFs to reduce carbon by 1.6–2.3 t CO₂/t",
-            "Traceability: End-to-end chain-of-custody, digital certificates for buyers",
+            "13,000 tpa capacity for oils, asbestos, PCBs",
+            "Zero-waste-to-landfill policy implementation",
           ],
         },
       ],
     },
     {
       id: "partners",
-      title: "Partners & Affiliations",
-      subtitle: "Global Network & Certifications",
-      image:
-        "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-right",
+      title: "Low-Carbon Steel Re-Rolling",
+      subtitle: "Sustainable Steel Production",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
-          subtitle: "Strategic Partners",
+          subtitle: "Green Steel Technology",
           details: [
-            "MoU with Gujarat Maritime Board/JICA (modeled after Alang improvements)",
+            "EAF processing reduces carbon by 1.6–2.3 t CO₂/t",
+            "End-to-end chain-of-custody traceability",
           ],
         },
         {
-          subtitle: "Key Memberships",
+          subtitle: "Digital Certificates",
           details: [
-            "UN Global Compact",
-            "Bureau of International Recycling",
-            "Local labor NGOs",
+            "Blockchain-verified steel quality assurance",
+            "Real-time tracking and reporting systems",
           ],
         },
       ],
     },
     {
       id: "impact",
-      title: "Global Impact & Case Studies",
+      title: "Global Impact & Partnerships",
       subtitle: "Environmental Leadership in Action",
-      image:
-        "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-top",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
           subtitle: "Climate Impact",
           details: [
-            "Repurposing steel from old ships combats climate change by reducing virgin steel production",
-            "Environmental hazards traditional beaching poses—and how Neptunus' green refurbishing addresses human and ecological risks",
+            "Repurposing steel combats climate change",
+            "Addressing environmental hazards of traditional beaching",
+          ],
+        },
+        {
+          subtitle: "Strategic Partnerships",
+          details: [
+            "MoU with Gujarat Maritime Board/JICA",
+            "UN Global Compact membership",
           ],
         },
       ],
@@ -158,17 +222,21 @@ const Index = () => {
       id: "policy",
       title: "Policy & Initiative Highlights",
       subtitle: "Alignment with National Programs",
-      image:
-        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2340&q=80",
-      layout: "image-bottom",
+      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
           subtitle: "National Electric Mobility Mission",
-          details: ["Battery-electric yard equipment cuts diesel use by 40%"],
+          details: [
+            "Battery-electric yard equipment cuts diesel use by 40%",
+            "Integration with renewable energy sources",
+          ],
         },
         {
           subtitle: "Swachh Bharat Mission",
-          details: ["On-site TSDF/incinerator for hazardous & municipal waste"],
+          details: [
+            "On-site TSDF/incinerator for hazardous waste",
+            "Community health and safety programs",
+          ],
         },
       ],
     },
@@ -375,112 +443,59 @@ const Index = () => {
     setMobileMenuOpen(false);
   };
 
-  const getCardLayout = (service: (typeof services)[0]) => {
-    switch (service.layout) {
-      case "image-left":
-        return "grid-cols-1 lg:grid-cols-2";
-      case "image-right":
-        return "grid-cols-1 lg:grid-cols-2";
-      case "image-top":
-        return "grid-cols-1";
-      case "image-bottom":
-        return "grid-cols-1";
-      default:
-        return "grid-cols-1 lg:grid-cols-2";
-    }
+  const getCardLayout = () => {
+    return "grid-cols-1";
   };
 
   const renderCardContent = (service: (typeof services)[0]) => {
-    const imageElement = (
-      <div className="relative h-48 lg:h-auto overflow-hidden">
-        <img
-          src={service.image}
-          alt={service.title}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/60 to-transparent" />
-      </div>
-    );
-
-    const contentElement = (
-      <div className="p-6">
-        <div className="mb-4">
-          <div className="text-caption text-brand-blue mb-2">
-            {service.subtitle}
-          </div>
-          <h3
-            className="text-lg mb-3 text-text-primary font-medium"
-            id={service.id}
-          >
-            {service.title}
-          </h3>
+    return (
+      <div className="h-full">
+        <div className="relative h-48 overflow-hidden">
+          <img
+            src={service.image}
+            alt={service.title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/60 to-transparent" />
         </div>
-
-        <div className="space-y-4 mb-4">
-          {service.content.map((item, idx) => (
-            <div key={idx}>
-              <h4 className="text-md font-semibold mb-2 text-text-primary">
-                {item.subtitle}
-              </h4>
-              <ul className="space-y-2">
-                {item.details.slice(0, 2).map((detail, detailIdx) => (
-                  <li
-                    key={detailIdx}
-                    className="text-sm text-text-secondary flex items-start"
-                  >
-                    <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                    {detail}
-                  </li>
-                ))}
-              </ul>
+        <div className="p-6">
+          <div className="mb-4">
+            <div className="text-caption text-brand-blue mb-2">
+              {service.subtitle}
             </div>
-          ))}
-        </div>
+            <h3 className="text-lg mb-3 text-text-primary font-medium">
+              {service.title}
+            </h3>
+          </div>
 
-        <Button className="btn-primary group text-sm">
-          Read More
-          <ArrowRight className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1" />
-        </Button>
+          <div className="space-y-4 mb-4">
+            {service.content.map((item, idx) => (
+              <div key={idx}>
+                <h4 className="text-md font-semibold mb-2 text-text-primary">
+                  {item.subtitle}
+                </h4>
+                <ul className="space-y-2">
+                  {item.details.map((detail, detailIdx) => (
+                    <li
+                      key={detailIdx}
+                      className="text-sm text-text-secondary flex items-start"
+                    >
+                      <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <Button className="btn-primary group text-sm">
+            Read More
+            <ArrowRight className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1" />
+          </Button>
+        </div>
       </div>
     );
-
-    switch (service.layout) {
-      case "image-left":
-        return (
-          <>
-            {imageElement}
-            {contentElement}
-          </>
-        );
-      case "image-right":
-        return (
-          <>
-            {contentElement}
-            {imageElement}
-          </>
-        );
-      case "image-top":
-        return (
-          <div className="space-y-0">
-            {imageElement}
-            {contentElement}
-          </div>
-        );
-      case "image-bottom":
-        return (
-          <div className="space-y-0">
-            {contentElement}
-            {imageElement}
-          </div>
-        );
-      default:
-        return (
-          <>
-            {imageElement}
-            {contentElement}
-          </>
-        );
-    }
   };
 
   return (
@@ -490,15 +505,15 @@ const Index = () => {
       <nav
         className={`fixed z-50 transition-all duration-1000 ease-out ${
           navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-4/5"
-            : "left-1/2 top-8 -translate-x-1/2"
+            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
+            : "left-1/2 top-8 -translate-x-1/2 w-auto"
         }`}
       >
         <div
           className={`glass-panel transition-all duration-1000 ease-out ${
             navScrolled
-              ? "flex items-center justify-between py-4 px-6 rounded-lg"
-              : "flex items-center space-x-8 py-3 px-8 rounded-full"
+              ? "flex items-center justify-between py-3 px-4 md:py-4 md:px-6 rounded-lg"
+              : "flex items-center space-x-4 md:space-x-8 py-3 px-4 md:px-8 rounded-full"
           }`}
         >
           {/* Logo */}
@@ -506,31 +521,34 @@ const Index = () => {
             src="/assets/logo.png"
             alt="Neptunus Logo"
             className={`transition-all duration-700 ${
-              navScrolled ? "h-10" : "h-12"
+              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
             } w-auto`}
           />
 
           {/* Hamburger + Contact */}
           {navScrolled ? (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <button
-                className="transition-all duration-700"
+                className="transition-all duration-700 p-2"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? (
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 md:w-5 md:h-5" />
                 ) : (
-                  <Menu className="w-5 h-5" />
+                  <Menu className="w-4 h-4 md:w-5 md:h-5" />
                 )}
               </button>
-              <Button className="btn-primary text-xs px-4 py-2 transition-all duration-700">
+              <Button 
+                className="btn-primary text-xs md:text-sm px-3 md:px-4 py-2 transition-all duration-700"
+                onClick={() => scrollToSection('contact')}
+              >
                 Contact
               </Button>
             </div>
           ) : (
             <>
               <button
-                className="transition-all duration-700"
+                className="transition-all duration-700 p-2"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? (
@@ -539,7 +557,10 @@ const Index = () => {
                   <Menu className="w-5 h-5" />
                 )}
               </button>
-              <Button className="btn-primary text-sm px-6 py-2 transition-all duration-700">
+              <Button 
+                className="btn-primary text-sm md:text-base px-4 md:px-6 py-2 transition-all duration-700"
+                onClick={() => scrollToSection('contact')}
+              >
                 Contact
               </Button>
             </>
@@ -582,23 +603,75 @@ const Index = () => {
           />
         </video>
 
-        <div className="relative z-10 text-center max-w-6xl px-8 animate-fade-in-up">
-          <h1 className="text-display mb-8 text-gradient font-light">
+        <div className="relative z-10 text-center max-w-6xl px-4 md:px-8 animate-fade-in-up">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl mb-6 md:mb-8 text-gradient font-light">
             Neptunus Ship Builders and Recyclers
           </h1>
-          <p className="text-body-large text-text-secondary mb-12 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl lg:text-2xl text-text-secondary mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
             Pioneering India's carbon-negative future through sustainable ship
             recycling and circular steel production.
           </p>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-3 animate-float">
-          <ChevronDown className="w-6 h-6 text-brand-blue animate-bounce" />
-          <span className="text-caption text-text-tertiary">
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2 md:space-y-3 animate-float">
+          <ChevronDown className="w-5 h-5 md:w-6 md:h-6 text-brand-blue animate-bounce" />
+          <span className="text-xs md:text-sm text-text-tertiary text-center">
             Scroll to Explore
           </span>
         </div>
       </div>
+
+      {/* Enhanced Certifications Carousel */}
+      <section className="section-padding" id="certifications">
+        <div className="container-custom">
+          <div className="text-center mb-20">
+            <h2 className="text-headline mb-6 text-gradient font-medium">
+              Certifications & Standards
+            </h2>
+            <p className="text-body-large text-text-secondary">
+              Maintaining the highest industry standards and compliance
+            </p>
+          </div>
+
+          <div className="overflow-hidden">
+            <div className="flex animate-scroll-smooth space-x-12">
+              {[...certifications, ...certifications].map((cert, index) => (
+                <HoverCard key={index}>
+                  <HoverCardTrigger asChild>
+                    <div className="flex-shrink-0 w-64 h-40 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
+                      <div className="w-16 h-16 mb-3 flex items-center justify-center overflow-hidden rounded-lg">
+                        <img
+                          src={cert.logo}
+                          alt={cert.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                      </div>
+                      <div className="text-center px-4">
+                        <div className="font-semibold text-text-primary mb-2">
+                          {cert.name}
+                        </div>
+                        <div className="text-sm text-text-secondary">
+                          {cert.description}
+                        </div>
+                      </div>
+                    </div>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80">
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-text-primary">
+                        {cert.name}
+                      </h4>
+                      <p className="text-sm text-text-secondary">
+                        {cert.details}
+                      </p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Services Section */}
       <section
@@ -659,66 +732,14 @@ const Index = () => {
               {services.map((service, index) => (
                 <Card
                   key={service.id}
-                  className="min-w-full gradient-border hover-lift mx-4"
+                  className="min-w-full gradient-border hover-lift mx-4 h-80"
                 >
-                  <CardContent className="p-0">
-                    <div className={`grid gap-0 ${getCardLayout(service)}`}>
+                  <CardContent className="p-0 h-full">
+                    <div className={`grid gap-0 ${getCardLayout()} h-full`}>
                       {renderCardContent(service)}
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Enhanced Certifications Carousel */}
-      <section className="section-padding" id="certifications">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Certifications & Standards
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Maintaining the highest industry standards and compliance
-            </p>
-          </div>
-
-          <div className="overflow-hidden">
-            <div className="flex animate-scroll-smooth space-x-12">
-              {[...certifications, ...certifications].map((cert, index) => (
-                <HoverCard key={index}>
-                  <HoverCardTrigger asChild>
-                    <div className="flex-shrink-0 w-64 h-40 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
-                      <div className="w-16 h-16 mb-3 flex items-center justify-center overflow-hidden rounded-lg">
-                        <img
-                          src={cert.logo}
-                          alt={cert.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="text-center px-4">
-                        <div className="font-semibold text-text-primary mb-2">
-                          {cert.name}
-                        </div>
-                        <div className="text-sm text-text-secondary">
-                          {cert.description}
-                        </div>
-                      </div>
-                    </div>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-80">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-text-primary">
-                        {cert.name}
-                      </h4>
-                      <p className="text-sm text-text-secondary">
-                        {cert.details}
-                      </p>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
               ))}
             </div>
           </div>
@@ -1045,7 +1066,7 @@ const Index = () => {
       </section>
 
       {/* Enhanced Contact Form */}
-      <section className="section-padding bg-surface-elevated/20">
+      <section className="section-padding bg-surface-elevated/20" id="contact">
         <div className="container-custom max-w-4xl">
           <div className="text-center mb-20">
             <h2 className="text-headline mb-6 text-gradient font-medium">
@@ -1056,68 +1077,106 @@ const Index = () => {
             </p>
           </div>
 
-          <Card className="gradient-border p-12">
+          <Card className="gradient-border p-8 lg:p-12">
             <CardContent className="p-0">
-              <form className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-body font-medium mb-3 text-text-primary">
-                      Name
+                      Name *
                     </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
+                    <Input 
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.name ? 'border-red-500' : ''}`}
+                      placeholder="Your full name"
+                    />
+                    {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-body font-medium mb-3 text-text-primary">
-                      Email
+                      Email *
                     </label>
                     <Input
                       type="email"
-                      className="bg-surface-elevated border-border/40 text-text-primary h-12"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.email ? 'border-red-500' : ''}`}
+                      placeholder="your.email@company.com"
                     />
+                    {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-body font-medium mb-3 text-text-primary">
-                      Phone Number
+                      Phone Number *
                     </label>
                     <Input
                       type="tel"
-                      className="bg-surface-elevated border-border/40 text-text-primary h-12"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.phone ? 'border-red-500' : ''}`}
+                      placeholder="+91 XXXXX XXXXX"
                     />
+                    {formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
                   </div>
                   <div>
                     <label className="block text-body font-medium mb-3 text-text-primary">
-                      Company
+                      Company *
                     </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Designation
-                    </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
-                  </div>
-                  <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
-                      Subject
-                    </label>
-                    <Input className="bg-surface-elevated border-border/40 text-text-primary h-12" />
+                    <Input 
+                      value={formData.company}
+                      onChange={(e) => handleInputChange('company', e.target.value)}
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.company ? 'border-red-500' : ''}`}
+                      placeholder="Your company name"
+                    />
+                    {formErrors.company && <p className="text-red-500 text-sm mt-1">{formErrors.company}</p>}
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-body font-medium mb-3 text-text-primary">
-                    Message
+                    Designation *
                   </label>
-                  <Textarea className="bg-surface-elevated border-border/40 text-text-primary h-32 resize-none" />
+                  <Input 
+                    value={formData.designation}
+                    onChange={(e) => handleInputChange('designation', e.target.value)}
+                    className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.designation ? 'border-red-500' : ''}`}
+                    placeholder="Your job title"
+                  />
+                  {formErrors.designation && <p className="text-red-500 text-sm mt-1">{formErrors.designation}</p>}
                 </div>
-                <Button className="w-full btn-primary h-14 text-lg">
-                  Send Message <ExternalLink className="ml-2 w-5 h-5" />
+
+                <div>
+                  <label className="block text-body font-medium mb-3 text-text-primary">
+                    Message *
+                  </label>
+                  <Textarea 
+                    value={formData.message}
+                    onChange={(e) => handleInputChange('message', e.target.value)}
+                    className={`bg-surface-elevated border-border/40 text-text-primary h-32 resize-none ${formErrors.message ? 'border-red-500' : ''}`}
+                    placeholder="Tell us about your requirements..."
+                  />
+                  {formErrors.message && <p className="text-red-500 text-sm mt-1">{formErrors.message}</p>}
+                </div>
+
+                <Button 
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full btn-primary h-14 text-lg disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message <ExternalLink className="ml-2 w-5 h-5" />
+                    </>
+                  )}
                 </Button>
               </form>
             </CardContent>
@@ -1190,11 +1249,47 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="border-t border-border/20 pt-8 text-center">
-            <p className="text-text-secondary">
-              &copy; 2024 Neptunus Ship Builders and Recyclers. All rights
-              reserved.
-            </p>
+          {/* Social Media Icons */}
+          <div className="border-t border-border/20 pt-8">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+              <p className="text-text-secondary">
+                &copy; 2024 Neptunus Ship Builders and Recyclers. All rights reserved.
+              </p>
+              <div className="flex space-x-4">
+                <a 
+                  href="https://facebook.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                >
+                  <Facebook className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                </a>
+                <a 
+                  href="https://twitter.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                >
+                  <Twitter className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                </a>
+                <a 
+                  href="https://linkedin.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                >
+                  <Linkedin className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                </a>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                >
+                  <Instagram className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
