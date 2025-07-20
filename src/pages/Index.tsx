@@ -651,7 +651,7 @@ const Index = () => {
           </div>
 
           {/* Service Cards with Varied Layouts */}
-          <div className="relative overflow-hidden">
+          <div className="relative overflow-hidden max-w-4xl mx-auto">
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
