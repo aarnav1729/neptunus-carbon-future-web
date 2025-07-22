@@ -479,17 +479,17 @@ const Impact = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
+      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-4">
+            <h2 className="text-headline font-bold text-white mb-4">
               Join the Impact Revolution
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-6">
+            <p className="text-title text-white mb-6">
               Be part of reshaping industries and communities for a sustainable future
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group">
+              <Button variant="secondary" size="lg" className="group bg-green-900 text-white">
                 <a href="/stakeholders" className="flex items-center">
                   Explore Opportunities
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -498,7 +498,7 @@ const Impact = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-white bg-yellow-500 hover:bg-primary-foreground hover:text-primary"
               >
                 <a href="/#contact">Partner with Us</a>
               </Button>

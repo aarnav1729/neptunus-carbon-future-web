@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   ChevronDown,
   ArrowRight,
@@ -15,6 +15,7 @@ import {
   Linkedin,
   Instagram,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -272,7 +273,7 @@ const Index = () => {
   const certifications = [
     {
       name: "HKC – Hong Kong Convention",
-      logo: "/assets/certs/hkgs.png",
+      logo: "/assets/HKC.png",
       description: "IMO aligned",
       details: "Hong Kong Green Standard aligned with IMO guidelines",
     },
@@ -284,7 +285,7 @@ const Index = () => {
     },
     {
       name: "UNEP / Basel Convention",
-      logo: "/assets/certs/unep-basel.png",
+      logo: "/assets/unep.png",
       description: "for hazardous materials",
       details: "Aligned with UNEP / Basel Convention for hazardous materials",
     },
@@ -296,32 +297,32 @@ const Index = () => {
     },
     {
       name: "IHM (Part 1-3)",
-      logo: "/assets/certs/ihm.png",
+      logo: "/assets/IHM.jpg",
       description: "per IMO MEPC.269(68)",
       details:
         "Inventory of Hazardous Materials (Parts 1–3) per IMO MEPC.269(68)",
     },
     {
       name: "ISO 9001:2015",
-      logo: "/assets/certs/iso9001.png",
+      logo: "/assets/ISO9001.png",
       description: "Quality Management Systems",
       details: "ISO 9001:2015 standard for Quality Management Systems",
     },
     {
       name: "ISO 30000:2009",
-      logo: "/assets/certs/iso30000.png",
+      logo: "/assets/iso30000.png",
       description: "Ship Recycling Management",
       details: "ISO 30000:2009 for Ship Recycling Management Systems",
     },
     {
       name: "ISO 45001:2018",
-      logo: "/assets/certs/iso45001.png",
+      logo: "/assets/iso45001.webp",
       description: "Health & Safety Systems",
       details: "ISO 45001:2018 for Occupational Health & Safety Management",
     },
     {
       name: "ISO 14001:2015",
-      logo: "/assets/certs/iso14001.png",
+      logo: "/assets/iso-14001.jpg",
       description: "Environmental Management",
       details: "ISO 14001:2015 standard for Environmental Management Systems",
     },
@@ -583,18 +584,16 @@ const Index = () => {
           <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
-                  className={`block text-body transition-colors ${
-                    active
-                      ? "text-primary font-medium"
-                      : "text-text-secondary hover:text-primary"
+                  to={href}
+                  className={`block ... ${
+                    active ? "text-primary" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <button
                 className="mt-2 btn-primary w-full"
@@ -1397,7 +1396,3 @@ const Index = () => {
 };
 
 export default Index;
-function useRef<T>(initialValue: T | null): { current: T | null } {
-  return { current: initialValue };
-}
-

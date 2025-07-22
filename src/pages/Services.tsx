@@ -69,7 +69,7 @@ const Services = () => {
       title: "Ship Building",
       subtitle: "Circular Maritime Construction",
       image:
-        "https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "/assets/shipb.jpg",
       description:
         "Right beside our recycling docks, we're turning yesterday's ships into tomorrow's livelihoods. Using the recycled steel we reclaim, our modular yard crafts coastal vessels up to 5,000 DWT—everything from supply boats to passenger ferries. This circular approach slashes embodied carbon by more than 50% and keeps local workshops humming with skilled jobs.",
       features: [
@@ -109,7 +109,7 @@ const Services = () => {
       title: "Steel Re-rolling",
       subtitle: "Green Steel Production",
       image:
-        "https://images.unsplash.com/photo-1565793298595-6a879b1d9492?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "/assets/steel.jpg",
       description:
         "Our electric-arc-furnace mill is where community ambition meets industrial innovation. Processing up to 60,000 TPA of reclaimed ship steel, we produce top-grade rebars, structural sections, and specialty billets—all under an ISO 14001-certified process with full chain-of-custody transparency.",
       features: [
@@ -226,27 +226,27 @@ const Services = () => {
       </nav>
 
       {/* Hero Section (moved down, reduced whitespace) */}
-      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
+      <section className="pt-28 pb-8 bg-stone-200">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-4">
+            <h1 className="text-display font-bold text-black mb-4">
               Our Services
             </h1>
-            <p className="text-title text-text-secondary mb-4">
-              Comprehensive maritime solutions for sustainable ship recycling, green steel production, and environmental stewardship
+            <p className="text-title text-black mb-4">
+              Comprehensive maritime solutions for sustainable ship recycling, green steel production, and energy production
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">6</div>
-                <div className="text-body text-text-secondary">Core Services</div>
+                <div className="text-title text-green-900 font-bold text-primary mb-2">6</div>
+                <div className="text-body text-black">Core Services</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">500</div>
-                <div className="text-body text-text-secondary">Ships Annually</div>
+                <div className="text-title text-black font-bold text-primary mb-2">500</div>
+                <div className="text-body text-black">Ships Annually</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">100%</div>
-                <div className="text-body text-text-secondary">Compliant Operations</div>
+                <div className="text-title text-green-900 font-bold text-primary mb-2">100%</div>
+                <div className="text-body text-black">Compliant Operations</div>
               </div>
             </div>
           </div>
@@ -354,17 +354,17 @@ const Services = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
+      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-4">
+            <h2 className="text-headline text-white font-bold text-primary-foreground mb-4">
               Ready to Partner with Us?
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-6">
+            <p className="text-title text-white text-primary-foreground/90 mb-6">
               Discover how our services can meet your maritime and sustainability needs
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group">
+              <Button variant="secondary" size="lg" className="group text-white bg-green-900">
                 <a href="/#contact" className="flex items-center">
                   Get Quote
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -373,7 +373,7 @@ const Services = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-white bg-yellow-500 hover:bg-primary-foreground hover:text-primary"
               >
                 <a href="/stakeholders">View Stakeholder Benefits</a>
               </Button>

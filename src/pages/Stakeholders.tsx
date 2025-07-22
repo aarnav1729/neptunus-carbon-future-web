@@ -46,7 +46,7 @@ const Stakeholders = () => {
     {
       name: "Ship Owners & Shipping Lines",
       icon: Ship,
-      color: "from-blue-500 to-blue-600",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "🚢",
       tagline: "Turn end-of-life vessels into future savings",
       benefits: [
@@ -64,7 +64,7 @@ const Stakeholders = () => {
     {
       name: "Steel Manufacturers & Re-rollers",
       icon: Building2,
-      color: "from-orange-500 to-red-500",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "⚒️",
       tagline: "Secure low-carbon feedstock with full traceability",
       benefits: [
@@ -82,7 +82,7 @@ const Stakeholders = () => {
     {
       name: "Investors & Financial Institutions",
       icon: DollarSign,
-      color: "from-purple-500 to-purple-600",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "💼",
       tagline: "First-mover advantage in green steel revolution",
       benefits: [
@@ -101,7 +101,7 @@ const Stakeholders = () => {
     {
       name: "Local Communities & Workforce",
       icon: Users,
-      color: "from-green-500 to-green-600",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "🏘️",
       tagline: "Safe jobs, skills development, and community uplift",
       benefits: [
@@ -120,7 +120,7 @@ const Stakeholders = () => {
     {
       name: "Regulators & NGOs",
       icon: Scale,
-      color: "from-teal-500 to-teal-600",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "⚖️",
       tagline: "Transparency, compliance, and environmental partnership",
       benefits: [
@@ -138,7 +138,7 @@ const Stakeholders = () => {
     {
       name: "Global Partners & Climate Advocates",
       icon: Globe,
-      color: "from-indigo-500 to-indigo-600",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "🌍",
       tagline: "Leading India's circular economy transformation",
       benefits: [
@@ -156,7 +156,7 @@ const Stakeholders = () => {
     {
       name: "Government & Policy Makers",
       icon: Building,
-      color: "from-yellow-500 to-orange-500",
+      color: "from-green-900/10 to-yellow-500/10",
       emoji: "🏛️",
       tagline: "Catalyzing industrial transformation and rural prosperity",
       benefits: [
@@ -235,27 +235,27 @@ const Stakeholders = () => {
       </nav>
 
       {/* Hero Section (moved down, reduced whitespace) */}
-      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
+      <section className="pt-28 pb-8 bg-stone-200">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-4">
+            <h1 className="text-display font-bold text-black mb-4">
               Stakeholder Benefits
             </h1>
-            <p className="text-title text-text-secondary mb-4">
+            <p className="text-title text-black mb-4">
               Discover how Neptunus creates value for every stakeholder in the maritime and steel ecosystem
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">7</div>
-                <div className="text-body text-text-secondary">Stakeholder Groups</div>
+                <div className="text-title text-green-900 font-bold text-primary mb-2">7</div>
+                <div className="text-body text-black">Stakeholder Groups</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">100%</div>
-                <div className="text-body text-text-secondary">Value Creation</div>
+                <div className="text-title text-green-900 font-bold text-primary mb-2">100%</div>
+                <div className="text-body text-black">Value Creation</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">360°</div>
-                <div className="text-body text-text-secondary">Comprehensive Benefits</div>
+                <div className="text-title text-green-900 font-bold text-primary mb-2">360°</div>
+                <div className="text-body text-black">Comprehensive Benefits</div>
               </div>
             </div>
           </div>
@@ -266,10 +266,10 @@ const Stakeholders = () => {
       <section className="section-padding pt-12 pb-12">
         <div className="container-custom space-y-12">
           {stakeholderGroups.map((group, idx) => (
-            <Card key={idx} className="elevated-panel overflow-hidden">
+            <Card key={idx} className="elevated-panel overflow-hidden bg-stone-200">
               <div className="grid lg:grid-cols-12">
                 {/* Header */}
-                <div className={`lg:col-span-4 bg-gradient-to-br ${group.color} p-8 lg:p-12 text-white`}>
+                <div className={`lg:col-span-4 bg-gradient-to-br ${group.color} p-8 lg:p-12 text-black`}>
                   <div className="space-y-6">
                     <div className="flex items-center space-x-4">
                       <div className="text-5xl">{group.emoji}</div>
@@ -284,7 +284,7 @@ const Stakeholders = () => {
                         <Badge
                           key={i2}
                           variant="secondary"
-                          className="bg-white/20 text-white border-white/30"
+                          className="bg-white/20 text-black border-white/30"
                         >
                           {feat}
                         </Badge>
@@ -296,14 +296,14 @@ const Stakeholders = () => {
                 <div className="lg:col-span-8 p-8 lg:p-12">
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-title font-bold text-text-primary mb-4">
+                      <h3 className="text-title font-bold text-black mb-4">
                         What's in it for you?
                       </h3>
                       <div className="space-y-4">
                         {group.benefits.map((b, i3) => (
                           <div key={i3} className="flex items-start">
                             <CheckCircle className="h-5 w-5 text-green-600 mr-4 flex-shrink-0 mt-0.5" />
-                            <p className="text-body text-text-secondary leading-relaxed">
+                            <p className="text-body text-black leading-relaxed">
                               {b}
                             </p>
                           </div>
@@ -313,10 +313,10 @@ const Stakeholders = () => {
                     <div className="bg-background/50 p-6 rounded-lg border-l-4 border-primary">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="text-body-large font-semibold text-text-primary mb-2">
+                          <h4 className="text-body-large font-semibold text-black mb-2">
                             Ready to Partner?
                           </h4>
-                          <p className="text-body text-text-secondary">
+                          <p className="text-body text-black">
                             Learn more about opportunities and how we can create value together
                           </p>
                         </div>
@@ -337,17 +337,17 @@ const Stakeholders = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
+      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-4">
+            <h2 className="text-white text-headline font-bold text-primary-foreground mb-4">
               Become a Stakeholder
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-6">
+            <p className="text-title text-white mb-6">
               Join us in transforming the maritime industry and building a sustainable future
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group">
+              <Button variant="secondary" size="lg" className="group text-white bg-green-900">
                 <a href="/#contact" className="flex items-center">
                   Start Partnership
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -356,7 +356,7 @@ const Stakeholders = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground bg-yellow-500 text-white hover:bg-primary-foreground hover:text-primary"
               >
                 <a href="/services">Explore Services</a>
               </Button>
