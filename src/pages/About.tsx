@@ -53,7 +53,7 @@ const About = () => {
             : "left-1/2 top-8 -translate-x-1/2 w-auto"
         }`}
       >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out shadow-lg">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -80,10 +80,10 @@ const About = () => {
                 <a
                   key={label}
                   href={href}
-                  className={`block text-body transition-colors ${
+                  className={`block transition-colors ${
                     active
-                      ? "text-primary font-medium"
-                      : "text-text-secondary hover:text-primary"
+                      ? "text-green-900 font-medium"
+                      : "text-slate-600 hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -91,7 +91,7 @@ const About = () => {
                 </a>
               ))}
               <button
-                className="mt-2 btn-primary w-full"
+                className="mt-2 w-full rounded-md bg-green-900 px-4 py-2 text-white hover:bg-green-800 transition-colors"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -105,28 +105,28 @@ const About = () => {
       </nav>
 
       {/* Hero Section (more top-padding, tighter bottom) */}
-      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
+      <section className="pt-28 pb-8 bg-stone-200 from-green-900/5 to-yellow-500/5">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-4">
+            <h1 className="text-display font-bold text-green-900 mb-4">
               About Neptunus
             </h1>
-            <p className="text-title text-text-secondary mb-4">
+            <p className="text-title text-slate-600 mb-4">
               Pioneering India's carbon-negative future through sustainable ship recycling and circular steel production
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 mb-8">
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">150+</div>
-                <div className="text-body text-text-secondary">Marine Officers</div>
+                <div className="text-title font-bold text-green-900 mb-2">150+</div>
+                <div className="text-body text-slate-600">Marine Officers</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">20+</div>
-                <div className="text-body text-text-secondary">Years Experience</div>
+                <div className="text-title font-bold text-green-900 mb-2">20+</div>
+                <div className="text-body text-slate-600">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">100%</div>
-                <div className="text-body text-text-secondary">Compliance</div>
+                <div className="text-title font-bold text-green-900 mb-2">100%</div>
+                <div className="text-body text-slate-600">Compliance</div>
               </div>
             </div>
           </div>
@@ -134,26 +134,26 @@ const About = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="section-padding">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <Card className="glass-panel h-full">
+          <div className="grid lg:grid-cols-2 gap-12 ">
+            <Card className="bg-stone-200 h-full">
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
-                  <Target className="h-8 w-8 text-primary mr-3" />
-                  <h2 className="text-headline font-bold text-text-primary">
+                  <Target className="h-8 w-8 text-green-900 mr-3" />
+                  <h2 className="text-headline font-bold text-green-900">
                     Mission
                   </h2>
                 </div>
                 <div className="space-y-6">
-                  <h3 className="text-title font-semibold text-primary">
+                  <h3 className="text-title font-semibold text-green-900">
                     Integrity and commitment towards combating climate change
                   </h3>
-                  <p className="text-body text-text-secondary leading-relaxed">
+                  <p className="text-body text-slate-600 leading-relaxed">
                     "To create a vertically integrated ship recycling facility while upholding the highest labour safety and environmental sustainability standards."
                   </p>
-                  <div className="bg-background/50 p-6 rounded-lg">
-                    <p className="text-body-large text-text-primary italic">
+                  <div className="bg-background/50 p-6 rounded-lg bg-white">
+                    <p className="text-body-large  text-green-900 italic">
                       We believe that sustainable ship recycling is not just about environmental protection—it's about creating a better future for communities, industries, and the planet.
                     </p>
                   </div>
@@ -164,20 +164,20 @@ const About = () => {
             <Card className="glass-panel h-full">
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
-                  <Eye className="h-8 w-8 text-primary mr-3" />
-                  <h2 className="text-headline font-bold text-text-primary">
+                  <Eye className="h-8 w-8 text-green-900 mr-3" />
+                  <h2 className="text-headline font-bold text-green-900">
                     Vision
                   </h2>
                 </div>
                 <div className="space-y-6">
-                  <h3 className="text-title font-semibold text-primary">
+                  <h3 className="text-title font-semibold text-green-900">
                     Leading India's transition to a carbon-secure future
                   </h3>
-                  <p className="text-body text-text-secondary leading-relaxed">
+                  <p className="text-body text-slate-600 leading-relaxed">
                     "To position India as a global leader in sustainable ship recycling by building the world's most advanced, environmentally responsible, and socially conscious maritime industrial facility."
                   </p>
                   <div className="bg-background/50 p-6 rounded-lg">
-                    <p className="text-body-large text-text-primary italic">
+                    <p className="text-body-large text-green-900 italic">
                       Our vision aligns with India's carbon-negative goals and positions us at the forefront of the global circular economy revolution.
                     </p>
                   </div>
@@ -189,20 +189,20 @@ const About = () => {
       </section>
 
       {/* Community Impact Quote */}
-      <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
+      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-text-primary mb-8">
+            <h2 className="text-headline font-bold text-green-900 mb-8">
               Our Promise to Odisha
             </h2>
-            <blockquote className="text-title text-text-secondary leading-relaxed mb-6 italic">
+            <blockquote className="text-title text-slate-600 leading-relaxed mb-6 italic">
               "Neptunus Shipbuilders & Recyclers is not just an industrial project—it's a promise to Odisha's people. Built on international standards like the Hong Kong Convention and the EU Ship Recycling Regulation, our facility brings credibility and compliance to a traditionally unsafe sector. But our commitment runs deeper. For the thousands of families along Odisha's coastline, Neptunus means access to safer jobs, fair wages, and long-term growth."
             </blockquote>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <div className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold">
+              <div className="bg-green-900 text-white px-6 py-3 rounded-lg font-semibold">
                 "Safer jobs, stronger communities—built in Odisha."
               </div>
-              <div className="bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-semibold">
+              <div className="bg-yellow-500 text-green-900 px-6 py-3 rounded-lg font-semibold">
                 "Local hands. Global standards"
               </div>
             </div>
@@ -214,10 +214,10 @@ const About = () => {
       <section className="section-padding">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-display font-bold text-text-primary mb-4">
+            <h2 className="text-display font-bold text-green-900 mb-4">
               Meet the Team
             </h2>
-            <p className="text-title text-text-secondary max-w-2xl mx-auto">
+            <p className="text-title text-slate-600 max-w-2xl mx-auto">
               Our leadership team brings decades of experience in maritime engineering, sustainable development, and operational excellence
             </p>
           </div>
@@ -268,22 +268,22 @@ const About = () => {
                         <img
                           src={member.image}
                           alt={member.name}
-                          className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-primary/20"
+                          className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-green-900/20"
                         />
                         <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                          <div className="bg-primary text-primary-foreground rounded-full p-2">
+                          <div className="bg-green-900 text-white rounded-full p-2">
                             <Users className="h-4 w-4" />
                           </div>
                         </div>
                       </div>
                       <div className="text-center">
-                        <h3 className="text-body-large font-bold text-text-primary mb-2">
+                        <h3 className="text-body-large font-bold text-green-900 mb-2">
                           {member.name}
                         </h3>
-                        <p className="text-body text-brand-blue font-medium mb-4">
+                        <p className="text-body text-yellow-600 font-medium mb-4">
                           {member.position}
                         </p>
-                        <div className="flex items-center justify-center text-text-secondary">
+                        <div className="flex items-center justify-center text-slate-500">
                           <span className="text-caption">View Details</span>
                           <ChevronDown className="h-4 w-4 ml-1 group-hover:translate-y-1 transition-transform" />
                         </div>
@@ -300,15 +300,15 @@ const About = () => {
                         className="w-16 h-16 rounded-full object-cover"
                       />
                       <div>
-                        <h4 className="text-body-large font-bold text-text-primary">
+                        <h4 className="text-body-large font-bold text-green-900">
                           {member.name}
                         </h4>
-                        <p className="text-body text-brand-blue">
+                        <p className="text-body text-yellow-600">
                           {member.position}
                         </p>
                       </div>
                     </div>
-                    <p className="text-caption text-text-secondary leading-relaxed">
+                    <p className="text-caption text-slate-600 leading-relaxed">
                       {member.bio}
                     </p>
                   </div>
@@ -320,20 +320,19 @@ const About = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
+      <section className="py-16 bg-gradient-to-r from-green-900 to-green-950">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-6">
+            <h2 className="text-headline font-bold text-white mb-6">
               Join Our Mission
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-8">
+            <p className="text-title text-white/90 mb-8">
               Be part of India's transformation towards sustainable maritime industry and circular economy
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                variant="secondary"
                 size="lg"
-                className="group"
+                className="group bg-yellow-500 text-green-900 hover:bg-yellow-400"
                 onClick={() => (window.location.href = "/stakeholders")}
               >
                 <div className="flex items-center">
@@ -344,7 +343,7 @@ const About = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-white text-white hover:bg-white hover:text-green-900"
                 onClick={() => (window.location.href = "/#contact")}
               >
                 Contact Us

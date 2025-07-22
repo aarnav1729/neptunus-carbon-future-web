@@ -47,7 +47,7 @@ const Services = () => {
       title: "Ship Breaking / Ship Recycling",
       subtitle: "Sustainable Maritime Vessel Disposal",
       image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "/assets/services.jpg",
       description:
         "At Neptunus, every retired vessel becomes a catalyst for positive change. Each year, our crews guide roughly 500 ships onto 60 specially engineered concrete beds. Here, with precision dry-dock techniques and expert hands, we gently deconstruct each hull—capturing every drop of oil, asbestos, and other hazardous materials before they ever reach our land or sea.",
       features: [
