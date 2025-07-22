@@ -618,7 +618,7 @@ const Index = () => {
           muted
           className="absolute inset-0 w-full h-full object-cover opacity-50"
         >
-          <source src="/assets/hero.mp4" type="video/mp4" />
+          <source src="/assets/herov.mp4" type="video/mp4" />
         </video>
 
         <div className="relative z-10 text-center max-w-6xl px-4 md:px-8 animate-fade-in-up">

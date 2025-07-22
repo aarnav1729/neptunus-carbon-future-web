@@ -28,6 +28,7 @@ export default {
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
+				
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))'
@@ -61,6 +62,9 @@ export default {
 				'brand-teal': 'hsl(var(--brand-teal))',
 				'brand-purple': 'hsl(var(--brand-purple))',
 				'brand-orange': 'hsl(var(--brand-orange))',
+				'brand-dark': '#2f482f',
+				'brand-base': '#487021',
+				'brand-light': '#efeee9',
 				// Semantic colors
 				'surface-elevated': 'hsl(var(--surface-elevated))',
 				'surface-elevated-high': 'hsl(var(--surface-elevated-high))',
