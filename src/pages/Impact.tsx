@@ -1,234 +1,324 @@
-import { Leaf, Zap, Globe, Factory, TrendingUp, Award, ArrowRight, BarChart3, Users, Building } from "lucide-react";
+// src/pages/Impact.tsx
+import { useEffect, useState } from "react";
+import {
+  Leaf,
+  Zap,
+  Globe as GlobeIcon,
+  Factory,
+  TrendingUp,
+  Award,
+  ArrowRight,
+  BarChart3,
+  Users as UsersIcon,
+  Building as BuildingIcon,
+  X,
+  Menu,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 
 const Impact = () => {
+  // Navbar state
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const threshold = window.innerHeight * 0.8;
+      setNavScrolled(window.scrollY > threshold);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Services", href: "/services" },
+    { label: "Stakeholders", href: "/stakeholders" },
+    { label: "Impact", href: "/impact", active: true },
+    { label: "Blog", href: "/blog" },
+    { label: "Partners", href: "/partners" },
+  ];
+
   const impactMetrics = [
     {
       title: "Carbon Emissions Avoided",
-      value: "8.35 Million",
-      unit: "tonnes CO₂/year",
-      description: "Per tonne of green steel: 1 tonne steel → 1.67 tonne CO₂ prevented",
+      value: "8.35M",
+      unit: "t CO₂/year",
+      description:
+        "Per tonne of green steel: 1 t steel → 1.67 t CO₂ prevented",
       details: [
-        "Annual impact (5 Mt steel): 5,000,000 t × 1.67 t CO₂/t = 8.35 million t CO₂ avoided",
-        "Real-world equivalent: Removing 1.75 million passenger cars from the road for one year"
+        "5 Mt steel × 1.67 t CO₂/t = 8.35 Mt CO₂ avoided",
+        "Equivalent to removing 1.75 M cars for a year",
       ],
       icon: Leaf,
       color: "text-green-600",
-      progress: 85
+      progress: 85,
     },
     {
       title: "Energy Savings",
-      value: "4,700",
-      unit: "kWh per tonne recycled",
-      description: "Recycling scrap steel uses just 28% of the energy needed for primary production",
+      value: "4 700",
+      unit: "kWh / t recycled",
+      description:
+        "Recycling uses just 28% of primary‐production energy",
       details: [
-        "Electricity saved: ≈ 4,700 kWh per tonne recycled",
-        "Total annual energy savings equivalent to powering 50,000 homes"
+        "≈ 4 700 kWh saved per t recycled",
+        "Equivalent to powering 50 000 homes",
       ],
       icon: Zap,
       color: "text-yellow-600",
-      progress: 72
+      progress: 72,
     },
     {
       title: "Raw Material Conservation",
-      value: "2.5 Million",
-      unit: "tonnes saved annually",
-      description: "Per tonne of scrap steel reused, significant raw materials are conserved",
+      value: "2.5M",
+      unit: "t saved annually",
+      description:
+        "Raw materials conserved per t scrap reused",
       details: [
-        "1.4 tonnes iron ore saved",
-        "0.8 tonnes coking coal saved",
-        "0.3 tonnes limestone saved"
+        "1.4 t iron ore saved",
+        "0.8 t coking coal saved",
+        "0.3 t limestone saved",
       ],
       icon: Factory,
       color: "text-blue-600",
-      progress: 90
-    }
+      progress: 90,
+    },
   ];
 
   const nationalInitiatives = [
     {
       name: "National Solar Mission",
-      goal: "280 GW solar capacity by 2030",
-      contribution: "25 MW Solar Park Onsite",
-      impact: "Clean power for operations and grid integration",
+      goal: "280 GW by 2030",
+      contribution: "25 MW on‐site solar park",
+      impact: "Clean power & grid integration",
       status: "Active",
       details: [
         "Supplies clean power for operations",
-        "Excess capacity integrated into renewable grid",
-        "Supports peak-hour load balancing"
-      ]
+        "Excess to renewable grid",
+        "Supports peak‐hour balancing",
+      ],
     },
     {
       name: "National Green Hydrogen Mission",
-      goal: "5 million tonnes green hydrogen by 2030",
-      contribution: "Steel logistics hub for hydrogen infrastructure",
-      impact: "Supporting hydrogen corridor development",
+      goal: "5 Mt green H₂ by 2030",
+      contribution: "Steel logistics hub for H₂",
+      impact: "Supports H₂ corridor",
       status: "Planning",
       details: [
-        "Steel reuse for hydrogen plant construction",
-        "Pipeline materials from recycled steel",
-        "Fuel cell fleet retrofitting site"
-      ]
+        "Recycled steel for plant construction",
+        "Pipeline materials from steel",
+        "Fuel‐cell fleet retrofit site",
+      ],
     },
     {
       name: "Swachh Bharat Mission",
       goal: "Scientific waste processing",
-      contribution: "Segregated hazardous waste treatment",
-      impact: "Zero-landfill dismantling practices",
+      contribution: "Hazardous‐waste segregation",
+      impact: "Zero‐landfill dismantling",
       status: "Implemented",
       details: [
         "TSDF, ETP, STP systems",
-        "Responsible plastic and e-waste disposal",
-        "Circular economy support"
-      ]
+        "E‐waste & plastic disposal",
+        "Circular‐economy support",
+      ],
     },
     {
-      name: "Mission LiFE",
-      goal: "Sustainable consumption and industrial action",
-      contribution: "Model industrial ecosystem",
-      impact: "Demonstrates scalable green industrial conduct",
+      name: "Mission LiFE",
+      goal: "Sustainable consumption",
+      contribution: "Model green ecosystem",
+      impact: "Scalable green industry",
       status: "Ongoing",
       details: [
-        "Energy-efficient equipment",
-        "Low-emission practices",
-        "Worker safety infrastructure"
-      ]
-    }
+        "Energy‐efficient equipment",
+        "Low‐emission practices",
+        "Worker‐safety infrastructure",
+      ],
+    },
   ];
 
   const odishaImpact = [
     {
-      metric: "Job Creation",
-      value: "22,000+",
-      description: "Direct and indirect employment opportunities",
-      icon: "👥"
+      metric: "Jobs Created",
+      value: "22 000+",
+      description: "Direct & indirect employment",
+      icon: "👥",
     },
     {
       metric: "GDP Contribution",
       value: "₹3B+",
-      description: "Annual contribution to Odisha's economy",
-      icon: "💰"
+      description: "Annual to Odisha's economy",
+      icon: "💰",
     },
     {
-      metric: "Skill Development",
-      value: "5,000+",
-      description: "Workers trained in green technologies",
-      icon: "🎓"
+      metric: "Skills Trained",
+      value: "5 000+",
+      description: "Workers in green tech",
+      icon: "🎓",
     },
     {
-      metric: "Community Investment",
-      value: "₹50Cr+",
-      description: "Investment in local infrastructure",
-      icon: "🏗️"
-    }
+      metric: "Community Invested",
+      value: "₹50 Cr+",
+      description: "Local infrastructure",
+      icon: "🏗️",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container-custom py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-headline font-bold text-primary">
-              Neptunus
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-body hover:text-primary transition-colors">Home</a>
-              <a href="/about" className="text-body hover:text-primary transition-colors">About</a>
-              <a href="/services" className="text-body hover:text-primary transition-colors">Services</a>
-              <a href="/stakeholders" className="text-body hover:text-primary transition-colors">Stakeholders</a>
-              <a href="/impact" className="text-body text-primary">Impact</a>
-              <a href="/blog" className="text-body hover:text-primary transition-colors">Blog</a>
-              <a href="/partners" className="text-body hover:text-primary transition-colors">Partners</a>
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Navbar */}
+      <nav
+        className={`fixed z-50 transition-all duration-1000 ease-out ${
+          navScrolled
+            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
+            : "left-1/2 top-8 -translate-x-1/2 w-auto"
+        }`}
+      >
+        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+          <img
+            src="/assets/logo.png"
+            alt="Neptunus Logo"
+            className={`w-auto transition-all duration-700 ${
+              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
+            }`}
+          />
+          <button
+            className="p-2 text-black"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+        {mobileMenuOpen && (
+          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+            <div className="flex flex-col space-y-3">
+              {navLinks.map(({ label, href, active }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className={`block text-body transition-colors ${
+                    active
+                      ? "text-primary font-medium"
+                      : "text-text-secondary hover:text-primary"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {label}
+                </a>
+              ))}
+              <button
+                className="mt-2 btn-primary w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.location.href = "/#contact";
+                }}
+              >
+                Contact
+              </button>
             </div>
           </div>
-        </div>
+        )}
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-20 pb-16 bg-gradient-to-br from-primary/5 to-secondary/5">
+      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-6">
+            <h1 className="text-display font-bold text-text-primary mb-4">
               Global Impact & Societal Benefits
             </h1>
-            <p className="text-title text-text-secondary mb-8">
-              Transforming the maritime industry while addressing climate change and driving sustainable development
+            <p className="text-title text-text-secondary mb-4">
+              Transforming the maritime industry while combating climate change and advancing sustainable development
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">8.35M</div>
-                <div className="text-body text-text-secondary">Tonnes CO₂ Avoided</div>
+                <div className="text-title font-bold text-primary mb-2">
+                  8.35M
+                </div>
+                <div className="text-body text-text-secondary">
+                  Tonnes CO₂ Avoided
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">22K+</div>
-                <div className="text-body text-text-secondary">Jobs Created</div>
+                <div className="text-title font-bold text-primary mb-2">
+                  22K+
+                </div>
+                <div className="text-body text-text-secondary">
+                  Jobs Created
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">5M</div>
-                <div className="text-body text-text-secondary">Tonnes Steel Recycled</div>
+                <div className="text-title font-bold text-primary mb-2">
+                  5M
+                </div>
+                <div className="text-body text-text-secondary">
+                  Tonnes Steel Recycled
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Key Impact Metrics */}
-      <section className="section-padding">
+      {/* Environmental Impact Metrics */}
+      <section className="section-padding pt-12 pb-12">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-display font-bold text-text-primary mb-4">
+          <div className="text-center mb-8">
+            <h2 className="text-display font-bold text-text-primary mb-2">
               Environmental Impact Metrics
             </h2>
             <p className="text-title text-text-secondary max-w-3xl mx-auto">
-              Our operations create measurable positive impact on the environment through innovative recycling and circular economy practices
+              Measurable environmental gains from our circular practices
             </p>
           </div>
 
           <div className="grid gap-8">
-            {impactMetrics.map((metric, index) => (
-              <Card key={index} className="elevated-panel overflow-hidden">
+            {impactMetrics.map((metric, i) => (
+              <Card key={i} className="elevated-panel overflow-hidden">
                 <div className="grid lg:grid-cols-3 gap-0">
-                  {/* Metric Header */}
+                  {/* Header */}
                   <div className="bg-gradient-to-br from-primary/10 to-secondary/10 p-8">
-                    <div className="flex items-center mb-6">
-                      <metric.icon className={`h-8 w-8 ${metric.color} mr-3`} />
+                    <div className="flex items-center mb-4">
+                      <metric.icon
+                        className={`h-8 w-8 ${metric.color} mr-2`}
+                      />
                       <div className="text-2xl font-bold text-text-primary">
                         {metric.value}
                       </div>
                     </div>
-                    <h3 className="text-title font-bold text-text-primary mb-2">
+                    <h3 className="text-title font-bold text-text-primary mb-1">
                       {metric.title}
                     </h3>
-                    <div className="text-body text-text-secondary mb-4">
+                    <div className="text-body text-text-secondary mb-3">
                       {metric.unit}
                     </div>
                     <Progress value={metric.progress} className="h-2" />
-                    <div className="text-caption text-text-secondary mt-2">
-                      {metric.progress}% efficiency achieved
+                    <div className="text-caption text-text-secondary mt-1">
+                      {metric.progress}% efficiency
                     </div>
                   </div>
 
-                  {/* Metric Details */}
+                  {/* Details */}
                   <div className="lg:col-span-2 p-8">
-                    <p className="text-body text-text-secondary mb-6 leading-relaxed">
+                    <p className="text-body text-text-secondary mb-4 leading-relaxed">
                       {metric.description}
                     </p>
-                    <div className="space-y-4">
-                      <h4 className="text-body-large font-semibold text-text-primary">
-                        Key Details:
-                      </h4>
-                      <ul className="space-y-3">
-                        {metric.details.map((detail, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <BarChart3 className="h-4 w-4 text-primary mr-3 flex-shrink-0 mt-1" />
-                            <span className="text-body text-text-secondary">{detail}</span>
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="space-y-3">
+                      {metric.details.map((d, idx) => (
+                        <div key={idx} className="flex items-start">
+                          <BarChart3 className="h-4 w-4 text-primary mr-2 mt-1" />
+                          <span className="text-body text-text-secondary">
+                            {d}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -238,60 +328,70 @@ const Impact = () => {
         </div>
       </section>
 
-      {/* National Initiatives Support */}
+      {/* National Initiatives */}
       <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-display font-bold text-text-primary mb-4">
+          <div className="text-center mb-8">
+            <h2 className="text-display font-bold text-text-primary mb-2">
               Supporting India's National Missions
             </h2>
             <p className="text-title text-text-secondary max-w-3xl mx-auto">
-              Neptunus actively contributes to India's sustainable development goals and national missions
+              Contributing to sustainable development goals
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {nationalInitiatives.map((initiative, index) => (
-              <Card key={index} className="glass-panel">
+            {nationalInitiatives.map((ni, idx) => (
+              <Card key={idx} className="glass-panel overflow-hidden">
                 <CardHeader>
-                  <div className="flex items-center justify-between mb-4">
-                    <Badge variant={initiative.status === 'Active' ? 'default' : initiative.status === 'Implemented' ? 'secondary' : 'outline'}>
-                      {initiative.status}
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge
+                      variant={
+                        ni.status === "Active"
+                          ? "default"
+                          : ni.status === "Implemented"
+                          ? "secondary"
+                          : "outline"
+                      }
+                    >
+                      {ni.status}
                     </Badge>
-                    <Globe className="h-6 w-6 text-primary" />
+                    <GlobeIcon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-body-large text-text-primary">
-                    {initiative.name}
+                  <CardTitle className="text-body-large text-text-primary mb-1">
+                    {ni.name}
                   </CardTitle>
                   <p className="text-body text-text-secondary">
-                    Goal: {initiative.goal}
+                    Goal: {ni.goal}
                   </p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6">
                   <div className="space-y-4">
                     <div className="bg-background/50 p-4 rounded-lg">
-                      <h4 className="text-body font-semibold text-text-primary mb-2">
+                      <h4 className="text-body font-semibold text-text-primary mb-1">
                         Our Contribution:
                       </h4>
-                      <p className="text-body text-primary font-medium">
-                        {initiative.contribution}
+                      <p className="text-body text-primary">
+                        {ni.contribution}
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-body font-semibold text-text-primary mb-2">
+                      <h4 className="text-body font-semibold text-text-primary mb-1">
                         Impact:
                       </h4>
-                      <p className="text-body text-text-secondary mb-4">
-                        {initiative.impact}
+                      <p className="text-body text-text-secondary mb-2">
+                        {ni.impact}
                       </p>
-                      <ul className="space-y-2">
-                        {initiative.details.map((detail, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <TrendingUp className="h-4 w-4 text-green-600 mr-2 flex-shrink-0 mt-0.5" />
-                            <span className="text-caption text-text-secondary">{detail}</span>
-                          </li>
+                      <div className="space-y-2">
+                        {ni.details.map((d, i2) => (
+                          <div key={i2} className="flex items-start">
+                            <TrendingUp className="h-4 w-4 text-green-600 mr-2 mt-1" />
+                            <span className="text-caption text-text-secondary">
+                              {d}
+                            </span>
+                          </div>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -302,60 +402,74 @@ const Impact = () => {
       </section>
 
       {/* Odisha Impact */}
-      <section className="section-padding">
+      <section className="section-padding pt-12 pb-12">
         <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-display font-bold text-text-primary mb-4">
+          <div className="text-center mb-8">
+            <h2 className="text-display font-bold text-text-primary mb-2">
               Transforming Odisha
             </h2>
             <p className="text-title text-text-secondary max-w-3xl mx-auto">
-              Our commitment to Odisha goes beyond industrial development—we're building stronger communities and sustainable prosperity
+              Building stronger communities and sustainable prosperity
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {odishaImpact.map((item, index) => (
-              <Card key={index} className="glass-panel text-center p-6">
-                <div className="text-4xl mb-4">{item.icon}</div>
-                <div className="text-title font-bold text-primary mb-2">
-                  {item.value}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {odishaImpact.map((it, idx) => (
+              <Card key={idx} className="glass-panel text-center p-4">
+                <div className="text-4xl mb-2">{it.icon}</div>
+                <div className="text-body-large font-bold text-primary mb-1">
+                  {it.value}
                 </div>
-                <h3 className="text-body-large font-bold text-text-primary mb-2">
-                  {item.metric}
+                <h3 className="text-body font-bold text-text-primary mb-1">
+                  {it.metric}
                 </h3>
-                <p className="text-body text-text-secondary">
-                  {item.description}
+                <p className="text-caption text-text-secondary">
+                  {it.description}
                 </p>
               </Card>
             ))}
           </div>
 
-          <Card className="elevated-panel">
-            <CardContent className="p-8">
-              <div className="text-center mb-8">
-                <h3 className="text-headline font-bold text-text-primary mb-4">
+          <Card className="elevated-panel overflow-hidden">
+            <CardContent className="p-6">
+              <div className="text-center mb-6">
+                <h3 className="text-headline font-bold text-text-primary mb-2">
                   Community Promise
                 </h3>
-                <blockquote className="text-body-large text-text-secondary italic leading-relaxed">
-                  "For the thousands of families along Odisha's coastline, Neptunus means access to safer jobs, fair wages, and long-term growth. It means skill-building centers for youth, local supply chains for rural artisans and vendors, and classrooms supported by clean, sustainable industry."
+                <blockquote className="text-body text-text-secondary italic leading-relaxed">
+                  "For Odisha’s families, Neptunus means safer jobs, fair wages,
+                  and long-term growth—backed by skill centers, local supply
+                  chains, and community infrastructure."
                 </blockquote>
               </div>
-              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
-                <div className="grid md:grid-cols-3 gap-6 text-center">
+              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-4 rounded-lg">
+                <div className="grid md:grid-cols-3 gap-4 text-center">
                   <div>
-                    <Award className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <h4 className="text-body font-bold text-text-primary mb-1">Safety First</h4>
-                    <p className="text-caption text-text-secondary">Zero-accident pledge with OSHA-grade protocols</p>
+                    <Award className="h-6 w-6 text-primary mx-auto mb-1" />
+                    <h4 className="text-body font-bold text-text-primary mb-1">
+                      Safety First
+                    </h4>
+                    <p className="text-caption text-text-secondary">
+                      Zero‑accident pledge & OSHA protocols
+                    </p>
                   </div>
                   <div>
-                    <Users className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <h4 className="text-body font-bold text-text-primary mb-1">Local Hiring</h4>
-                    <p className="text-caption text-text-secondary">70% local hire target with training programs</p>
+                    <UsersIcon className="h-6 w-6 text-primary mx-auto mb-1" />
+                    <h4 className="text-body font-bold text-text-primary mb-1">
+                      Local Hiring
+                    </h4>
+                    <p className="text-caption text-text-secondary">
+                      70% local hire with training programs
+                    </p>
                   </div>
                   <div>
-                    <Building className="h-8 w-8 text-primary mx-auto mb-2" />
-                    <h4 className="text-body font-bold text-text-primary mb-1">Infrastructure</h4>
-                    <p className="text-caption text-text-secondary">Schools, housing, and medical facilities</p>
+                    <BuildingIcon className="h-6 w-6 text-primary mx-auto mb-1" />
+                    <h4 className="text-body font-bold text-text-primary mb-1">
+                      Infrastructure
+                    </h4>
+                    <p className="text-caption text-text-secondary">
+                      Schools, housing, medical facilities
+                    </p>
                   </div>
                 </div>
               </div>
@@ -368,11 +482,11 @@ const Impact = () => {
       <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-6">
+            <h2 className="text-headline font-bold text-primary-foreground mb-4">
               Join the Impact Revolution
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-8">
-              Be part of the transformation that's reshaping industries and communities for a sustainable future
+            <p className="text-title text-primary-foreground/90 mb-6">
+              Be part of reshaping industries and communities for a sustainable future
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="secondary" size="lg" className="group">
@@ -381,7 +495,11 @@ const Impact = () => {
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </a>
               </Button>
-              <Button variant="outline" size="lg" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
                 <a href="/#contact">Partner with Us</a>
               </Button>
             </div>

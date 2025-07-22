@@ -1,75 +1,121 @@
-import { ArrowRight, Target, Eye, Users, ChevronDown } from "lucide-react";
+// src/pages/About.tsx
+import { useEffect, useState } from "react";
+import {
+  ArrowRight,
+  Target,
+  Eye,
+  Users,
+  ChevronDown,
+  X,
+  Menu,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const About = () => {
-  const teamMembers = [
-    {
-      name: "Deepak Pillapalem",
-      position: "Managing Director",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      bio: "Deepak Reddy Pillapalem is the Founder and Managing Director of Neptunus Shipbreaking & Recycling Pvt Ltd. With over 20 years of real estate development expertise, he has driven exceptional growth in the sector—channeling his strategic vision into sustainable ship recycling, steel re-rolling, renewable-energy integration, and community-driven partnerships. Under his leadership, Neptunus will become India's first facility fully compliant with both the EU Ship Recycling Regulation and the Hong Kong Convention. He holds a Bachelor's degree in Civil Engineering from CBIT Hyderabad and a Master's degree in Urban Planning from the University of Cleveland. He has secured multimillion-dollar financing, forged strategic partnerships with local cooperatives, and consistently delivers strong returns—driving stakeholder value, uplifting communities, and championing green innovations.",
-    },
-    {
-      name: "Satish Burugupalli",
-      position: "Executive Director",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      bio: "Satish Burugupalli is the Executive Director of Neptunus Shipbreaking & Recycling, bringing over 15 years of operational leadership in maritime engineering and sustainable infrastructure. He oversees high-impact projects—from greenfield plant expansions to renewable-energy integration—ensuring full compliance with international ship-recycling regulations while delivering on-time, on-budget performance. Satish secures strategic alliances with government agencies and local cooperatives, drives solar-park and waste-heat recovery initiatives to minimize carbon footprints, and champions workforce development programs that uplift surrounding communities.",
-    },
-    {
-      name: "Marine Officer",
-      position: "Chief Technical Officer",
-      image: "https://images.unsplash.com/photo-1494790108755-2616c273e11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      bio: "Leading our technical operations with 15+ years of marine engineering experience and deep expertise in ship recycling technologies.",
-    },
-    {
-      name: "Safety Director",
-      position: "Head of Safety & Compliance",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      bio: "Ensuring world-class safety standards with extensive experience in maritime safety protocols and environmental compliance.",
-    },
-    {
-      name: "Operations Manager",
-      position: "Director of Operations",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      bio: "Streamlining operations with innovative approaches to sustainable ship recycling and steel production efficiency.",
-    }
+  // Nav state
+  const [navScrolled, setNavScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Scroll handler for shrinking navbar
+  useEffect(() => {
+    const onScroll = () => {
+      const heroThreshold = window.innerHeight * 0.8;
+      setNavScrolled(window.scrollY > heroThreshold);
+    };
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Links for mobile menu
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about", active: true },
+    { label: "Services", href: "/services" },
+    { label: "Stakeholders", href: "/stakeholders" },
+    { label: "Impact", href: "/impact" },
+    { label: "Blog", href: "/blog" },
+    { label: "Partners", href: "/partners" },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container-custom py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-headline font-bold text-primary">
-              Neptunus
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="/" className="text-body hover:text-primary transition-colors">Home</a>
-              <a href="/about" className="text-body text-primary">About</a>
-              <a href="/services" className="text-body hover:text-primary transition-colors">Services</a>
-              <a href="/stakeholders" className="text-body hover:text-primary transition-colors">Stakeholders</a>
-              <a href="/impact" className="text-body hover:text-primary transition-colors">Impact</a>
-              <a href="/blog" className="text-body hover:text-primary transition-colors">Blog</a>
-              <a href="/partners" className="text-body hover:text-primary transition-colors">Partners</a>
+    <div className="min-h-screen bg-background text-foreground overflow-hidden">
+      {/* Navbar (always hamburger) */}
+      <nav
+        className={`fixed z-50 transition-all duration-1000 ease-out ${
+          navScrolled
+            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
+            : "left-1/2 top-8 -translate-x-1/2 w-auto"
+        }`}
+      >
+        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+          <img
+            src="/assets/logo.png"
+            alt="Neptunus Logo"
+            className={`w-auto transition-all duration-700 ${
+              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
+            }`}
+          />
+          <button
+            className="p-2 text-black"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5 text-black" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+            <div className="flex flex-col space-y-3">
+              {navLinks.map(({ label, href, active }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className={`block text-body transition-colors ${
+                    active
+                      ? "text-primary font-medium"
+                      : "text-text-secondary hover:text-primary"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {label}
+                </a>
+              ))}
+              <button
+                className="mt-2 btn-primary w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.location.href = "/#contact";
+                }}
+              >
+                Contact
+              </button>
             </div>
           </div>
-        </div>
+        )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 bg-gradient-to-br from-primary/5 to-secondary/5">
+      {/* Hero Section (more top-padding, tighter bottom) */}
+      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-6">
+            <h1 className="text-display font-bold text-text-primary mb-4">
               About Neptunus
             </h1>
-            <p className="text-title text-text-secondary mb-8">
+            <p className="text-title text-text-secondary mb-4">
               Pioneering India's carbon-negative future through sustainable ship recycling and circular steel production
             </p>
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
+
+            <div className="grid md:grid-cols-3 gap-8 mb-8">
               <div className="text-center">
                 <div className="text-title font-bold text-primary mb-2">150+</div>
                 <div className="text-body text-text-secondary">Marine Officers</div>
@@ -95,7 +141,9 @@ const About = () => {
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
                   <Target className="h-8 w-8 text-primary mr-3" />
-                  <h2 className="text-headline font-bold text-text-primary">Mission</h2>
+                  <h2 className="text-headline font-bold text-text-primary">
+                    Mission
+                  </h2>
                 </div>
                 <div className="space-y-6">
                   <h3 className="text-title font-semibold text-primary">
@@ -117,7 +165,9 @@ const About = () => {
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
                   <Eye className="h-8 w-8 text-primary mr-3" />
-                  <h2 className="text-headline font-bold text-text-primary">Vision</h2>
+                  <h2 className="text-headline font-bold text-text-primary">
+                    Vision
+                  </h2>
                 </div>
                 <div className="space-y-6">
                   <h3 className="text-title font-semibold text-primary">
@@ -173,8 +223,44 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
-              <HoverCard key={index}>
+            {[
+              {
+                name: "Deepak Pillapalem",
+                position: "Managing Director",
+                image:
+                  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+                bio: "Deepak Reddy Pillapalem is the Founder and Managing Director of Neptunus Shipbreaking & Recycling Pvt Ltd. With over 20 years of real estate development expertise, he has driven exceptional growth in the sector—channeling his strategic vision into sustainable ship recycling, steel re-rolling, renewable-energy integration, and community-driven partnerships. Under his leadership, Neptunus will become India's first facility fully compliant with both the EU Ship Recycling Regulation and the Hong Kong Convention. He holds a Bachelor's degree in Civil Engineering from CBIT Hyderabad and a Master's degree in Urban Planning from the University of Cleveland. He has secured multimillion-dollar financing, forged strategic partnerships with local cooperatives, and consistently delivers strong returns—driving stakeholder value, uplifting communities, and championing green innovations.",
+              },
+              {
+                name: "Satish Burugupalli",
+                position: "Executive Director",
+                image:
+                  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+                bio: "Satish Burugupalli is the Executive Director of Neptunus Shipbreaking & Recycling, bringing over 15 years of operational leadership in maritime engineering and sustainable infrastructure. He oversees high-impact projects—from greenfield plant expansions to renewable-energy integration—ensuring full compliance with international ship-recycling regulations while delivering on-time, on-budget performance. Satish secures strategic alliances with government agencies and local cooperatives, drives solar-park and waste-heat recovery initiatives to minimize carbon footprints, and champions workforce development programs that uplift surrounding communities.",
+              },
+              {
+                name: "Akaash Reddy",
+                position: "Chief Technical Officer",
+                image:
+                  "https://images.unsplash.com/photo-1494790108755-2616c273e11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+                bio: "Leading our technical operations with 15+ years of marine engineering experience and deep expertise in ship recycling technologies.",
+              },
+              {
+                name: "Amay Reddy",
+                position: "Head of Safety & Compliance",
+                image:
+                  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+                bio: "Ensuring world-class safety standards with extensive experience in maritime safety protocols and environmental compliance.",
+              },
+              {
+                name: "Tanay Reddy",
+                position: "Director of Operations",
+                image:
+                  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+                bio: "Streamlining operations with innovative approaches to sustainable ship recycling and steel production efficiency.",
+              },
+            ].map((member, i) => (
+              <HoverCard key={i}>
                 <HoverCardTrigger asChild>
                   <Card className="elevated-panel cursor-pointer group transition-all duration-300 hover-lift">
                     <CardContent className="p-6">
@@ -217,7 +303,9 @@ const About = () => {
                         <h4 className="text-body-large font-bold text-text-primary">
                           {member.name}
                         </h4>
-                        <p className="text-body text-brand-blue">{member.position}</p>
+                        <p className="text-body text-brand-blue">
+                          {member.position}
+                        </p>
                       </div>
                     </div>
                     <p className="text-caption text-text-secondary leading-relaxed">
@@ -242,14 +330,24 @@ const About = () => {
               Be part of India's transformation towards sustainable maritime industry and circular economy
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group">
-                <a href="/stakeholders" className="flex items-center">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="group"
+                onClick={() => (window.location.href = "/stakeholders")}
+              >
+                <div className="flex items-center">
                   Explore Opportunities
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </a>
+                </div>
               </Button>
-              <Button variant="outline" size="lg" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                <a href="/#contact">Contact Us</a>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                onClick={() => (window.location.href = "/#contact")}
+              >
+                Contact Us
               </Button>
             </div>
           </div>

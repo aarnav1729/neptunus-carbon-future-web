@@ -7,6 +7,7 @@ import {
   MapPin,
   ExternalLink,
   ChevronLeft,
+  ChevronRight,
   Menu,
   X,
   Facebook,
@@ -43,6 +44,8 @@ const Index = () => {
   const [navScrolled, setNavScrolled] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [scrollSpeed, setScrollSpeed] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -64,6 +67,24 @@ const Index = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Auto‑scroll effect
+  useEffect(() => {
+    let animationId: number;
+    const step = () => {
+      const el = carouselRef.current;
+      if (el) {
+        el.scrollLeft += scrollSpeed;
+        // when we've scrolled through one copy, jump back seamlessly
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft -= el.scrollWidth / 2;
+        }
+      }
+      animationId = requestAnimationFrame(step);
+    };
+    animationId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationId);
+  }, [scrollSpeed]);
 
   // Animation for numbers
   useEffect(() => {
@@ -106,40 +127,42 @@ const Index = () => {
   // Form validation
   const validateForm = () => {
     const errors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) errors.name = "Name is required";
     if (!formData.email.trim()) errors.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.email = "Invalid email format";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      errors.email = "Invalid email format";
     if (!formData.phone.trim()) errors.phone = "Phone number is required";
     if (!formData.company.trim()) errors.company = "Company is required";
-    if (!formData.designation.trim()) errors.designation = "Designation is required";
+    if (!formData.designation.trim())
+      errors.designation = "Designation is required";
     if (!formData.message.trim()) errors.message = "Message is required";
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (formErrors[field]) {
-      setFormErrors(prev => ({ ...prev, [field]: "" }));
+      setFormErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
-    
+
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     toast({
       title: "Message sent successfully!",
       description: "We'll get back to you within 24 hours.",
     });
-    
+
     setFormData({
       name: "",
       email: "",
@@ -156,7 +179,8 @@ const Index = () => {
       id: "services",
       title: "Ship Recycling & Dismantling",
       subtitle: "Comprehensive Maritime Solutions",
-      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
           subtitle: "Phased Expansion Strategy",
@@ -178,7 +202,8 @@ const Index = () => {
       id: "partners",
       title: "Low-Carbon Steel Re-Rolling",
       subtitle: "Sustainable Steel Production",
-      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
           subtitle: "Green Steel Technology",
@@ -200,7 +225,8 @@ const Index = () => {
       id: "impact",
       title: "Global Impact & Partnerships",
       subtitle: "Environmental Leadership in Action",
-      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
           subtitle: "Climate Impact",
@@ -222,7 +248,8 @@ const Index = () => {
       id: "policy",
       title: "Policy & Initiative Highlights",
       subtitle: "Alignment with National Programs",
-      image: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       content: [
         {
           subtitle: "National Electric Mobility Mission",
@@ -244,46 +271,59 @@ const Index = () => {
 
   const certifications = [
     {
-      name: "ISO 14001",
-      logo: "https://images.unsplash.com/photo-1606868306217-dbf5046868d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Environmental Management System",
-      details:
-        "Internationally recognized standard for environmental management systems ensuring continuous improvement in environmental performance",
+      name: "HKC – Hong Kong Convention",
+      logo: "/assets/certs/hkgs.png",
+      description: "IMO aligned",
+      details: "Hong Kong Green Standard aligned with IMO guidelines",
     },
     {
-      name: "ISO 45001",
-      logo: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Occupational Health & Safety",
-      details:
-        "Global standard for occupational health and safety management systems, protecting workers and visitors",
+      name: "EUSSR",
+      logo: "/assets/certs/eussr.png",
+      description: "meets EU Ship Recycling Regulation",
+      details: "Compliant with the EU Ship Recycling Regulation",
     },
     {
-      name: "UN Global Compact",
-      logo: "https://images.unsplash.com/photo-1569025743873-ea3a9ade89f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Corporate Sustainability",
-      details:
-        "World's largest corporate sustainability initiative with 10 principles covering human rights, labor, environment and anti-corruption",
+      name: "UNEP / Basel Convention",
+      logo: "/assets/certs/unep-basel.png",
+      description: "for hazardous materials",
+      details: "Aligned with UNEP / Basel Convention for hazardous materials",
     },
     {
-      name: "Bureau of International Recycling",
-      logo: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Recycling Standards",
-      details:
-        "Leading international trade association promoting sustainable recycling practices and circular economy principles",
+      name: "SA 8000",
+      logo: "/assets/certs/sa8000.png",
+      description: "Administered by SAI",
+      details: "Social Accountability International standard SA 8000",
     },
     {
-      name: "GRIHA 5-Star",
-      logo: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Green Building Rating",
+      name: "IHM (Part 1-3)",
+      logo: "/assets/certs/ihm.png",
+      description: "per IMO MEPC.269(68)",
       details:
-        "India's premier green building rating system promoting energy efficiency and environmental sustainability",
+        "Inventory of Hazardous Materials (Parts 1–3) per IMO MEPC.269(68)",
     },
     {
-      name: "BEE 5-Star",
-      logo: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      description: "Energy Efficiency",
-      details:
-        "Bureau of Energy Efficiency certification ensuring optimal energy performance and reduced carbon footprint",
+      name: "ISO 9001:2015",
+      logo: "/assets/certs/iso9001.png",
+      description: "Quality Management Systems",
+      details: "ISO 9001:2015 standard for Quality Management Systems",
+    },
+    {
+      name: "ISO 30000:2009",
+      logo: "/assets/certs/iso30000.png",
+      description: "Ship Recycling Management",
+      details: "ISO 30000:2009 for Ship Recycling Management Systems",
+    },
+    {
+      name: "ISO 45001:2018",
+      logo: "/assets/certs/iso45001.png",
+      description: "Health & Safety Systems",
+      details: "ISO 45001:2018 for Occupational Health & Safety Management",
+    },
+    {
+      name: "ISO 14001:2015",
+      logo: "/assets/certs/iso14001.png",
+      description: "Environmental Management",
+      details: "ISO 14001:2015 standard for Environmental Management Systems",
     },
   ];
 
@@ -498,10 +538,20 @@ const Index = () => {
     );
   };
 
+  // Navbar links
+  const navLinks = [
+    { label: "Home", href: "/", active: true },
+    { label: "About", href: "/about" },
+    { label: "Services", href: "/services" },
+    { label: "Stakeholders", href: "/stakeholders" },
+    { label: "Impact", href: "/impact" },
+    { label: "Blog", href: "/blog" },
+    { label: "Partners", href: "/partners" },
+  ];
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Enhanced Navigation */}
-
+      {/* Navbar (always hamburger) */}
       <nav
         className={`fixed z-50 transition-all duration-1000 ease-out ${
           navScrolled
@@ -509,81 +559,52 @@ const Index = () => {
             : "left-1/2 top-8 -translate-x-1/2 w-auto"
         }`}
       >
-        <div
-          className={`glass-panel transition-all duration-1000 ease-out ${
-            navScrolled
-              ? "flex items-center justify-between py-3 px-4 md:py-4 md:px-6 rounded-lg"
-              : "flex items-center space-x-4 md:space-x-8 py-3 px-4 md:px-8 rounded-full"
-          }`}
-        >
-          {/* Logo */}
+        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`transition-all duration-700 ${
+            className={`w-auto transition-all duration-700 ${
               navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            } w-auto`}
+            }`}
           />
-
-          {/* Hamburger + Contact */}
-          {navScrolled ? (
-            <div className="flex items-center space-x-2 md:space-x-4">
-              <button
-                className="transition-all duration-700 p-2"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-4 h-4 md:w-5 md:h-5" />
-                ) : (
-                  <Menu className="w-4 h-4 md:w-5 md:h-5" />
-                )}
-              </button>
-              <Button 
-                className="btn-primary text-xs md:text-sm px-3 md:px-4 py-2 transition-all duration-700"
-                onClick={() => scrollToSection('contact')}
-              >
-                Contact
-              </Button>
-            </div>
-          ) : (
-            <>
-              <button
-                className="transition-all duration-700 p-2"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu className="w-5 h-5" />
-                )}
-              </button>
-              <Button 
-                className="btn-primary text-sm md:text-base px-4 md:px-6 py-2 transition-all duration-700"
-                onClick={() => scrollToSection('contact')}
-              >
-                Contact
-              </Button>
-            </>
-          )}
+          <button
+            className="p-2 text-black"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
         </div>
 
-        {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div
-            className={`absolute mt-2 glass-panel rounded-2xl p-4 ${
-              navScrolled ? "top-full right-0" : "top-full left-0 right-0"
-            }`}
-          >
+          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
             <div className="flex flex-col space-y-3">
-              {services.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => scrollToSection(s.id)}
-                  className="text-text-secondary hover:text-primary transition-colors text-left"
+              {navLinks.map(({ label, href, active }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className={`block text-body transition-colors ${
+                    active
+                      ? "text-primary font-medium"
+                      : "text-text-secondary hover:text-primary"
+                  }`}
+                  onClick={() => setMobileMenuOpen(false)}
                 >
-                  {s.title}
-                </button>
+                  {label}
+                </a>
               ))}
+              <button
+                className="mt-2 btn-primary w-full"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.location.href = "/#contact";
+                }}
+              >
+                Contact
+              </button>
             </div>
           </div>
         )}
@@ -597,10 +618,7 @@ const Index = () => {
           muted
           className="absolute inset-0 w-full h-full object-cover opacity-50"
         >
-          <source
-            src="/assets/hero.mp4"
-            type="video/mp4"
-          />
+          <source src="/assets/hero.mp4" type="video/mp4" />
         </video>
 
         <div className="relative z-10 text-center max-w-6xl px-4 md:px-8 animate-fade-in-up">
@@ -624,8 +642,8 @@ const Index = () => {
       {/* Enhanced Certifications Carousel */}
       <section className="section-padding" id="certifications">
         <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
+          <div className="text-center mb-8">
+            <h2 className="text-headline mb-4 text-gradient font-medium">
               Certifications & Standards
             </h2>
             <p className="text-body-large text-text-secondary">
@@ -633,42 +651,74 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="overflow-hidden">
-            <div className="flex animate-scroll-smooth space-x-12">
-              {[...certifications, ...certifications].map((cert, index) => (
-                <HoverCard key={index}>
-                  <HoverCardTrigger asChild>
-                    <div className="flex-shrink-0 w-64 h-40 elevated-panel rounded-2xl flex flex-col items-center justify-center hover-lift cursor-pointer group transition-all duration-300 hover:scale-110">
-                      <div className="w-16 h-16 mb-3 flex items-center justify-center overflow-hidden rounded-lg">
-                        <img
-                          src={cert.logo}
-                          alt={cert.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
-                      </div>
-                      <div className="text-center px-4">
-                        <div className="font-semibold text-text-primary mb-2">
-                          {cert.name}
-                        </div>
-                        <div className="text-sm text-text-secondary">
-                          {cert.description}
-                        </div>
-                      </div>
+          {/* Controls */}
+          <div className="flex items-center space-x-4 mb-4">
+            <button
+              className="p-2 hover:bg-surface-elevated rounded-full"
+              onClick={() => {
+                if (carouselRef.current) carouselRef.current.scrollLeft -= 200;
+              }}
+            >
+              <ChevronLeft className="w-5 h-5 text-text-primary" />
+            </button>
+            <button
+              className="p-2 hover:bg-surface-elevated rounded-full"
+              onClick={() => {
+                if (carouselRef.current) carouselRef.current.scrollLeft += 200;
+              }}
+            >
+              <ChevronRight className="w-5 h-5 text-text-primary" />
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="0.5"
+              value={scrollSpeed}
+              onChange={(e) => setScrollSpeed(Number(e.target.value))}
+              className="flex-1"
+            />
+          </div>
+
+          {/* Infinite‑looping carousel */}
+          <div
+            ref={carouselRef}
+            className="flex space-x-12 overflow-hidden"
+            style={{ scrollBehavior: "auto" }}
+          >
+            {[...certifications, ...certifications].map((cert, index) => (
+              <HoverCard key={index}>
+                <HoverCardTrigger asChild>
+                  <div className="flex-shrink-0 w-64 h-40 elevated-panel rounded-2xl flex flex-col items-center justify-center cursor-pointer group transition-transform duration-300 hover:scale-105">
+                    <div className="w-16 h-16 mb-3 overflow-hidden rounded-lg">
+                      <img
+                        src={cert.logo}
+                        alt={cert.name}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-80">
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-text-primary">
+                    <div className="text-center px-4">
+                      <div className="font-semibold text-text-primary mb-1">
                         {cert.name}
-                      </h4>
-                      <p className="text-sm text-text-secondary">
-                        {cert.details}
-                      </p>
+                      </div>
+                      <div className="text-xs text-text-secondary">
+                        {cert.description}
+                      </div>
                     </div>
-                  </HoverCardContent>
-                </HoverCard>
-              ))}
-            </div>
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="font-semibold text-text-primary">
+                      {cert.name}
+                    </h4>
+                    <p className="text-sm text-text-secondary">
+                      {cert.details}
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            ))}
           </div>
         </div>
       </section>
@@ -1085,13 +1135,21 @@ const Index = () => {
                     <label className="block text-body font-medium mb-3 text-text-primary">
                       Name *
                     </label>
-                    <Input 
+                    <Input
                       value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.name ? 'border-red-500' : ''}`}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                        formErrors.name ? "border-red-500" : ""
+                      }`}
                       placeholder="Your full name"
                     />
-                    {formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
+                    {formErrors.name && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {formErrors.name}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-body font-medium mb-3 text-text-primary">
@@ -1100,11 +1158,19 @@ const Index = () => {
                     <Input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.email ? 'border-red-500' : ''}`}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                        formErrors.email ? "border-red-500" : ""
+                      }`}
                       placeholder="your.email@company.com"
                     />
-                    {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
+                    {formErrors.email && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {formErrors.email}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -1116,23 +1182,39 @@ const Index = () => {
                     <Input
                       type="tel"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.phone ? 'border-red-500' : ''}`}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                        formErrors.phone ? "border-red-500" : ""
+                      }`}
                       placeholder="+91 XXXXX XXXXX"
                     />
-                    {formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {formErrors.phone}
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label className="block text-body font-medium mb-3 text-text-primary">
                       Company *
                     </label>
-                    <Input 
+                    <Input
                       value={formData.company}
-                      onChange={(e) => handleInputChange('company', e.target.value)}
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.company ? 'border-red-500' : ''}`}
+                      onChange={(e) =>
+                        handleInputChange("company", e.target.value)
+                      }
+                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                        formErrors.company ? "border-red-500" : ""
+                      }`}
                       placeholder="Your company name"
                     />
-                    {formErrors.company && <p className="text-red-500 text-sm mt-1">{formErrors.company}</p>}
+                    {formErrors.company && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {formErrors.company}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -1140,29 +1222,45 @@ const Index = () => {
                   <label className="block text-body font-medium mb-3 text-text-primary">
                     Designation *
                   </label>
-                  <Input 
+                  <Input
                     value={formData.designation}
-                    onChange={(e) => handleInputChange('designation', e.target.value)}
-                    className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${formErrors.designation ? 'border-red-500' : ''}`}
+                    onChange={(e) =>
+                      handleInputChange("designation", e.target.value)
+                    }
+                    className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                      formErrors.designation ? "border-red-500" : ""
+                    }`}
                     placeholder="Your job title"
                   />
-                  {formErrors.designation && <p className="text-red-500 text-sm mt-1">{formErrors.designation}</p>}
+                  {formErrors.designation && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.designation}
+                    </p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-body font-medium mb-3 text-text-primary">
                     Message *
                   </label>
-                  <Textarea 
+                  <Textarea
                     value={formData.message}
-                    onChange={(e) => handleInputChange('message', e.target.value)}
-                    className={`bg-surface-elevated border-border/40 text-text-primary h-32 resize-none ${formErrors.message ? 'border-red-500' : ''}`}
+                    onChange={(e) =>
+                      handleInputChange("message", e.target.value)
+                    }
+                    className={`bg-surface-elevated border-border/40 text-text-primary h-32 resize-none ${
+                      formErrors.message ? "border-red-500" : ""
+                    }`}
                     placeholder="Tell us about your requirements..."
                   />
-                  {formErrors.message && <p className="text-red-500 text-sm mt-1">{formErrors.message}</p>}
+                  {formErrors.message && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {formErrors.message}
+                    </p>
+                  )}
                 </div>
 
-                <Button 
+                <Button
                   type="submit"
                   disabled={isSubmitting}
                   className="w-full btn-primary h-14 text-lg disabled:opacity-50"
@@ -1253,36 +1351,37 @@ const Index = () => {
           <div className="border-t border-border/20 pt-8">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
               <p className="text-text-secondary">
-                &copy; 2024 Neptunus Ship Builders and Recyclers. All rights reserved.
+                &copy; 2024 Neptunus Ship Builders and Recyclers. All rights
+                reserved.
               </p>
               <div className="flex space-x-4">
-                <a 
-                  href="https://facebook.com" 
-                  target="_blank" 
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
                 >
                   <Facebook className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
                 </a>
-                <a 
-                  href="https://twitter.com" 
-                  target="_blank" 
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
                 >
                   <Twitter className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
                 </a>
-                <a 
-                  href="https://linkedin.com" 
-                  target="_blank" 
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
                 >
                   <Linkedin className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
                 </a>
-                <a 
-                  href="https://instagram.com" 
-                  target="_blank" 
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
                 >
@@ -1298,3 +1397,7 @@ const Index = () => {
 };
 
 export default Index;
+function useRef<T>(initialValue: T | null): { current: T | null } {
+  return { current: initialValue };
+}
+
