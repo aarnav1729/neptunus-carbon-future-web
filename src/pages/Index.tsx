@@ -178,7 +178,7 @@ const Index = () => {
   const services = [
     {
       id: "services",
-      title: "Ship Recycling & Dismantling",
+      title: "Ship Recycling & Building",
       subtitle: "Comprehensive Maritime Solutions",
       image:
         "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
@@ -279,19 +279,19 @@ const Index = () => {
     },
     {
       name: "EUSSR",
-      logo: "/assets/certs/eussr.png",
+      logo: "/assets/eussr.jpg",
       description: "meets EU Ship Recycling Regulation",
       details: "Compliant with the EU Ship Recycling Regulation",
     },
     {
       name: "UNEP / Basel Convention",
-      logo: "/assets/unep.png",
+      logo: "/assets/unepp.png",
       description: "for hazardous materials",
       details: "Aligned with UNEP / Basel Convention for hazardous materials",
     },
     {
       name: "SA 8000",
-      logo: "/assets/certs/sa8000.png",
+      logo: "/assets/SA8000.png",
       description: "Administered by SAI",
       details: "Social Accountability International standard SA 8000",
     },
@@ -553,23 +553,15 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (always hamburger) */}
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
-            : "left-1/2 top-8 -translate-x-1/2 w-auto"
-        }`}
-      >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+      <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`w-auto transition-all duration-700 ${
-              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            }`}
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
-            className="p-2 text-black"
+            className="p-2 text-white"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
             {mobileMenuOpen ? (
@@ -581,13 +573,13 @@ const Index = () => {
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
-                  className={`block ... ${
+                  className={`block text-lg ${
                     active ? "text-primary" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
@@ -596,7 +588,7 @@ const Index = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full"
+                className="mt-2 btn-primary w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -624,7 +616,7 @@ const Index = () => {
           <h1 className="text-4xl md:text-6xl lg:text-7xl mb-6 md:mb-8 text-gradient font-light">
             Neptunus Ship Builders and Recyclers
           </h1>
-          <p className="text-lg md:text-xl lg:text-2xl text-text-secondary mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg text-white md:text-xl lg:text-2xl text-text-secondary mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
             Pioneering India's carbon-negative future through sustainable ship
             recycling and circular steel production.
           </p>
@@ -724,10 +716,11 @@ const Index = () => {
 
       {/* Services Section */}
       <section
-        className="section-padding bg-surface-elevated/20"
+        className="relative section-padding bg-surface-elevated/20"
         id="services-section"
       >
         <div className="container-custom">
+          {/* Section Heading */}
           <div className="text-center mb-20">
             <h2 className="text-headline mb-6 text-gradient font-medium">
               Our Capabilities
@@ -737,60 +730,68 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Card Navigation */}
-          <div className="flex justify-center items-center mb-12 space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateCards("left")}
-              className="rounded-full hover:bg-surface-elevated"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-
-            <div className="flex space-x-2">
-              {services.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentCardIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentCardIndex
-                      ? "bg-brand-blue"
-                      : "bg-surface-elevated"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigateCards("right")}
-              className="rounded-full hover:bg-surface-elevated"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* Service Cards with Varied Layouts */}
-          <div className="relative overflow-hidden max-w-4xl mx-auto">
+          {/* Card Slider */}
+          <div className="relative max-w-5xl mx-auto overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className="flex transition-transform duration-700 ease-out"
               style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
             >
-              {services.map((service, index) => (
-                <Card
-                  key={service.id}
-                  className="min-w-full gradient-border hover-lift mx-4 h-80"
-                >
-                  <CardContent className="p-0 h-full">
-                    <div className={`grid gap-0 ${getCardLayout()} h-full`}>
-                      {renderCardContent(service)}
+              {services.map((service) => (
+                /* Slide */
+                <div key={service.id} className="relative min-w-full h-[540px]">
+                  {/* Background  */}
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+                  />
+
+                  {/* Glass card */}
+                  <div className="absolute top-6 left-6 w-[420px] lg:w-[480px] h-[280px] rounded-2xl bg-white/15 backdrop-blur-md ring-1 ring-white/10 p-8 text-white flex flex-col justify-between">
+                    <div>
+                      <span className="text-xs tracking-widest uppercase opacity-80">
+                        {service.tag}
+                      </span>
+                      <h3 className="mt-2 text-3xl md:text-4xl leading-tight font-medium">
+                        {service.title}
+                        <ArrowRight className="inline-block w-5 h-5 ml-1" />
+                      </h3>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Arrows INSIDE the card */}
+                    <div className="flex justify-between">
+                      <button
+                        onClick={() => navigateCards("left")}
+                        className="p-3 rounded-md bg-white/10 hover:bg-white/20 transition-colors duration-300"
+                      >
+                        <ChevronLeft className="w-6 h-6" />
+                      </button>
+                      <button
+                        onClick={() => navigateCards("right")}
+                        className="p-3 rounded-md bg-white/10 hover:bg-white/20 transition-colors duration-300"
+                      >
+                        <ArrowRight className="w-6 h-6" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
+          </div>
+
+          {/* Dots */}
+          <div className="flex justify-center mt-10 space-x-2">
+            {services.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentCardIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentCardIndex
+                    ? "bg-brand-blue"
+                    : "bg-surface-elevated"
+                }`}
+              />
+            ))}
           </div>
         </div>
       </section>
