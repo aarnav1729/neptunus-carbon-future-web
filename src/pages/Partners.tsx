@@ -44,7 +44,7 @@ const Partners = () => {
 
   const strategicPartners = [
     {
-      name: "Gujarat Maritime Board",
+      name: "Odisha Maritime Board",
       type: "Government Partnership",
       description:
         "MoU modeled after Alang improvements with JICA collaboration",
@@ -459,48 +459,6 @@ const Partners = () => {
                   <p className="text-caption text-primary font-medium">
                     {p.impact}
                   </p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Certification Bodies */}
-      <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
-        <div className="container-custom">
-          <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
-              Certification & Verification Partners
-            </h2>
-            <p className="text-title text-text-secondary max-w-3xl mx-auto">
-              Ensuring highest standards through global certification bodies
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {certificationBodies.map((body, idx) => (
-              <Card key={idx} className="glass-panel text-center p-6">
-                <img
-                  src={body.logo}
-                  alt={body.name}
-                  className="w-20 h-20 rounded-lg mx-auto mb-4 object-cover"
-                />
-                <h3 className="text-body-large font-bold text-text-primary mb-2">
-                  {body.name}
-                </h3>
-                <p className="text-body text-text-secondary mb-4">
-                  {body.service}
-                </p>
-                <div className="space-y-2">
-                  {body.certifications.map((cert, i4) => (
-                    <Badge
-                      key={i4}
-                      variant="outline"
-                      className="border-primary text-primary"
-                    >
-                      {cert}
-                    </Badge>
-                  ))}
                 </div>
               </Card>
             ))}

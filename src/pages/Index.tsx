@@ -33,9 +33,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import shipbuild from "@/assets/ship1.jpeg";
+import low1 from "@/assets/low1.jpeg";
+import policy1 from "@/assets/policy1.jpeg";
+import part1 from "@/assets/part1.jpeg";
+import stake1 from "@/assets/stake1.jpeg";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [animatedNumbers, setAnimatedNumbers] = useState({
     steel: 0,
     gdp: 0,
@@ -111,7 +118,7 @@ const Index = () => {
         if (entry.isIntersecting && entry.target.id === "metrics") {
           animateNumber("steel", 5, 2000);
           animateNumber("gdp", 3, 2000);
-          animateNumber("jobs", 2200, 2000);
+          animateNumber("jobs", 22000, 2000);
           animateNumber("carbon", 835, 2000);
         }
       });
@@ -180,8 +187,7 @@ const Index = () => {
       id: "services",
       title: "Ship Recycling & Building",
       subtitle: "Comprehensive Maritime Solutions",
-      image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: stake1,
       content: [
         {
           subtitle: "Phased Expansion Strategy",
@@ -203,8 +209,7 @@ const Index = () => {
       id: "partners",
       title: "Low-Carbon Steel Re-Rolling",
       subtitle: "Sustainable Steel Production",
-      image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: low1,
       content: [
         {
           subtitle: "Green Steel Technology",
@@ -226,8 +231,7 @@ const Index = () => {
       id: "impact",
       title: "Global Impact & Partnerships",
       subtitle: "Environmental Leadership in Action",
-      image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: part1,
       content: [
         {
           subtitle: "Climate Impact",
@@ -249,8 +253,7 @@ const Index = () => {
       id: "policy",
       title: "Policy & Initiative Highlights",
       subtitle: "Alignment with National Programs",
-      image:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: policy1,
       content: [
         {
           subtitle: "National Electric Mobility Mission",
@@ -264,6 +267,29 @@ const Index = () => {
           details: [
             "On-site TSDF/incinerator for hazardous waste",
             "Community health and safety programs",
+          ],
+        },
+      ],
+    },
+
+    {
+      id: "stakeholders",
+      title: "What's In It for You?",
+      subtitle: "Holistic Stakeholder Benefits",
+      image: shipbuild,
+      content: [
+        {
+          subtitle: "Phased Expansion Strategy",
+          details: [
+            "60 total bays (Phase 1: 30 bays → Phase 2: +30 bays)",
+            "Annual throughput: Up to 500 ships dismantled",
+          ],
+        },
+        {
+          subtitle: "Hazardous Waste Management",
+          details: [
+            "13,000 tpa capacity for oils, asbestos, PCBs",
+            "Zero-waste-to-landfill policy implementation",
           ],
         },
       ],
@@ -488,54 +514,107 @@ const Index = () => {
     return "grid-cols-1";
   };
 
+  const cardRoutes: Record<string, string> = {
+    services: "/services",
+    partners: "/services", // low-carbon steel → Services.tsx
+    impact: "/partners", // global impact → Partners.tsx
+    policy: "/impact", // policy → Impact.tsx
+    stakeholders: "/stakeholders", // stakeholders → Stakeholders.tsx
+  };
+
   const renderCardContent = (service: (typeof services)[0]) => {
     return (
-      <div className="h-full">
-        <div className="relative h-48 overflow-hidden">
-          <img
-            src={service.image}
-            alt={service.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/60 to-transparent" />
-        </div>
-        <div className="p-6">
-          <div className="mb-4">
-            <div className="text-caption text-brand-blue mb-2">
-              {service.subtitle}
-            </div>
-            <h3 className="text-lg mb-3 text-text-primary font-medium">
-              {service.title}
-            </h3>
+      <section
+        className="relative section-padding bg-surface-elevated/20"
+        id="services-section"
+      >
+        <div className="container-custom">
+          {/* Section Heading */}
+          <div className="text-center mb-20">
+            <h2 className="text-headline mb-6 text-gradient font-medium">
+              Our Capabilities
+            </h2>
+            <p className="text-body-large text-text-secondary max-w-3xl mx-auto">
+              Comprehensive solutions for sustainable maritime operations
+            </p>
           </div>
 
-          <div className="space-y-4 mb-4">
-            {service.content.map((item, idx) => (
-              <div key={idx}>
-                <h4 className="text-md font-semibold mb-2 text-text-primary">
-                  {item.subtitle}
-                </h4>
-                <ul className="space-y-2">
-                  {item.details.map((detail, detailIdx) => (
-                    <li
-                      key={detailIdx}
-                      className="text-sm text-text-secondary flex items-start"
-                    >
-                      <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          {/* Card Slider */}
+          <div className="relative max-w-5xl mx-auto overflow-hidden">
+            <div
+              className="flex transition-transform duration-700 ease-out"
+              style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
+            >
+              {services.map((service) => (
+                // 3️⃣ root div is now clickable
+                <div
+                  key={service.id}
+                  className="relative min-w-full h-[540px] cursor-pointer"
+                  onClick={() => navigate(cardRoutes[service.id] || "/")}
+                >
+                  {/* Background Image */}
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+                  />
+
+                  {/* Card Frame */}
+                  <div className="absolute inset-0 m-6 rounded-2xl overflow-hidden">
+                    {/* Glass Header Overlay */}
+                    <div className="absolute top-6 left-6 bg-white/15 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-6 py-4 text-white z-10">
+                      <span className="text-xs tracking-widest uppercase opacity-80">
+                        {service.tag}
+                      </span>
+                      <h3 className="mt-1 text-3xl md:text-4xl font-medium flex items-center leading-tight">
+                        {service.title}
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                      </h3>
+                    </div>
+
+                    {/* Card-level Arrows (above link area) */}
+                    <div className="absolute inset-0 flex items-center justify-between px-6 z-10">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // 4️⃣ prevent bubbling to root onClick
+                          navigateCards("left");
+                        }}
+                        className="p-3 bg-black hover:bg-black rounded transition-colors z-20"
+                      >
+                        <ChevronLeft className="w-6 h-6 text-black" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigateCards("right");
+                        }}
+                        className="p-3 bg-black/10 hover:bg-black/60 rounded transition-colors z-20"
+                      >
+                        <ChevronRight className="w-6 h-6 text-black" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Dots */}
+          <div className="flex justify-center mt-10 space-x-2">
+            {services.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentCardIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentCardIndex
+                    ? "bg-brand-blue"
+                    : "bg-surface-elevated"
+                }`}
+              />
             ))}
           </div>
-
-          <Button className="btn-primary group text-sm">
-            Read More
-            <ArrowRight className="ml-2 w-3 h-3 transition-transform group-hover:translate-x-1" />
-          </Button>
         </div>
-      </div>
+      </section>
     );
   };
 
@@ -631,6 +710,7 @@ const Index = () => {
       </div>
 
       {/* Enhanced Certifications Carousel */}
+      {/* Enhanced Certifications Carousel */}
       <section className="section-padding" id="certifications">
         <div className="container-custom">
           <div className="text-center mb-8">
@@ -645,20 +725,20 @@ const Index = () => {
           {/* Controls */}
           <div className="flex items-center space-x-4 mb-4">
             <button
-              className="p-2 hover:bg-surface-elevated rounded-full"
+              className="p-3 hover:bg-surface-elevated rounded-full"
               onClick={() => {
-                if (carouselRef.current) carouselRef.current.scrollLeft -= 200;
+                if (carouselRef.current) carouselRef.current.scrollLeft -= 300;
               }}
             >
-              <ChevronLeft className="w-5 h-5 text-text-primary" />
+              <ChevronLeft className="w-6 h-6 text-text-primary" />
             </button>
             <button
-              className="p-2 hover:bg-surface-elevated rounded-full"
+              className="p-3 hover:bg-surface-elevated rounded-full"
               onClick={() => {
-                if (carouselRef.current) carouselRef.current.scrollLeft += 200;
+                if (carouselRef.current) carouselRef.current.scrollLeft += 300;
               }}
             >
-              <ChevronRight className="w-5 h-5 text-text-primary" />
+              <ChevronRight className="w-6 h-6 text-text-primary" />
             </button>
             <input
               type="range"
@@ -671,39 +751,39 @@ const Index = () => {
             />
           </div>
 
-          {/* Infinite‑looping carousel */}
+          {/* Infinite-looping carousel */}
           <div
             ref={carouselRef}
-            className="flex space-x-12 overflow-hidden"
+            className="flex space-x-16 overflow-hidden"
             style={{ scrollBehavior: "auto" }}
           >
             {[...certifications, ...certifications].map((cert, index) => (
               <HoverCard key={index}>
                 <HoverCardTrigger asChild>
-                  <div className="flex-shrink-0 w-64 h-40 elevated-panel rounded-2xl flex flex-col items-center justify-center cursor-pointer group transition-transform duration-300 hover:scale-105">
-                    <div className="w-16 h-16 mb-3 overflow-hidden rounded-lg">
+                  <div className="flex-shrink-0 w-80 h-56 elevated-panel rounded-2xl flex flex-col items-center justify-center cursor-pointer group transition-transform duration-300 hover:scale-105">
+                    <div className="w-24 h-24 mb-4 overflow-hidden rounded-lg">
                       <img
                         src={cert.logo}
                         alt={cert.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="text-center px-4">
-                      <div className="font-semibold text-text-primary mb-1">
+                    <div className="text-center px-6">
+                      <div className="font-semibold text-lg text-text-primary mb-2">
                         {cert.name}
                       </div>
-                      <div className="text-xs text-text-secondary">
+                      <div className="text-sm text-text-secondary">
                         {cert.description}
                       </div>
                     </div>
                   </div>
                 </HoverCardTrigger>
-                <HoverCardContent className="w-80">
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-text-primary">
+                <HoverCardContent className="w-96 p-6">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-xl text-text-primary">
                       {cert.name}
                     </h4>
-                    <p className="text-sm text-text-secondary">
+                    <p className="text-base text-text-secondary">
                       {cert.details}
                     </p>
                   </div>
@@ -716,11 +796,11 @@ const Index = () => {
 
       {/* Services Section */}
       <section
-        className="relative section-padding bg-surface-elevated/20"
         id="services-section"
+        className="relative section-padding bg-surface-elevated/20"
       >
         <div className="container-custom">
-          {/* Section Heading */}
+          {/* Heading */}
           <div className="text-center mb-20">
             <h2 className="text-headline mb-6 text-gradient font-medium">
               Our Capabilities
@@ -730,47 +810,57 @@ const Index = () => {
             </p>
           </div>
 
-          {/* Card Slider */}
+          {/* Slider */}
           <div className="relative max-w-5xl mx-auto overflow-hidden">
             <div
               className="flex transition-transform duration-700 ease-out"
               style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
             >
               {services.map((service) => (
-                /* Slide */
-                <div key={service.id} className="relative min-w-full h-[540px]">
-                  {/* Background  */}
+                <div
+                  key={service.id}
+                  className="relative min-w-full h-[540px] cursor-pointer"
+                  onClick={() => navigate(cardRoutes[service.id] || "/")}
+                >
+                  {/* Background */}
                   <img
                     src={service.image}
                     alt={service.title}
                     className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
                   />
 
-                  {/* Glass card */}
-                  <div className="absolute top-6 left-6 w-[420px] lg:w-[480px] h-[280px] rounded-2xl bg-white/15 backdrop-blur-md ring-1 ring-white/10 p-8 text-white flex flex-col justify-between">
-                    <div>
+                  {/* Card Frame */}
+                  <div className="absolute inset-0 m-6 rounded-2xl overflow-hidden">
+                    {/* Glass Header */}
+                    <div className="absolute top-6 left-6 bg-white/15 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-6 py-4 text-white z-10">
                       <span className="text-xs tracking-widest uppercase opacity-80">
-                        {service.tag}
+                        {service.subtitle}
                       </span>
-                      <h3 className="mt-2 text-3xl md:text-4xl leading-tight font-medium">
+                      <h3 className="mt-1 text-3xl md:text-4xl font-medium flex items-center leading-tight">
                         {service.title}
-                        <ArrowRight className="inline-block w-5 h-5 ml-1" />
+                        <ArrowRight className="ml-2 w-5 h-5" />
                       </h3>
                     </div>
 
-                    {/* Arrows INSIDE the card */}
-                    <div className="flex justify-between">
+                    {/* Nav Arrows */}
+                    <div className="absolute inset-0 flex items-center justify-between px-6 z-20">
                       <button
-                        onClick={() => navigateCards("left")}
-                        className="p-3 rounded-md bg-white/10 hover:bg-white/20 transition-colors duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigateCards("left");
+                        }}
+                        className="p-3 bg-white/10 hover:bg-white/60 rounded transition-colors"
                       >
-                        <ChevronLeft className="w-6 h-6" />
+                        <ChevronLeft className="w-6 h-6 text-white" />
                       </button>
                       <button
-                        onClick={() => navigateCards("right")}
-                        className="p-3 rounded-md bg-white/10 hover:bg-white/20 transition-colors duration-300"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigateCards("right");
+                        }}
+                        className="p-3 bg-white/10 hover:bg-white/60 rounded transition-colors"
                       >
-                        <ArrowRight className="w-6 h-6" />
+                        <ChevronRight className="w-6 h-6 text-white" />
                       </button>
                     </div>
                   </div>
@@ -781,12 +871,12 @@ const Index = () => {
 
           {/* Dots */}
           <div className="flex justify-center mt-10 space-x-2">
-            {services.map((_, index) => (
+            {services.map((_, idx) => (
               <button
-                key={index}
-                onClick={() => setCurrentCardIndex(index)}
+                key={idx}
+                onClick={() => setCurrentCardIndex(idx)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentCardIndex
+                  idx === currentCardIndex
                     ? "bg-brand-blue"
                     : "bg-surface-elevated"
                 }`}
@@ -885,118 +975,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Redesigned Stakeholder Unity Section */}
-      <section className="section-padding" id="stakeholders">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              United Under One Vision
-            </h2>
-            <p className="text-body-large text-text-secondary">
-              Collaborative ecosystem bringing all stakeholders together for
-              sustainable maritime future
-            </p>
-          </div>
-
-          <div className="relative min-h-[800px] flex items-center justify-center">
-            {/* Central Unity Symbol */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-32 bg-gradient-to-br from-brand-blue to-brand-teal rounded-full flex items-center justify-center animate-glow shadow-2xl">
-                <div className="text-2xl font-bold text-background">UNITY</div>
-              </div>
-            </div>
-
-            {/* Interactive Stakeholder Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-6xl">
-              {stakeholders.map((stakeholder, index) => (
-                <Dialog key={index}>
-                  <DialogTrigger asChild>
-                    <Card
-                      className="gradient-border hover-lift cursor-pointer group transition-all duration-300 hover:scale-105 animate-float"
-                      style={{ animationDelay: `${index * 0.3}s` }}
-                    >
-                      <CardContent className="p-6 text-center">
-                        <div
-                          className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center text-2xl shadow-lg"
-                          style={{ backgroundColor: stakeholder.color }}
-                        >
-                          <span className="text-background font-bold">
-                            {stakeholder.name
-                              .split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </span>
-                        </div>
-                        <h3 className="text-sm font-semibold text-text-primary mb-2 leading-tight">
-                          {stakeholder.name}
-                        </h3>
-                        <div className="text-xs text-text-secondary">
-                          Click to explore benefits
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="flex items-center space-x-3 text-xl">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
-                          style={{ backgroundColor: stakeholder.color }}
-                        >
-                          <span className="text-background font-bold">
-                            {stakeholder.name
-                              .split(" ")
-                              .map((word) => word[0])
-                              .join("")
-                              .slice(0, 2)}
-                          </span>
-                        </div>
-                        <span>{stakeholder.name}</span>
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 mt-6">
-                      <h4 className="font-semibold text-brand-blue text-lg">
-                        What's in it for you?
-                      </h4>
-                      <ul className="space-y-3">
-                        {stakeholder.benefits.map((benefit, idx) => (
-                          <li key={idx} className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-brand-teal rounded-full mt-2 flex-shrink-0"></div>
-                            <span className="text-text-secondary leading-relaxed">
-                              {benefit}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              ))}
-            </div>
-
-            {/* Connecting Lines Animation */}
-            <div className="absolute inset-0 pointer-events-none">
-              {stakeholders.map((_, index) => {
-                const angle = (index * 360) / stakeholders.length;
-                return (
-                  <div
-                    key={index}
-                    className="absolute w-px h-24 bg-gradient-to-t from-brand-blue/20 to-transparent origin-bottom animate-pulse"
-                    style={{
-                      left: "50%",
-                      top: "50%",
-                      transform: `rotate(${angle}deg) translateY(-100px)`,
-                      animationDelay: `${index * 0.2}s`,
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Key Metrics */}
       <section id="metrics" className="section-padding bg-surface-elevated/20">
         <div className="container-custom">
@@ -1044,7 +1022,7 @@ const Index = () => {
                   {animatedNumbers.jobs.toLocaleString()}
                 </div>
                 <div className="text-body font-medium text-text-primary mb-2">
-                  Direct Jobs
+                  Direct and Indirect Jobs
                 </div>
                 <div className="text-sm text-text-secondary">
                   Employment opportunities

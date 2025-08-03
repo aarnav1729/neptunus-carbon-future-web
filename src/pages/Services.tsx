@@ -1,5 +1,6 @@
 // src/pages/Services.tsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Ship,
   Building,
@@ -46,8 +47,7 @@ const Services = () => {
       icon: Ship,
       title: "Ship Breaking / Ship Recycling",
       subtitle: "Sustainable Maritime Vessel Disposal",
-      image:
-        "/assets/services.jpg",
+      image: "/assets/sbs1.jpeg",
       description:
         "At Neptunus, every retired vessel becomes a catalyst for positive change. Each year, our crews guide roughly 500 ships onto 60 specially engineered concrete beds. Here, with precision dry-dock techniques and expert hands, we gently deconstruct each hull—capturing every drop of oil, asbestos, and other hazardous materials before they ever reach our land or sea.",
       features: [
@@ -68,8 +68,7 @@ const Services = () => {
       icon: Building,
       title: "Ship Building",
       subtitle: "Circular Maritime Construction",
-      image:
-        "/assets/shipb.jpg",
+      image: "/assets/shipb.jpg",
       description:
         "Right beside our recycling docks, we're turning yesterday's ships into tomorrow's livelihoods. Using the recycled steel we reclaim, our modular yard crafts coastal vessels up to 5,000 DWT—everything from supply boats to passenger ferries. This circular approach slashes embodied carbon by more than 50% and keeps local workshops humming with skilled jobs.",
       features: [
@@ -86,8 +85,7 @@ const Services = () => {
       icon: Trash2,
       title: "Waste Disposal Management",
       subtitle: "Zero-Harm Environmental Solutions",
-      image:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "/assets/wastes2.jpeg",
       description:
         "We've designed our on-site Treatment, Storage & Disposal Facility (TSDF) as a zero-harm hub for 13,000 TPA of hazardous waste and 1,500 TPA of municipal solids. With a 30 TPD incinerator, secure landfills, an effluent treatment plant, and dedicated recycling lines, every residue gets transformed or contained safely.",
       features: [
@@ -108,8 +106,7 @@ const Services = () => {
       icon: Cog,
       title: "Steel Re-rolling",
       subtitle: "Green Steel Production",
-      image:
-        "/assets/steel.jpg",
+      image: "/assets/steelre.jpeg",
       description:
         "Our electric-arc-furnace mill is where community ambition meets industrial innovation. Processing up to 60,000 TPA of reclaimed ship steel, we produce top-grade rebars, structural sections, and specialty billets—all under an ISO 14001-certified process with full chain-of-custody transparency.",
       features: [
@@ -130,8 +127,7 @@ const Services = () => {
       icon: Truck,
       title: "Logistics Park",
       subtitle: "Integrated Supply Chain Solutions",
-      image:
-        "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "/assets/logs.jpeg",
       description:
         "Spread across 100 acres, our logistics park is more than forklifts and warehouses—it's a lifeline for local enterprise. Covered stacking yards, bonded facilities, and direct links to national highways and the Chennai–Kolkata rail corridor mean smoother operations and swift dispatch.",
       features: [
@@ -148,8 +144,25 @@ const Services = () => {
       icon: Wrench,
       title: "Ship Servicing",
       subtitle: "Maritime Maintenance & Repair",
-      image:
-        "https://images.unsplash.com/photo-1585076641399-5c06d1b3365f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: "/assets/serv2.jpeg",
+      description:
+        "When ships need care, Neptunus steps in with heart and expertise. Our service quay—backed by 350,000 m³ dredging capacity, four tug/push boats, and eight specialized service craft—offers everything from hull inspections to emergency overhauls.",
+      features: [
+        "350,000 m³ dredging capacity",
+        "4 tug/push boats",
+        "8 specialized service craft",
+        "Hull inspection services",
+        "Emergency overhaul capabilities",
+      ],
+      capacity: "Full maritime services",
+      compliance: ["Maritime Safety Standards", "Emergency Response Protocols"],
+    },
+
+    {
+      icon: Wrench,
+      title: "Solar Energy Park",
+      subtitle: "Maritime Maintenance & Repair",
+      image: "/assets/serv2.jpeg",
       description:
         "When ships need care, Neptunus steps in with heart and expertise. Our service quay—backed by 350,000 m³ dredging capacity, four tug/push boats, and eight specialized service craft—offers everything from hull inspections to emergency overhauls.",
       features: [
@@ -167,52 +180,38 @@ const Services = () => {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (always hamburger) */}
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
-            : "left-1/2 top-8 -translate-x-1/2 w-auto"
-        }`}
-      >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+      <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`w-auto transition-all duration-700 ${
-              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            }`}
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
-            className="p-2 text-black"
+            className="p-2 text-white"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
-                  className={`block text-body transition-colors ${
-                    active
-                      ? "text-primary font-medium"
-                      : "text-text-secondary hover:text-primary"
+                  to={href}
+                  className={`block text-lg ${
+                    active ? "text-primary font-medium" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full"
+                className="mt-2 btn-primary w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -225,28 +224,28 @@ const Services = () => {
         )}
       </nav>
 
-      {/* Hero Section (moved down, reduced whitespace) */}
-      <section className="pt-28 pb-8 bg-stone-200">
+      {/* Hero Section */}
+      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-black mb-4">
+            <h1 className="text-display font-bold text-stone-200 mb-4">
               Our Services
             </h1>
-            <p className="text-title text-black mb-4">
+            <p className="text-title text-stone-200 mb-4">
               Comprehensive maritime solutions for sustainable ship recycling, green steel production, and energy production
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title text-green-900 font-bold text-primary mb-2">6</div>
-                <div className="text-body text-black">Core Services</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">6</div>
+                <div className="text-body text-stone-200">Core Services</div>
               </div>
               <div className="text-center">
-                <div className="text-title text-black font-bold text-primary mb-2">500</div>
-                <div className="text-body text-black">Ships Annually</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">500</div>
+                <div className="text-body text-stone-200">Ships Annually</div>
               </div>
               <div className="text-center">
-                <div className="text-title text-green-900 font-bold text-primary mb-2">100%</div>
-                <div className="text-body text-black">Compliant Operations</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">100%</div>
+                <div className="text-body text-stone-200">Compliant Operations</div>
               </div>
             </div>
           </div>
@@ -254,11 +253,14 @@ const Services = () => {
       </section>
 
       {/* Services Grid */}
-      <section className="section-padding pt-12 pb-12">
+      <section className="section-padding pt-12 pb-12 bg-white text-black">
         <div className="container-custom">
           <div className="grid gap-12">
             {services.map((service, idx) => (
-              <Card key={idx} className="elevated-panel overflow-hidden">
+              <Card
+                key={idx}
+                className="elevated-panel overflow-hidden bg-stone-200 text-black"
+              >
                 <div
                   className={`grid lg:grid-cols-2 gap-0 ${
                     idx % 2 === 1 ? "lg:grid-flow-col-dense" : ""
@@ -282,34 +284,32 @@ const Services = () => {
                       </div>
                     </div>
                   </div>
+
                   {/* Content */}
                   <div
-                    className={`p-6 lg:p-8 ${
+                    className={`p-6 lg:p-8 bg-stone-200 text-black ${
                       idx % 2 === 1 ? "lg:col-start-1" : ""
                     }`}
                   >
                     <div className="space-y-4">
                       <div>
-                        <div className="text-caption text-brand-blue mb-1">
+                        <div className="text-caption mb-1 text-black opacity-80">
                           {service.subtitle}
                         </div>
-                        <h2 className="text-headline font-bold text-text-primary mb-2">
+                        <h2 className="text-headline font-bold mb-2 text-black">
                           {service.title}
                         </h2>
-                        <p className="text-body text-text-secondary leading-relaxed">
+                        <p className="text-body leading-relaxed text-black">
                           {service.description}
                         </p>
                       </div>
 
-                      <div className="bg-background/50 p-4 rounded-lg">
+                      <div className="bg-stone-200 p-4 rounded-lg text-black">
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-body-large font-semibold text-text-primary">
+                          <h3 className="text-body-large font-semibold text-black">
                             Key Features
                           </h3>
-                          <Badge
-                            variant="secondary"
-                            className="bg-primary/10 text-primary"
-                          >
+                          <Badge variant="secondary" className="bg-white text-black">
                             Capacity: {service.capacity}
                           </Badge>
                         </div>
@@ -317,28 +317,22 @@ const Services = () => {
                           {service.features.map((feat, i2) => (
                             <div
                               key={i2}
-                              className="flex items-center space-x-2"
+                              className="flex items-center space-x-2 text-black"
                             >
                               <CheckCircle className="h-4 w-4 text-green-600" />
-                              <span className="text-body text-text-secondary">
-                                {feat}
-                              </span>
+                              <span className="text-body">{feat}</span>
                             </div>
                           ))}
                         </div>
                       </div>
 
                       <div>
-                        <h3 className="text-body-large font-semibold text-text-primary mb-2">
+                        <h3 className="text-body-large font-semibold mb-2 text-black">
                           Compliance & Standards
                         </h3>
                         <div className="flex flex-wrap gap-2">
                           {service.compliance.map((c, i3) => (
-                            <Badge
-                              key={i3}
-                              variant="outline"
-                              className="border-primary text-primary"
-                            >
+                            <Badge key={i3} variant="outline" className="border-black text-black">
                               {c}
                             </Badge>
                           ))}
@@ -354,13 +348,13 @@ const Services = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline text-white font-bold text-primary-foreground mb-4">
+            <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">
               Ready to Partner with Us?
             </h2>
-            <p className="text-title text-white text-primary-foreground/90 mb-6">
+            <p className="text-title text-stone-200 text-primary-foreground/90 mb-6">
               Discover how our services can meet your maritime and sustainability needs
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
