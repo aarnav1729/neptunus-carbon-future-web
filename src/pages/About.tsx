@@ -1,5 +1,6 @@
 // src/pages/About.tsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Target,
@@ -12,27 +13,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
 const About = () => {
-  // Nav state
+  // Nav state (always hamburger, matched to Services.tsx)
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Scroll handler for shrinking navbar
+  // Shrink navbar on scroll (kept for parity and future use)
   useEffect(() => {
     const onScroll = () => {
-      const heroThreshold = window.innerHeight * 0.8;
-      setNavScrolled(window.scrollY > heroThreshold);
+      const threshold = window.innerHeight * 0.8;
+      setNavScrolled(window.scrollY > threshold);
     };
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Links for mobile menu
+  // Links for mobile menu (mark About active)
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "About", href: "/about", active: true },
@@ -45,28 +53,21 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navbar (always hamburger) */}
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
-            : "left-1/2 top-8 -translate-x-1/2 w-auto"
-        }`}
-      >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out shadow-lg">
+      {/* Navbar (identical to Services.tsx) */}
+      <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`w-auto transition-all duration-700 ${
-              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            }`}
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? (
-              <X className="w-5 h-5 text-black" />
+              <X className="w-5 h-5" />
             ) : (
               <Menu className="w-5 h-5" />
             )}
@@ -74,24 +75,22 @@ const About = () => {
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 bg-black text-white rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
-                  className={`block transition-colors ${
-                    active
-                      ? "text-green-900 font-medium"
-                      : "text-slate-600 hover:text-green-900"
+                  to={href}
+                  className={`block text-lg ${
+                    active ? "text-primary font-medium" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <button
-                className="mt-2 w-full rounded-md bg-green-900 px-4 py-2 text-white hover:bg-green-800 transition-colors"
+                className="mt-2 btn-primary w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -104,29 +103,36 @@ const About = () => {
         )}
       </nav>
 
-      {/* Hero Section (more top-padding, tighter bottom) */}
-      <section className="pt-28 pb-8 bg-stone-200 from-green-900/5 to-yellow-500/5">
+      {/* Hero Section (color scheme matched to Services.tsx) */}
+      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-black mb-4">
+            <h1 className="text-display font-bold text-stone-200 mb-4">
               About Neptunus
             </h1>
-            <p className="text-title text-slate-600 mb-4">
-              Pioneering India's carbon-negative future through sustainable ship recycling and circular steel production
+            <p className="text-title text-stone-200 mb-4">
+              Pioneering India's carbon-negative future through sustainable ship
+              recycling and circular economy.
             </p>
 
             <div className="grid md:grid-cols-3 gap-8 mb-8">
               <div className="text-center">
-                <div className="text-title font-bold text-green-900 mb-2">150+</div>
-                <div className="text-body text-slate-600">Marine Officers</div>
+                <div className="text-title font-bold text-stone-200 text-primary mb-2">
+                  150+
+                </div>
+                <div className="text-body text-stone-200">Marine Officers</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-green-900 mb-2">20+</div>
-                <div className="text-body text-slate-600">Years Experience</div>
+                <div className="text-title font-bold text-stone-200 text-primary mb-2">
+                  20+
+                </div>
+                <div className="text-body text-stone-200">Years Experience</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-green-900 mb-2">100%</div>
-                <div className="text-body text-slate-600">Compliance</div>
+                <div className="text-title font-bold text-stone-200 text-primary mb-2">
+                  100%
+                </div>
+                <div className="text-body text-stone-200">Compliance</div>
               </div>
             </div>
           </div>
@@ -134,7 +140,7 @@ const About = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="section-padding bg-white">
+      <section className="section-padding bg-white text-black">
         <div className="container-custom">
           <div className="grid lg:grid-cols-2 gap-12 ">
             <Card className="bg-stone-200 h-full">
@@ -149,36 +155,43 @@ const About = () => {
                   <h3 className="text-title font-semibold text-green-900">
                     Integrity and commitment towards combating climate change
                   </h3>
-                  <p className="text-body text-slate-600 leading-relaxed">
-                    "To create a vertically integrated ship recycling facility while upholding the highest labour safety and environmental sustainability standards.                         "
+                  <p className="text-body-large text-black leading-relaxed">
+                    "To create a vertically integrated ship recycling facility
+                    while upholding the highest labour safety and environmental
+                    sustainability standards."
                   </p>
-                  <div className="bg-background/50 p-6 rounded-lg bg-black">
-                    <p className="text-body-large  text-white italic">
-                      We believe that sustainable ship recycling is not just about environmental protection—it's about creating a better future for communities, industries, and the planet.
+                  <div className="p-6 rounded-lg bg-white">
+                    <p className="text-body-large text-black italic">
+                      We believe that sustainable ship recycling is not just
+                      about environmental protection—it's about creating a
+                      better future for communities, industries, and the planet.
                     </p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="glass-panel h-full bg-stone-200">
+            <Card className="elevated-panel h-full bg-stone-200">
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
                   <Eye className="h-8 w-8 text-green-900 mr-3" />
-                  <h2 className="text-headline font-bold text-black">
-                    Vision
-                  </h2>
+                  <h2 className="text-headline font-bold text-black">Vision</h2>
                 </div>
                 <div className="space-y-6">
                   <h3 className="text-title font-semibold text-green-900">
                     Leading India's transition to a carbon-secure future
                   </h3>
-                  <p className="text-body text-slate-600 leading-relaxed">
-                    "To position India as a global leader in sustainable ship recycling by building the world's most advanced, environmentally responsible, and socially conscious maritime industrial facility."
+                  <p className="text-body-large text-black leading-relaxed">
+                    "To position India as a global leader in sustainable ship
+                    recycling by building the world's most advanced,
+                    environmentally responsible, and socially conscious maritime
+                    industrial facility."
                   </p>
-                  <div className="bg-background/50 p-6 rounded-lg bg-black">
-                    <p className="text-body-large text-white italic">
-                      Our vision aligns with India's carbon-negative goals and positions us at the forefront of the global circular economy revolution.
+                  <div className="p-6 rounded-lg bg-white">
+                    <p className="text-body-large text-black italic">
+                      Our vision aligns with India's carbon-negative goals and
+                      positions us at the forefront of the global circular
+                      economy revolution.
                     </p>
                   </div>
                 </div>
@@ -188,15 +201,21 @@ const About = () => {
         </div>
       </section>
 
-      {/* Community Impact Quote */}
-      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
+      {/* Community Impact Quote (matched gradient + light text like Services) */}
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-white mb-8">
-              Our Promise to Odisha
+            <h2 className="text-headline font-bold text-stone-200 mb-8">
+              Our Promise
             </h2>
-            <blockquote className="text-title text-zinc-400 leading-relaxed mb-6 italic">
-              "Neptunus Shipbuilders & Recyclers is not just an industrial project—it's a promise to Odisha's people. Built on international standards like the Hong Kong Convention and the EU Ship Recycling Regulation, our facility brings credibility and compliance to a traditionally unsafe sector. But our commitment runs deeper. For the thousands of families along Odisha's coastline, Neptunus means access to safer jobs, fair wages, and long-term growth."
+            <blockquote className="text-title text-stone-200 leading-relaxed mb-6 italic">
+              "Neptunus Shipbuilders & Recyclers is not just an industrial
+              project—it's a promise to Odisha's people. Built on international
+              standards like the Hong Kong Convention and the EU Ship Recycling
+              Regulation, our facility brings credibility and compliance to a
+              traditionally unsafe sector. But our commitment runs deeper. For
+              the thousands of families along Odisha's coastline, Neptunus means
+              access to safer jobs, fair wages, and long-term growth."
             </blockquote>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <div className="bg-green-900 text-white px-6 py-3 rounded-lg font-semibold">
@@ -210,39 +229,37 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="section-padding bg-white">
+      {/* Team Section (quick view only, square images) */}
+      <section className="section-padding bg-white text-black">
         <div className="container-custom">
           <div className="text-center mb-12">
             <h2 className="text-display font-bold text-black mb-4">
               Architects of a Greener Maritime Future
             </h2>
             <p className="text-title text-slate-600 max-w-2xl mx-auto">
-              Our leadership team brings decades of experience in maritime engineering, sustainable development, and operational excellence
+              Our leadership team brings decades of experience in maritime
+              engineering, sustainable development, and operational excellence
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 ">
-            {[
+          {(() => {
+            const members = [
               {
                 name: "Deepak Pillapalem",
                 position: "Managing Director",
-                image:
-                  "/assets/deepak.jpeg",
-                bio: "Deepak Reddy Pillapalem is the Founder and Managing Director of Neptunus Shipbreaking & Recycling Pvt Ltd. With over 20 years of real estate development expertise, he has driven exceptional growth in the sector—channeling his strategic vision into sustainable ship recycling, steel re-rolling, renewable-energy integration, and community-driven partnerships. Under his leadership, Neptunus will become India's first facility fully compliant with both the EU Ship Recycling Regulation and the Hong Kong Convention. He holds a Bachelor's degree in Civil Engineering from CBIT Hyderabad and a Master's degree in Urban Planning from the University of Cleveland. He has secured multimillion-dollar financing, forged strategic partnerships with local cooperatives, and consistently delivers strong returns—driving stakeholder value, uplifting communities, and championing green innovations.",
+                image: "/assets/deepak.jpeg",
+                bio: "Deepak Reddy Pillapalem is the Founder and Managing Director of Neptunus Ship Dismantling & Recycling Pvt Ltd. With over 20 years of real estate development expertise, he has driven exceptional growth in the sector—channeling his strategic vision into sustainable ship recycling, steel re-rolling, renewable-energy integration, and community-driven partnerships. Under his leadership, Neptunus will become India's first facility fully compliant with both the EU Ship Recycling Regulation and the Hong Kong Convention. He holds a Bachelor's degree in Civil Engineering from CBIT Hyderabad and a Master's degree in Urban Planning from the University of Cleveland. He has secured multimillion-dollar financing, forged strategic partnerships with local cooperatives, and consistently delivers strong returns—driving stakeholder value, uplifting communities, and championing green innovations.",
               },
               {
                 name: "Satish Burugupalli",
                 position: "Executive Director",
-                image:
-                  "/assets/satish.jpeg",
-                bio: "Satish Burugupalli is the Executive Director of Neptunus Shipbreaking & Recycling, bringing over 15 years of operational leadership in maritime engineering and sustainable infrastructure. He oversees high-impact projects—from greenfield plant expansions to renewable-energy integration—ensuring full compliance with international ship-recycling regulations while delivering on-time, on-budget performance. Satish secures strategic alliances with government agencies and local cooperatives, drives solar-park and waste-heat recovery initiatives to minimize carbon footprints, and champions workforce development programs that uplift surrounding communities.",
+                image: "/assets/satish.jpeg",
+                bio: "Satish Burugupalli is the Executive Director of Neptunus Ship Dismantling & Recycling, bringing over 15 years of operational leadership in maritime engineering and sustainable infrastructure. He oversees high-impact projects—from greenfield plant expansions to renewable-energy integration—ensuring full compliance with international ship-recycling regulations while delivering on-time, on-budget performance. Satish secures strategic alliances with government agencies and local cooperatives, drives solar-park and waste-heat recovery initiatives to minimize carbon footprints, and champions workforce development programs that uplift surrounding communities.",
               },
               {
                 name: "Akaash Reddy",
                 position: "Chief Technical Officer",
-                image:
-                  "/assets/akaash.jpeg",
+                image: "/assets/akaash.jpeg",
                 bio: "Leading our technical operations with 15+ years of marine engineering experience and deep expertise in ship recycling technologies.",
               },
               {
@@ -259,80 +276,177 @@ const About = () => {
                   "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
                 bio: "Streamlining operations with innovative approaches to sustainable ship recycling and steel production efficiency.",
               },
-            ].map((member, i) => (
-              <HoverCard key={i}>
-                <HoverCardTrigger asChild>
-                  <Card className="elevated-panel cursor-pointer group transition-all duration-300 hover-lift bg-stone-200">
-                    <CardContent className="p-6">
-                      <div className="relative mb-6">
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-green-900/20"
-                        />
-                        <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
-                          <div className="bg-green-900 text-white rounded-full p-2">
-                            <Users className="h-4 w-4" />
+            ];
+
+            const [open, setOpen] = useState(false);
+            const [active, setActive] = useState<(typeof members)[0] | null>(
+              null
+            );
+
+            const openModal = (m: (typeof members)[0]) => {
+              setActive(m);
+              setOpen(true);
+            };
+
+            const cardKeyHandler = (
+              e: React.KeyboardEvent<HTMLDivElement>,
+              m: (typeof members)[0]
+            ) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openModal(m);
+              }
+            };
+
+            return (
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {members.map((member, i) => (
+                    <Card
+                      key={i}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open profile for ${member.name}`}
+                      onClick={() => openModal(member)}
+                      onKeyDown={(e) => cardKeyHandler(e, member)}
+                      className="group relative overflow-hidden bg-stone-200 border border-stone-300 hover:border-stone-400 transition-all duration-300 cursor-pointer will-change-transform"
+                      style={{ transform: "perspective(1200px)" }}
+                    >
+                      <CardContent className="p-0">
+                        {/* Image: SQUARE with soft radius */}
+                        <div className="relative aspect-square">
+                          <img
+                            src={member.image}
+                            alt={member.name}
+                            className="absolute inset-0 w-full h-full object-cover rounded-xl"
+                          />
+
+                          {/* Corner badge */}
+                          <div className="absolute top-4 left-4 bg-green-900 text-white text-xs px-3 py-1 rounded-full shadow">
+                            {member.position}
+                          </div>
+
+                          {/* Hover overlay */}
+                          <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                          {/* Hover content */}
+                          <div className="absolute inset-x-0 bottom-0 p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <h3 className="text-lg font-bold text-white">
+                              {member.name}
+                            </h3>
+                            <p className="text-sm text-white/80 line-clamp-2">
+                              {member.bio}
+                            </p>
+
+                            {/* Quick view only (kept) */}
+                            <div className="mt-4 flex items-center gap-2 text-white/95">
+                              <span className="text-sm">Quick view</span>
+                              <ChevronDown className="h-4 w-4 translate-y-0 group-hover:translate-y-0.5 transition-transform" />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="text-center">
-                        <h3 className="text-body-large font-bold text-black mb-2">
-                          {member.name}
-                        </h3>
-                        <p className="text-body text-yellow-600 font-medium mb-4">
-                          {member.position}
-                        </p>
-                        <div className="flex items-center justify-center text-slate-500">
-                          <span className="text-caption">View Details</span>
-                          <ChevronDown className="h-4 w-4 ml-1 group-hover:translate-y-1 transition-transform" />
+
+                        {/* Base content (no "View Details") */}
+                        <div className="p-5">
+                          <h4 className="text-body-large font-bold text-black">
+                            {member.name}
+                          </h4>
+                          <p className="text-sm text-yellow-700">
+                            {member.position}
+                          </p>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-96">
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                      <div>
-                        <h4 className="text-body-large font-bold text-green-900">
-                          {member.name}
-                        </h4>
-                        <p className="text-body text-yellow-600">
-                          {member.position}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-caption text-slate-600 leading-relaxed">
-                      {member.bio}
-                    </p>
-                  </div>
-                </HoverCardContent>
-              </HoverCard>
-            ))}
-          </div>
+
+                        {/* Subtle lift/tilt on hover */}
+                        <div className="absolute inset-0 rounded-xl pointer-events-none transition-transform duration-300 group-hover:-translate-y-1 group-hover:[transform:rotateX(2deg)rotateY(-2deg)]" />
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Quick-view Modal */}
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogContent className="sm:max-w-xl">
+                    {active && (
+                      <>
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-3">
+                            {/* Square avatar */}
+                            <img
+                              src={active.image}
+                              alt={active.name}
+                              className="w-14 h-14 rounded-xl object-cover border border-stone-300"
+                            />
+                            <div>
+                              <div className="text-lg font-semibold">
+                                {active.name}
+                              </div>
+                              <div className="text-sm text-yellow-700">
+                                {active.position}
+                              </div>
+                            </div>
+                          </DialogTitle>
+                          <DialogDescription className="sr-only">
+                            Profile details for {active.name}
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        {/* Bio */}
+                        <div className="space-y-4">
+                          <p className="text-sm text-white leading-relaxed">
+                            {active.bio}
+                          </p>
+
+                          {/* Quick actions */}
+                          <div className="flex flex-wrap gap-3 pt-2">
+                            <Button
+                              size="sm"
+                              className="bg-green-900 text-white hover:bg-green-800"
+                              onClick={() => {
+                                setOpen(false);
+                                window.location.href = "/#contact";
+                              }}
+                            >
+                              Email
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="border-yellow-500 bg-yellow-500 text-white hover:bg-yellow-400"
+                              onClick={() => {
+                                setOpen(false);
+                                window.location.href = "/stakeholders";
+                              }}
+                            >
+                              Schedule Call
+                            </Button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </DialogContent>
+                </Dialog>
+              </>
+            );
+          })()}
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
-        <div className="container-custom ">
+      {/* Call to Action (match Services.tsx styling and button variants) */}
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+        <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-white mb-6">
+            <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">
               Join Our Mission
             </h2>
-            <p className="text-title text-white/90 mb-8">
-              Be part of India's transformation towards sustainable maritime industry and circular economy
+            <p className="text-title text-stone-200 text-primary-foreground/90 mb-6">
+              Be part of India's transformation towards a sustainable maritime
+              industry and circular economy
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
+                variant="secondary"
                 size="lg"
-                className="group bg-green-900 text-white hover:bg-white hover:text-black"
+                className="group text-white bg-green-900"
                 onClick={() => (window.location.href = "/stakeholders")}
               >
                 <div className="flex items-center">
@@ -343,7 +457,7 @@ const About = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white text-white bg-yellow-500 hover:bg-white hover:text-black"
+                className="border-primary-foreground text-white bg-yellow-500 hover:bg-primary-foreground hover:text-primary"
                 onClick={() => (window.location.href = "/#contact")}
               >
                 Contact Us

@@ -1,5 +1,6 @@
 // src/pages/Stakeholders.tsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Ship,
   Building2,
@@ -18,7 +19,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const Stakeholders = () => {
-  // Navbar state
+  // Navbar state (always hamburger)
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -99,14 +100,14 @@ const Stakeholders = () => {
       ],
     },
     {
-      name: "Local Communities & Workforce",
+      name: "Social & COmmunity Infrastructure",
       icon: Users,
       color: "from-green-900/10 to-yellow-500/10",
       emoji: "🏘️",
       tagline: "Safe jobs, skills development, and community uplift",
       benefits: [
         "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
-        "Capacity building: on-site training programs, apprenticeships, and an aspirational '70% local hire' target",
+        "Capacity building: on-site training programs, apprenticeships, and an aspirational '90% local hire' target",
         "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
         "Pride of place: become part of Odisha's green-industry revolution and global climate story",
       ],
@@ -172,56 +173,82 @@ const Stakeholders = () => {
         "PPP Model",
       ],
     },
+
+    {
+      name: "Women Empowerment Initiatives",
+      icon: Users,
+      color: "from-green-900/10 to-yellow-500/10",
+      emoji: "🏘️",
+      tagline: "Safe jobs, skills development, and community uplift",
+      benefits: [
+        "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
+        "Capacity building: on-site training programs, apprenticeships, and an aspirational '90% local hire' target",
+        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
+        "Pride of place: become part of Odisha's green-industry revolution and global climate story",
+      ],
+      keyFeatures: [
+        "Zero-Accident Pledge",
+        "70% Local Hire Target",
+        "Training Programs",
+        "Community Infrastructure",
+      ],
+    },
+    {
+      name: "Skill Development Programs",
+      icon: Users,
+      color: "from-green-900/10 to-yellow-500/10",
+      emoji: "🏘️",
+      tagline: "Safe jobs, skills development, and community uplift",
+      benefits: [
+        "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
+        "Capacity building: on-site training programs, apprenticeships, and an aspirational '90% local hire' target",
+        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
+        "Pride of place: become part of Odisha's green-industry revolution and global climate story",
+      ],
+      keyFeatures: [
+        "Zero-Accident Pledge",
+        "70% Local Hire Target",
+        "Training Programs",
+        "Community Infrastructure",
+      ],
+    },
   ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navbar (always hamburger) */}
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
-            : "left-1/2 top-8 -translate-x-1/2 w-auto"
-        }`}
-      >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+      {/* Navbar (from Services.tsx) */}
+      <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`w-auto transition-all duration-700 ${
-              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            }`}
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
             className="p-2 text-black"
-            onClick={() => setMobileMenuOpen(o => !o)}
+            onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+
         {mobileMenuOpen && (
-          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
-                  className={`block text-body transition-colors ${
-                    active
-                      ? "text-primary font-medium"
-                      : "text-text-secondary hover:text-primary"
+                  to={href}
+                  className={`block text-lg ${
+                    active ? "text-primary font-medium" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full"
+                className="mt-2 btn-primary w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -234,28 +261,28 @@ const Stakeholders = () => {
         )}
       </nav>
 
-      {/* Hero Section (moved down, reduced whitespace) */}
-      <section className="pt-28 pb-8 bg-stone-200">
+      {/* Hero Section (matching Services color scheme) */}
+      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-black mb-4">
+            <h1 className="text-display font-bold text-stone-200 mb-4">
               Stakeholder Benefits
             </h1>
-            <p className="text-title text-black mb-4">
+            <p className="text-title text-stone-200 mb-4">
               Discover how Neptunus creates value for every stakeholder in the maritime and steel ecosystem
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title text-green-900 font-bold text-primary mb-2">7</div>
-                <div className="text-body text-black">Stakeholder Groups</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">7</div>
+                <div className="text-body text-stone-200">Stakeholder Groups</div>
               </div>
               <div className="text-center">
-                <div className="text-title text-green-900 font-bold text-primary mb-2">100%</div>
-                <div className="text-body text-black">Value Creation</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">100%</div>
+                <div className="text-body text-stone-200">Value Creation</div>
               </div>
               <div className="text-center">
-                <div className="text-title text-green-900 font-bold text-primary mb-2">360°</div>
-                <div className="text-body text-black">Comprehensive Benefits</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">360°</div>
+                <div className="text-body text-stone-200">Comprehensive Benefits</div>
               </div>
             </div>
           </div>
@@ -263,28 +290,28 @@ const Stakeholders = () => {
       </section>
 
       {/* Stakeholder Groups */}
-      <section className="section-padding pt-12 pb-12">
+      <section className="section-padding pt-12 pb-12 bg-white text-black">
         <div className="container-custom space-y-12">
           {stakeholderGroups.map((group, idx) => (
             <Card key={idx} className="elevated-panel overflow-hidden bg-stone-200">
               <div className="grid lg:grid-cols-12">
                 {/* Header */}
-                <div className={`lg:col-span-4 bg-gradient-to-br ${group.color} p-8 lg:p-12 text-black`}>
+                <div className={`lg:col-span-4 bg-gradient-to-br ${group.color} p-8 lg:p-12`}>
                   <div className="space-y-6">
                     <div className="flex items-center space-x-4">
                       <div className="text-5xl">{group.emoji}</div>
-                      <group.icon className="h-8 w-8" />
+                      <group.icon className="h-8 w-8 text-black" />
                     </div>
                     <div>
-                      <h2 className="text-headline font-bold mb-3">{group.name}</h2>
-                      <p className="text-body-large opacity-90">{group.tagline}</p>
+                      <h2 className="text-headline font-bold text-black mb-3">{group.name}</h2>
+                      <p className="text-body-large text-black opacity-90">{group.tagline}</p>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {group.keyFeatures.map((feat, i2) => (
                         <Badge
                           key={i2}
                           variant="secondary"
-                          className="bg-white/20 text-black border-white/30"
+                          className="bg-white text-black border-black/20"
                         >
                           {feat}
                         </Badge>
@@ -310,7 +337,7 @@ const Stakeholders = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="bg-background/50 p-6 rounded-lg border-l-4 border-primary">
+                    <div className="bg-white p-6 rounded-lg border-l-4 border-primary">
                       <div className="flex items-center justify-between">
                         <div>
                           <h4 className="text-body-large font-semibold text-black mb-2">
@@ -337,13 +364,13 @@ const Stakeholders = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-green-900/10 to-yellow-500/10">
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-white text-headline font-bold text-primary-foreground mb-4">
+            <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">
               Become a Stakeholder
             </h2>
-            <p className="text-title text-white mb-6">
+            <p className="text-title text-stone-200 text-primary-foreground/90 mb-6">
               Join us in transforming the maritime industry and building a sustainable future
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -356,7 +383,7 @@ const Stakeholders = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground bg-yellow-500 text-white hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-white bg-yellow-500 hover:bg-primary-foreground hover:text-primary"
               >
                 <a href="/services">Explore Services</a>
               </Button>

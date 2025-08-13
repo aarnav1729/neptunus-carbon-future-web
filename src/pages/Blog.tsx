@@ -1,5 +1,6 @@
 // src/pages/Blog.tsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Calendar,
   Clock,
@@ -18,7 +19,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const Blog = () => {
-  // Navbar state
+  // Navbar state (always hamburger, matched to Services.tsx)
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -134,52 +135,39 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navbar (always hamburger) */}
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
-            : "left-1/2 top-8 -translate-x-1/2 w-auto"
-        }`}
-      >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+      {/* Navbar (always hamburger, identical to Services.tsx) */}
+      <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`w-auto transition-all duration-700 ${
-              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            }`}
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+
         {mobileMenuOpen && (
-          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
-                  className={`block text-body transition-colors ${
-                    active
-                      ? "text-primary font-medium"
-                      : "text-text-secondary hover:text-primary"
+                  to={href}
+                  className={`block text-lg ${
+                    active ? "text-primary font-medium" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full"
+                className="mt-2 btn-primary w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -192,53 +180,43 @@ const Blog = () => {
         )}
       </nav>
 
-      {/* Hero Section (moved down, reduced whitespace) */}
-      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
+      {/* Hero Section (green gradient like Services) */}
+      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-4">
+            <h1 className="text-display font-bold text-stone-200 mb-4">
               Case Studies & Insights
             </h1>
-            <p className="text-title text-text-secondary mb-4">
+            <p className="text-title text-stone-200 mb-4">
               Explore technical insights, success stories, and thought leadership in sustainable ship recycling and circular steel production
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">50+</div>
-                <div className="text-body text-text-secondary">
-                  Published Articles
-                </div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">50+</div>
+                <div className="text-body text-stone-200">Published Articles</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">6</div>
-                <div className="text-body text-text-secondary">
-                  Topic Categories
-                </div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">6</div>
+                <div className="text-body text-stone-200">Topic Categories</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">10K+</div>
-                <div className="text-body text-text-secondary">
-                  Monthly Readers
-                </div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">10K+</div>
+                <div className="text-body text-stone-200">Monthly Readers</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Article */}
-      <section className="section-padding pt-12 pb-12">
+      {/* Featured Article (white section with dark text) */}
+      <section className="section-padding pt-12 pb-12 bg-white text-black">
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
-              Featured Article
-            </h2>
-            <p className="text-title text-text-secondary">
-              Latest insights from our research and industry experience
-            </p>
+            <h2 className="text-display font-bold text-black mb-2">Featured Article</h2>
+            <p className="text-title text-slate-600">Latest insights from our research and industry experience</p>
           </div>
 
-          <Card className="elevated-panel overflow-hidden mb-12">
+          <Card className="elevated-panel overflow-hidden mb-12 bg-stone-200 text-black">
             <div className="grid lg:grid-cols-2 gap-0">
               <div className="relative h-80 lg:h-auto">
                 <img
@@ -246,28 +224,26 @@ const Blog = () => {
                   alt={featuredArticle.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-green-300/10 to-green-500/10" />
                 <div className="absolute top-6 left-6">
-                  <Badge className="bg-primary text-primary-foreground">
-                    Featured
-                  </Badge>
+                  <Badge className="bg-gradient-to-r from-green-300/10 to-green-500/10 text-primary-foreground">Featured</Badge>
                 </div>
               </div>
               <div className="p-8 lg:p-12">
                 <div className="space-y-6">
                   <div>
-                    <Badge variant="outline" className="mb-2">
+                    <Badge variant="outline" className="mb-2 border-black text-black">
                       {featuredArticle.category}
                     </Badge>
-                    <h1 className="text-headline font-bold text-text-primary mb-2">
+                    <h1 className="text-headline font-bold text-black mb-2">
                       {featuredArticle.title}
                     </h1>
-                    <p className="text-body text-text-secondary leading-relaxed">
+                    <p className="text-body text-black/80 leading-relaxed">
                       {featuredArticle.excerpt}
                     </p>
                   </div>
 
-                  <div className="flex items-center space-x-6 text-caption text-text-secondary">
+                  <div className="flex items-center space-x-6 text-caption text-black/70">
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 mr-2" />
                       {featuredArticle.date}
@@ -280,13 +256,13 @@ const Blog = () => {
 
                   <div className="flex flex-wrap gap-2">
                     {featuredArticle.tags.map((tag, i) => (
-                      <Badge key={i} variant="secondary">
+                      <Badge key={i} variant="secondary" className="bg-white text-black">
                         {tag}
                       </Badge>
                     ))}
                   </div>
 
-                  <Button className="group">
+                  <Button className="group bg-green-900 text-white hover:bg-green-800">
                     Read Full Article
                     <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -297,45 +273,35 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Categories */}
-      <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
+      {/* Categories (on green gradient; cards contrast in white) */}
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
-              Browse by Category
-            </h2>
-            <p className="text-title text-text-secondary">
-              Explore articles organized by topic areas
-            </p>
+            <h2 className="text-display font-bold text-stone-200 mb-2">Browse by Category</h2>
+            <p className="text-title text-stone-200">Explore articles organized by topic areas</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((category, idx) => (
               <Card
                 key={idx}
-                className="glass-panel cursor-pointer hover-lift transition-all duration-300"
+                className="elevated-panel cursor-pointer hover-lift transition-all duration-300 bg-white text-black"
               >
                 <CardContent className="p-6 text-center">
                   <div className="flex items-center justify-center mb-4">
-                    <div className="p-3 rounded-lg bg-primary/10">
-                      {idx === 0 && <Globe className="h-6 w-6 text-primary" />}
-                      {idx === 1 && (
-                        <Lightbulb className="h-6 w-6 text-primary" />
-                      )}
-                      {idx === 2 && <BookOpen className="h-6 w-6 text-primary" />}
-                      {idx === 3 && <UsersIcon className="h-6 w-6 text-primary" />}
-                      {idx === 4 && <Shield className="h-6 w-6 text-primary" />}
-                      {idx === 5 && (
-                        <TrendingUp className="h-6 w-6 text-primary" />
-                      )}
+                    <div className="p-3 rounded-lg bg-gradient-to-r from-green-300/10 to-green-500/10">
+                      {idx === 0 && <Globe className="h-6 w-6 text-black" />}
+                      {idx === 1 && <Lightbulb className="h-6 w-6 text-black" />}
+                      {idx === 2 && <BookOpen className="h-6 w-6 text-black" />}
+                      {idx === 3 && <UsersIcon className="h-6 w-6 text-black" />}
+                      {idx === 4 && <Shield className="h-6 w-6 text-black" />}
+                      {idx === 5 && <TrendingUp className="h-6 w-6 text-black" />}
                     </div>
                   </div>
-                  <h3 className="text-body-large font-bold text-text-primary mb-2">
+                  <h3 className="text-body-large font-bold text-black mb-2">
                     {category.name}
                   </h3>
-                  <Badge className={`${category.color} text-sm`}>
-                    {category.count} articles
-                  </Badge>
+                  <Badge className={`${category.color} text-sm`}>{category.count} articles</Badge>
                 </CardContent>
               </Card>
             ))}
@@ -343,23 +309,19 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* Recent Articles */}
-      <section className="section-padding pt-12 pb-12">
+      {/* Recent Articles (white section with dark text and stone cards) */}
+      <section className="section-padding pt-12 pb-12 bg-white text-black">
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
-              Recent Articles
-            </h2>
-            <p className="text-title text-text-secondary">
-              Latest insights and case studies from our team
-            </p>
+            <h2 className="text-display font-bold text-black mb-2">Recent Articles</h2>
+            <p className="text-title text-slate-600">Latest insights and case studies from our team</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map((article, idx) => (
               <Card
                 key={idx}
-                className="elevated-panel cursor-pointer group hover-lift transition-all duration-300"
+                className="elevated-panel cursor-pointer group hover-lift transition-all duration-300 bg-stone-200 text-black"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -367,22 +329,22 @@ const Blog = () => {
                     alt={article.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   <div className="absolute top-4 left-4">
-                    <Badge variant="secondary" className="bg-background/90">
+                    <Badge variant="secondary" className="bg-white/90 text-black">
                       {article.category}
                     </Badge>
                   </div>
                 </div>
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <h3 className="text-body-large font-bold text-text-primary line-clamp-2 group-hover:text-primary transition-colors">
+                <CardContent className="p-6 group-hover:bg-gradient-to-r from-green-300/10 to-green-500/10">
+                  <div className="space-y-4 ">
+                    <h3 className="text-body-large font-bold text-black line-clamp-2 group-hover:text-green-900  transition-colors">
                       {article.title}
                     </h3>
-                    <p className="text-body text-text-secondary line-clamp-3">
+                    <p className="text-body text-black/80 line-clamp-3">
                       {article.excerpt}
                     </p>
-                    <div className="flex items-center space-x-4 text-caption text-text-secondary">
+                    <div className="flex items-center space-x-4 text-caption text-black/70">
                       <div className="flex items-center">
                         <Calendar className="h-4 w-4 mr-1" />
                         {article.date}
@@ -394,12 +356,12 @@ const Blog = () => {
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {article.tags.slice(0, 2).map((tag, i2) => (
-                        <Badge key={i2} variant="outline" className="text-xs">
+                        <Badge key={i2} variant="outline" className="text-xs border-black text-black">
                           {tag}
                         </Badge>
                       ))}
                       {article.tags.length > 2 && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs border-black text-black">
                           +{article.tags.length - 2}
                         </Badge>
                       )}
@@ -411,30 +373,34 @@ const Blog = () => {
           </div>
 
           <div className="text-center mt-12">
-            <Button variant="outline" size="lg">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-white bg-gradient-to-r from-green-300/10 to-green-500/10 text-white hover:bg-primary hover:text-black"
+            >
               View All Articles
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Newsletter Signup */}
-      <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
+      {/* Newsletter Signup (CTA styling aligned with Services buttons/colors) */}
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-4">
+            <h2 className="text-headline font-bold text-stone-200 mb-4">
               Stay Updated
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-6">
+            <p className="text-title text-stone-200/90 mb-6">
               Subscribe to our newsletter for the latest insights in sustainable ship recycling and circular economy
             </p>
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-primary-foreground"
+                className="flex-1 px-4 py-3 rounded-lg bg-white text-black placeholder:text-slate-500 border-0 focus:ring-2 focus:ring-primary"
               />
-              <Button variant="secondary" className="px-8">
+              <Button variant="secondary" className="px-8 bg-green-900 text-white hover:bg-green-800">
                 Subscribe
               </Button>
             </div>

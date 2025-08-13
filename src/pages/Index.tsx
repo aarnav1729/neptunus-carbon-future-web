@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+// src/pages/Index.tsx
+import { useEffect, useState, useRef, useMemo } from "react";
 import {
   ChevronDown,
   ArrowRight,
@@ -15,7 +16,7 @@ import {
   Linkedin,
   Instagram,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,35 +26,42 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import shipbuild from "@/assets/ship1.jpeg";
 import low1 from "@/assets/low1.jpeg";
 import policy1 from "@/assets/policy1.jpeg";
 import part1 from "@/assets/part1.jpeg";
 import stake1 from "@/assets/stake1.jpeg";
-import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Animated metrics
   const [animatedNumbers, setAnimatedNumbers] = useState({
     steel: 0,
     gdp: 0,
     jobs: 0,
     carbon: 0,
   });
+
+  // Navbar + UI state (match Services.tsx pattern)
   const [navScrolled, setNavScrolled] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [scrollSpeed, setScrollSpeed] = useState(1);
+  const servicesRailRef = useRef<HTMLDivElement>(null);
+
+  const [carouselPaused, setCarouselPaused] = useState(false);
+  const [selectedCert, setSelectedCert] = useState<
+    (typeof certifications)[number] | null
+  >(null);
+  const [overlayTextClass, setOverlayTextClass] = useState<
+    "text-black" | "text-white"
+  >("text-black");
+
+  // Contact form
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -65,25 +73,58 @@ const Index = () => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle scroll for navigation
+  const pickTextClassFromBg = (el: HTMLElement | null) => {
+    try {
+      if (!el) return "text-black";
+      const bg = getComputedStyle(el).backgroundColor; // e.g. "rgb(231, 229, 228)"
+      const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+      if (!match) return "text-black";
+      const [r, g, b] = [Number(match[1]), Number(match[2]), Number(match[3])];
+
+      // sRGB -> relative luminance
+      const toLin = (v: number) => {
+        const s = v / 255;
+        return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+      };
+      const L = 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
+      // If background is bright, use dark text; else white text
+      return L > 0.5 ? "text-black" : "text-white";
+    } catch {
+      return "text-black";
+    }
+  };
+
+  // Handle scroll for navigation (same threshold behavior)
   useEffect(() => {
     const handleScroll = () => {
       const heroHeight = window.innerHeight * 0.8;
       setNavScrolled(window.scrollY > heroHeight);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Auto‑scroll effect
+  useEffect(() => {
+    // center the middle copy on mount
+    const rail = servicesRailRef.current;
+    if (!rail) return;
+    const child = rail.children.item(BASE_OFFSET) as HTMLElement | null;
+    if (child) {
+      child.scrollIntoView({
+        behavior: "auto",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     let animationId: number;
     const step = () => {
       const el = carouselRef.current;
-      if (el) {
-        el.scrollLeft += scrollSpeed;
-        // when we've scrolled through one copy, jump back seamlessly
+      if (el && !carouselPaused) {
+        el.scrollLeft += FIXED_SCROLL_SPEED;
         if (el.scrollLeft >= el.scrollWidth / 2) {
           el.scrollLeft -= el.scrollWidth / 2;
         }
@@ -92,9 +133,9 @@ const Index = () => {
     };
     animationId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationId);
-  }, [scrollSpeed]);
+  }, [carouselPaused]);
 
-  // Animation for numbers
+  // Metric counters
   useEffect(() => {
     const animateNumber = (
       key: keyof typeof animatedNumbers,
@@ -125,17 +166,13 @@ const Index = () => {
     });
 
     const metricsElement = document.getElementById("metrics");
-    if (metricsElement) {
-      observer.observe(metricsElement);
-    }
-
+    if (metricsElement) observer.observe(metricsElement);
     return () => observer.disconnect();
   }, []);
 
   // Form validation
   const validateForm = () => {
     const errors: Record<string, string> = {};
-
     if (!formData.name.trim()) errors.name = "Name is required";
     if (!formData.email.trim()) errors.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
@@ -145,7 +182,6 @@ const Index = () => {
     if (!formData.designation.trim())
       errors.designation = "Designation is required";
     if (!formData.message.trim()) errors.message = "Message is required";
-
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -160,17 +196,12 @@ const Index = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
     setIsSubmitting(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     toast({
       title: "Message sent successfully!",
       description: "We'll get back to you within 24 hours.",
     });
-
     setFormData({
       name: "",
       email: "",
@@ -182,6 +213,9 @@ const Index = () => {
     setIsSubmitting(false);
   };
 
+  const FIXED_SCROLL_SPEED = 3; // ~40% of prior slider's max speed
+
+  // Cards content
   const services = [
     {
       id: "services",
@@ -271,7 +305,6 @@ const Index = () => {
         },
       ],
     },
-
     {
       id: "stakeholders",
       title: "What's In It for You?",
@@ -296,6 +329,7 @@ const Index = () => {
     },
   ];
 
+  // Certifications carousel data
   const certifications = [
     {
       name: "HKC – Hong Kong Convention",
@@ -316,10 +350,10 @@ const Index = () => {
       details: "Aligned with UNEP / Basel Convention for hazardous materials",
     },
     {
-      name: "SA 8000",
+      name: "SA 8000",
       logo: "/assets/SA8000.png",
       description: "Administered by SAI",
-      details: "Social Accountability International standard SA 8000",
+      details: "Social Accountability International standard SA 8000",
     },
     {
       name: "IHM (Part 1-3)",
@@ -329,28 +363,28 @@ const Index = () => {
         "Inventory of Hazardous Materials (Parts 1–3) per IMO MEPC.269(68)",
     },
     {
-      name: "ISO 9001:2015",
+      name: "ISO 9001:2015",
       logo: "/assets/ISO9001.png",
       description: "Quality Management Systems",
-      details: "ISO 9001:2015 standard for Quality Management Systems",
+      details: "ISO 9001:2015 standard for Quality Management Systems",
     },
     {
-      name: "ISO 30000:2009",
+      name: "ISO 30000:2009",
       logo: "/assets/iso30000.png",
       description: "Ship Recycling Management",
-      details: "ISO 30000:2009 for Ship Recycling Management Systems",
+      details: "ISO 30000:2009 for Ship Recycling Management Systems",
     },
     {
-      name: "ISO 45001:2018",
+      name: "ISO 45001:2018",
       logo: "/assets/iso45001.webp",
       description: "Health & Safety Systems",
-      details: "ISO 45001:2018 for Occupational Health & Safety Management",
+      details: "ISO 45001:2018 for Occupational Health & Safety Management",
     },
     {
-      name: "ISO 14001:2015",
+      name: "ISO 14001:2015",
       logo: "/assets/iso-14001.jpg",
       description: "Environmental Management",
-      details: "ISO 14001:2015 standard for Environmental Management Systems",
+      details: "ISO 14001:2015 standard for Environmental Management Systems",
     },
   ];
 
@@ -493,6 +527,7 @@ const Index = () => {
     },
   ];
 
+  // Slider navigation
   const navigateCards = (direction: "left" | "right") => {
     if (direction === "left") {
       setCurrentCardIndex((prev) =>
@@ -505,120 +540,28 @@ const Index = () => {
     }
   };
 
-  const scrollToSection = (sectionId: string) => {
-    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-    setMobileMenuOpen(false);
-  };
+  const BASE_OFFSET = services.length;
+  const servicesLoop = useMemo(
+    () => [...services, ...services, ...services],
+    [services]
+  );
 
-  const getCardLayout = () => {
-    return "grid-cols-1";
-  };
+  useEffect(() => {
+    // whenever index changes, scroll to the middle copy + index
+    const rail = servicesRailRef.current;
+    if (!rail) return;
+    const targetIndex = BASE_OFFSET + currentCardIndex;
+    const child = rail.children.item(targetIndex) as HTMLElement | null;
+    if (child) {
+      child.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }, [currentCardIndex, BASE_OFFSET]);
 
-  const cardRoutes: Record<string, string> = {
-    services: "/services",
-    partners: "/services", // low-carbon steel → Services.tsx
-    impact: "/partners", // global impact → Partners.tsx
-    policy: "/impact", // policy → Impact.tsx
-    stakeholders: "/stakeholders", // stakeholders → Stakeholders.tsx
-  };
-
-  const renderCardContent = (service: (typeof services)[0]) => {
-    return (
-      <section
-        className="relative section-padding bg-surface-elevated/20"
-        id="services-section"
-      >
-        <div className="container-custom">
-          {/* Section Heading */}
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Our Capabilities
-            </h2>
-            <p className="text-body-large text-text-secondary max-w-3xl mx-auto">
-              Comprehensive solutions for sustainable maritime operations
-            </p>
-          </div>
-
-          {/* Card Slider */}
-          <div className="relative max-w-5xl mx-auto overflow-hidden">
-            <div
-              className="flex transition-transform duration-700 ease-out"
-              style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
-            >
-              {services.map((service) => (
-                // 3️⃣ root div is now clickable
-                <div
-                  key={service.id}
-                  className="relative min-w-full h-[540px] cursor-pointer"
-                  onClick={() => navigate(cardRoutes[service.id] || "/")}
-                >
-                  {/* Background Image */}
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-                  />
-
-                  {/* Card Frame */}
-                  <div className="absolute inset-0 m-6 rounded-2xl overflow-hidden">
-                    {/* Glass Header Overlay */}
-                    <div className="absolute top-6 left-6 bg-white/15 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-6 py-4 text-white z-10">
-                      <span className="text-xs tracking-widest uppercase opacity-80">
-                        {service.tag}
-                      </span>
-                      <h3 className="mt-1 text-3xl md:text-4xl font-medium flex items-center leading-tight">
-                        {service.title}
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </h3>
-                    </div>
-
-                    {/* Card-level Arrows (above link area) */}
-                    <div className="absolute inset-0 flex items-center justify-between px-6 z-10">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation(); // 4️⃣ prevent bubbling to root onClick
-                          navigateCards("left");
-                        }}
-                        className="p-3 bg-black hover:bg-black rounded transition-colors z-20"
-                      >
-                        <ChevronLeft className="w-6 h-6 text-black" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigateCards("right");
-                        }}
-                        className="p-3 bg-black/10 hover:bg-black/60 rounded transition-colors z-20"
-                      >
-                        <ChevronRight className="w-6 h-6 text-black" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Dots */}
-          <div className="flex justify-center mt-10 space-x-2">
-            {services.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentCardIndex(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentCardIndex
-                    ? "bg-brand-blue"
-                    : "bg-surface-elevated"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  };
-
-  // Navbar links
+  // Navbar links (Services.tsx parity)
   const navLinks = [
     { label: "Home", href: "/", active: true },
     { label: "About", href: "/about" },
@@ -631,16 +574,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navbar (always hamburger) */}
+      {/* Navbar (exact structure & style from Services.tsx) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
             className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
-            className="p-2 text-white"
+            className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
             {mobileMenuOpen ? (
@@ -659,7 +602,7 @@ const Index = () => {
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary" : "hover:text-primary"
+                    active ? "text-primary font-medium" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -680,99 +623,118 @@ const Index = () => {
         )}
       </nav>
 
-      {/* Hero Section */}
-      <div className="relative h-screen flex items-center justify-center video-container">
+      {/* Hero Section (video + Services color scheme overlay) */}
+      <div className="relative h-screen flex items-center justify-center">
         <video
           autoPlay
           loop
           muted
-          className="absolute inset-0 w-full h-full object-cover opacity-50"
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
         >
           <source src="/assets/herov.mp4" type="video/mp4" />
         </video>
 
+        {/* Services green gradient veil */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-300/20 to-green-500/20" />
+
         <div className="relative z-10 text-center max-w-6xl px-4 md:px-8 animate-fade-in-up">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl mb-6 md:mb-8 text-gradient font-light">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl mb-6 md:mb-8 font-bold text-stone-200">
             Neptunus Ship Builders and Recyclers
           </h1>
-          <p className="text-lg text-white md:text-xl lg:text-2xl text-text-secondary mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl lg:text-2xl mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed text-stone-200">
             Pioneering India's carbon-negative future through sustainable ship
             recycling and circular steel production.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button
+              variant="secondary"
+              size="lg"
+              className="group text-white bg-green-900"
+            >
+              <a href="/#contact" className="flex items-center">
+                Get Quote
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-primary-foreground text-white bg-yellow-500 hover:bg-primary-foreground hover:text-primary"
+            >
+              <a href="/services">Explore Services</a>
+            </Button>
+          </div>
         </div>
 
-        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2 md:space-y-3 animate-float">
-          <ChevronDown className="w-5 h-5 md:w-6 md:h-6 text-brand-blue animate-bounce" />
-          <span className="text-xs md:text-sm text-text-tertiary text-center">
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 md:space-y-3">
+          <ChevronDown className="w-5 h-5 md:w-6 md:h-6 text-stone-200 animate-bounce" />
+          <span className="text-xs md:text-sm text-stone-200">
             Scroll to Explore
           </span>
         </div>
       </div>
 
-      {/* Enhanced Certifications Carousel */}
-      {/* Enhanced Certifications Carousel */}
-      <section className="section-padding" id="certifications">
+      {/* Certifications (full-width, auto-moving, click to pause + quick view) */}
+      <section
+        id="certifications"
+        className="section-padding bg-white text-black px-0 pb-6"
+      >
+        {/* Keep the heading constrained for readability */}
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-headline mb-4 text-gradient font-medium">
+            <h2 className="text-headline mb-4 font-bold text-black">
               Certifications & Standards
             </h2>
-            <p className="text-body-large text-text-secondary">
+            <p className="text-body-large text-black/70">
               Maintaining the highest industry standards and compliance
             </p>
           </div>
+        </div>
 
-          {/* Controls */}
-          <div className="flex items-center space-x-4 mb-4">
-            <button
-              className="p-3 hover:bg-surface-elevated rounded-full"
-              onClick={() => {
-                if (carouselRef.current) carouselRef.current.scrollLeft -= 300;
-              }}
-            >
-              <ChevronLeft className="w-6 h-6 text-text-primary" />
-            </button>
-            <button
-              className="p-3 hover:bg-surface-elevated rounded-full"
-              onClick={() => {
-                if (carouselRef.current) carouselRef.current.scrollLeft += 300;
-              }}
-            >
-              <ChevronRight className="w-6 h-6 text-text-primary" />
-            </button>
-            <input
-              type="range"
-              min="0"
-              max="10"
-              step="0.5"
-              value={scrollSpeed}
-              onChange={(e) => setScrollSpeed(Number(e.target.value))}
-              className="flex-1"
-            />
-          </div>
-
-          {/* Infinite-looping carousel */}
+        {/* Edge-to-edge rail */}
+        <div className="w-screen max-w-none overflow-hidden">
           <div
             ref={carouselRef}
-            className="flex space-x-16 overflow-hidden"
+            className="flex space-x-16 overflow-hidden px-6 sm:px-8 md:px-10"
             style={{ scrollBehavior: "auto" }}
           >
             {[...certifications, ...certifications].map((cert, index) => (
               <HoverCard key={index}>
                 <HoverCardTrigger asChild>
-                  <div className="flex-shrink-0 w-80 h-56 elevated-panel rounded-2xl flex flex-col items-center justify-center cursor-pointer group transition-transform duration-300 hover:scale-105">
-                    <div className="w-24 h-24 mb-4 overflow-hidden rounded-lg">
+                  {/* CARD */}
+                  <div
+                    className="flex-shrink-0 w-80 h-56 elevated-panel rounded-2xl flex flex-col items-center justify-center cursor-pointer group transition-transform duration-300 hover:scale-105 bg-stone-200"
+                    onClick={(e) => {
+                      // Pick best text color from the clicked card's background
+                      setOverlayTextClass(pickTextClassFromBg(e.currentTarget));
+                      setSelectedCert(cert);
+                      setCarouselPaused(true);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setOverlayTextClass(
+                          pickTextClassFromBg(e.currentTarget as HTMLElement)
+                        );
+                        setSelectedCert(cert);
+                        setCarouselPaused(true);
+                      }
+                    }}
+                  >
+                    <div className="w-24 h-24 mb-4 overflow-hidden rounded-lg bg-white">
                       <img
                         src={cert.logo}
                         alt={cert.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="text-center px-6">
-                      <div className="font-semibold text-lg text-text-primary mb-2">
+                      <div className="font-semibold text-lg text-black mb-2">
                         {cert.name}
                       </div>
-                      <div className="text-sm text-text-secondary">
+                      <div className="text-sm text-black/70">
                         {cert.description}
                       </div>
                     </div>
@@ -780,105 +742,204 @@ const Index = () => {
                 </HoverCardTrigger>
                 <HoverCardContent className="w-96 p-6">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-xl text-text-primary">
-                      {cert.name}
-                    </h4>
-                    <p className="text-base text-text-secondary">
-                      {cert.details}
-                    </p>
+                    <h4 className="font-semibold text-xl">{cert.name}</h4>
+                    <p className="text-base text-black/80">{cert.details}</p>
                   </div>
                 </HoverCardContent>
               </HoverCard>
             ))}
           </div>
         </div>
+
+        {/* Quick View Overlay (click anywhere to resume) */}
+        {selectedCert && (
+          <div
+            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center px-4"
+            onClick={() => {
+              setSelectedCert(null);
+              setCarouselPaused(false);
+            }}
+            role="button"
+            aria-label="Close certification quick view"
+          >
+            {/* Stop click bubbling inside the panel */}
+            <div
+              className="max-w-xl w-full rounded-2xl shadow-xl p-6 sm:p-8 bg-stone-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-4 sm:gap-6 mb-5">
+                <div className="w-16 h-16 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+                  <img
+                    src={selectedCert.logo}
+                    alt={selectedCert.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3
+                    className={`text-xl sm:text-2xl font-semibold ${overlayTextClass} truncate`}
+                  >
+                    {selectedCert.name}
+                  </h3>
+                  <p
+                    className={`text-sm sm:text-base ${
+                      overlayTextClass === "text-white"
+                        ? "text-white/80"
+                        : "text-black/70"
+                    } truncate`}
+                  >
+                    {selectedCert.description}
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className={`${
+                  overlayTextClass === "text-white"
+                    ? "text-white/90"
+                    : "text-black/80"
+                } leading-relaxed`}
+              >
+                {selectedCert.details}
+              </div>
+
+              <div className="mt-6 flex items-center justify-end">
+                <button
+                  onClick={() => {
+                    setSelectedCert(null);
+                    setCarouselPaused(false);
+                  }}
+                  className="px-4 py-2 rounded-lg bg-green-900 text-white hover:bg-green-800 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* Services Section */}
+      {/* Services – large single-focus card with side peek, tighter spacing after Certifications */}
       <section
         id="services-section"
-        className="relative section-padding bg-surface-elevated/20"
+        className="relative section-padding pt-6 md:pt-8 bg-white text-black"
       >
-        <div className="container-custom">
-          {/* Heading */}
-          <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Our Capabilities
-            </h2>
-            <p className="text-body-large text-text-secondary max-w-3xl mx-auto">
+        <div className="container-custom max-w-[1600px]">
+          <div className="text-center mb-8 md:mb-10">
+            <h2 className="text-headline mb-4 font-bold">Our Capabilities</h2>
+            <p className="text-body-large text-black/70 max-w-3xl mx-auto">
               Comprehensive solutions for sustainable maritime operations
             </p>
           </div>
 
-          {/* Slider */}
-          <div className="relative max-w-5xl mx-auto overflow-hidden">
+          {/* Rail with scroll snap; wider, padded, peeks on both sides */}
+          <div className="relative">
             <div
-              className="flex transition-transform duration-700 ease-out"
-              style={{ transform: `translateX(-${currentCardIndex * 100}%)` }}
+              ref={servicesRailRef}
+              className="flex gap-6 md:gap-8 px-4 md:px-6 overflow-x-auto snap-x snap-mandatory scroll-smooth [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
-              {services.map((service) => (
+              {servicesLoop.map((service, idx) => (
                 <div
-                  key={service.id}
-                  className="relative min-w-full h-[540px] cursor-pointer"
-                  onClick={() => navigate(cardRoutes[service.id] || "/")}
+                  key={`${service.id}-${idx}`}
+                  className="shrink-0 snap-center w-[90%] sm:w-[86%] md:w-[84%] lg:w-[80%] xl:w-[76%]"
                 >
-                  {/* Background */}
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-                  />
+                  <div
+                    className="group relative h-[460px] sm:h-[500px] lg:h-[560px] rounded-2xl overflow-hidden ring-1 ring-stone-200 hover:ring-stone-300 transition cursor-pointer bg-stone-200"
+                    onClick={() =>
+                      navigate(
+                        {
+                          services: "/services",
+                          partners: "/services",
+                          impact: "/partners",
+                          policy: "/impact",
+                          stakeholders: "/stakeholders",
+                        }[service.id] || "/"
+                      )
+                    }
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(
+                          {
+                            services: "/services",
+                            partners: "/services",
+                            impact: "/partners",
+                            policy: "/impact",
+                            stakeholders: "/stakeholders",
+                          }[service.id] || "/"
+                        );
+                      }
+                    }}
+                  >
+                    {/* Background image */}
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
 
-                  {/* Card Frame */}
-                  <div className="absolute inset-0 m-6 rounded-2xl overflow-hidden">
-                    {/* Glass Header */}
-                    <div className="absolute top-6 left-6 bg-white/15 backdrop-blur-md ring-1 ring-white/10 rounded-2xl px-6 py-4 text-white z-10">
-                      <span className="text-xs tracking-widest uppercase opacity-80">
-                        {service.subtitle}
-                      </span>
-                      <h3 className="mt-1 text-3xl md:text-4xl font-medium flex items-center leading-tight">
-                        {service.title}
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </h3>
+                    {/* Hover veil */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-300" />
+
+                    {/* Top-left meta pill */}
+                    <div className="absolute top-5 left-5 z-10">
+                      <div className="bg-white/80 backdrop-blur-md ring-1 ring-white/40 text-black rounded-xl px-4 py-2">
+                        <span className="text-[11px] tracking-widest uppercase opacity-90">
+                          {service.subtitle}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Nav Arrows */}
-                    <div className="absolute inset-0 flex items-center justify-between px-6 z-20">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigateCards("left");
-                        }}
-                        className="p-3 bg-white/10 hover:bg-white/60 rounded transition-colors"
-                      >
-                        <ChevronLeft className="w-6 h-6 text-white" />
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigateCards("right");
-                        }}
-                        className="p-3 bg-white/10 hover:bg-white/60 rounded transition-colors"
-                      >
-                        <ChevronRight className="w-6 h-6 text-white" />
-                      </button>
+                    {/* Bottom-left title & CTA */}
+                    <div className="absolute left-5 right-5 bottom-5 z-10">
+                      <h3 className="text-3xl md:text-4xl font-semibold leading-tight text-white drop-shadow">
+                        {service.title}
+                      </h3>
+                      <div className="mt-3 inline-flex items-center text-white/90 text-sm">
+                        <span className="underline underline-offset-4 decoration-white/40">
+                          Explore
+                        </span>
+                        <ArrowRight className="ml-2 w-4 h-4 translate-x-0 group-hover:translate-x-0.5 transition-transform" />
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
+
+            {/* Arrows (always visible; inside the padded area) */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-4 md:px-6">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateCards("left");
+                }}
+                className="pointer-events-auto p-3 bg-white/80 hover:bg-white rounded transition-colors shadow"
+              >
+                <ChevronLeft className="w-6 h-6 text-black" />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateCards("right");
+                }}
+                className="pointer-events-auto p-3 bg-white/80 hover:bg-white rounded transition-colors shadow"
+              >
+                <ChevronRight className="w-6 h-6 text-black" />
+              </button>
+            </div>
           </div>
 
           {/* Dots */}
-          <div className="flex justify-center mt-10 space-x-2">
+          <div className="flex justify-center mt-8 space-x-2">
             {services.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentCardIndex(idx)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  idx === currentCardIndex
-                    ? "bg-brand-blue"
-                    : "bg-surface-elevated"
+                  idx === currentCardIndex ? "bg-green-600" : "bg-stone-300"
                 }`}
               />
             ))}
@@ -886,14 +947,14 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Team Carousel - Pillars of Neptunus */}
-      <section className="section-padding bg-surface-elevated/20" id="team">
+      {/* Team Carousel */}
+      <section className="section-padding bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
+            <h2 className="text-headline font-bold text-stone-200 mb-4">
               Pillars of Neptunus
             </h2>
-            <p className="text-body-large text-text-secondary">
+            <p className="text-body-large text-stone-200/90">
               Experienced professionals driving sustainable innovation
             </p>
           </div>
@@ -903,7 +964,7 @@ const Index = () => {
               {[...teamMembers, ...teamMembers].map((member, index) => (
                 <HoverCard key={index}>
                   <HoverCardTrigger asChild>
-                    <Card className="flex-shrink-0 w-80 gradient-border hover-lift group cursor-pointer transition-all duration-500 hover:scale-105">
+                    <Card className="flex-shrink-0 w-80 hover-lift group cursor-pointer transition-all duration-500 hover:scale-105 bg-white/90">
                       <CardContent className="p-0">
                         <div className="relative h-48 overflow-hidden rounded-t-lg">
                           <img
@@ -911,19 +972,19 @@ const Index = () => {
                             alt={member.name}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                         </div>
                         <div className="p-6">
-                          <h3 className="text-xl font-bold mb-2 text-text-primary">
+                          <h3 className="text-xl font-bold mb-2 text-black">
                             {member.name}
                           </h3>
-                          <p className="text-brand-blue font-medium mb-3">
+                          <p className="text-green-800 font-medium mb-3">
                             {member.position}
                           </p>
-                          <p className="text-body text-text-secondary mb-4">
+                          <p className="text-body text-black/80 mb-4">
                             {member.description}
                           </p>
-                          <div className="inline-block px-4 py-2 bg-brand-blue/10 rounded-full text-sm text-brand-blue">
+                          <div className="inline-block px-4 py-2 bg-green-100 rounded-full text-sm text-green-800">
                             {member.expertise}
                           </div>
                         </div>
@@ -939,28 +1000,24 @@ const Index = () => {
                           className="w-16 h-16 object-cover rounded-full"
                         />
                         <div>
-                          <h4 className="font-semibold text-text-primary">
-                            {member.name}
-                          </h4>
-                          <p className="text-sm text-brand-blue">
+                          <h4 className="font-semibold">{member.name}</h4>
+                          <p className="text-sm text-green-700">
                             {member.position}
                           </p>
                         </div>
                       </div>
-                      <p className="text-sm text-text-secondary leading-relaxed">
+                      <p className="text-sm text-black/80 leading-relaxed">
                         {member.details}
                       </p>
                       <div>
-                        <h5 className="font-medium text-text-primary mb-2">
-                          Key Achievements:
-                        </h5>
+                        <h5 className="font-medium mb-2">Key Achievements:</h5>
                         <ul className="space-y-1">
                           {member.achievements.map((achievement, idx) => (
                             <li
                               key={idx}
-                              className="text-xs text-text-secondary flex items-start"
+                              className="text-xs text-black/70 flex items-start"
                             >
-                              <div className="w-1.5 h-1.5 bg-brand-teal rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
+                              <div className="w-1.5 h-1.5 bg-green-700 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
                               {achievement}
                             </li>
                           ))}
@@ -975,70 +1032,68 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Key Metrics */}
-      <section id="metrics" className="section-padding bg-surface-elevated/20">
+      {/* Impact Metrics */}
+      <section id="metrics" className="section-padding bg-white text-black">
         <div className="container-custom">
           <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Impact Metrics
-            </h2>
-            <p className="text-body-large text-text-secondary">
+            <h2 className="text-headline font-bold mb-4">Impact Metrics</h2>
+            <p className="text-body-large text-black/70">
               Measurable results driving sustainable change
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
+            <Card className="text-center p-8 hover-lift bg-stone-200">
               <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
+                <div className="text-5xl font-bold mb-4 text-green-700">
                   {animatedNumbers.steel}M
                 </div>
-                <div className="text-body font-medium text-text-primary mb-2">
+                <div className="text-body font-medium text-black mb-2">
                   MT Steel Recovered
                 </div>
-                <div className="text-sm text-text-secondary">
+                <div className="text-sm text-black/70">
                   Annual processing capacity
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
+            <Card className="text-center p-8 hover-lift bg-stone-200">
               <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
+                <div className="text-5xl font-bold mb-4 text-green-700">
                   ${animatedNumbers.gdp}B+
                 </div>
-                <div className="text-body font-medium text-text-primary mb-2">
+                <div className="text-body font-medium text-black mb-2">
                   GDP Contribution
                 </div>
-                <div className="text-sm text-text-secondary">
+                <div className="text-sm text-black/70">
                   Economic impact to Odisha
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
+            <Card className="text-center p-8 hover-lift bg-stone-200">
               <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
+                <div className="text-5xl font-bold mb-4 text-green-700">
                   {animatedNumbers.jobs.toLocaleString()}
                 </div>
-                <div className="text-body font-medium text-text-primary mb-2">
+                <div className="text-body font-medium text-black mb-2">
                   Direct and Indirect Jobs
                 </div>
-                <div className="text-sm text-text-secondary">
+                <div className="text-sm text-black/70">
                   Employment opportunities
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="gradient-border text-center p-8 hover-lift animate-glow">
+            <Card className="text-center p-8 hover-lift bg-stone-200">
               <CardContent className="p-0">
-                <div className="text-5xl font-light mb-4 text-gradient">
+                <div className="text-5xl font-bold mb-4 text-green-700">
                   {(animatedNumbers.carbon / 100).toFixed(1)}M
                 </div>
-                <div className="text-body font-medium text-text-primary mb-2">
+                <div className="text-body font-medium text-black mb-2">
                   T CO₂ Avoided
                 </div>
-                <div className="text-sm text-text-secondary">
+                <div className="text-sm text-black/70">
                   Annual carbon reduction
                 </div>
               </CardContent>
@@ -1048,21 +1103,21 @@ const Index = () => {
       </section>
 
       {/* Mission & Vision */}
-      <section className="section-padding">
+      <section className="section-padding bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <Card className="gradient-border p-12 hover-lift">
+            <Card className="p-12 hover-lift bg-white/95">
               <CardContent className="p-0">
-                <div className="text-caption text-brand-blue mb-4">
+                <div className="text-caption text-green-800 mb-4">
                   OUR MISSION
                 </div>
-                <h3 className="text-title mb-6 text-text-primary font-medium">
+                <h3 className="text-title mb-6 font-bold text-black">
                   Integrity and Commitment
                 </h3>
-                <p className="text-body-large font-medium mb-6 text-text-primary">
+                <p className="text-body-large font-medium mb-6 text-black">
                   Combating climate change through sustainable practices.
                 </p>
-                <p className="text-body text-text-secondary leading-relaxed">
+                <p className="text-body text-black/80 leading-relaxed">
                   "To create a vertically integrated ship recycling facility
                   while upholding the highest labour safety and environmental
                   sustainability standards."
@@ -1070,18 +1125,18 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="gradient-border p-12 hover-lift">
+            <Card className="p-12 hover-lift bg-white/95">
               <CardContent className="p-0">
-                <div className="text-caption text-brand-teal mb-4">
+                <div className="text-caption text-green-800 mb-4">
                   OUR VISION
                 </div>
-                <h3 className="text-title mb-6 text-text-primary font-medium">
+                <h3 className="text-title mb-6 font-bold text-black">
                   Leading India's Future
                 </h3>
-                <p className="text-body-large font-medium mb-6 text-text-primary">
+                <p className="text-body-large font-medium mb-6 text-black">
                   Transition to a carbon-secure future through innovation.
                 </p>
-                <p className="text-body text-text-secondary leading-relaxed">
+                <p className="text-body text-black/80 leading-relaxed">
                   "To position India as a global leader in sustainable ship
                   recycling by building the world's most advanced,
                   environmentally responsible, and socially conscious maritime
@@ -1093,24 +1148,22 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Contact Form */}
-      <section className="section-padding bg-surface-elevated/20" id="contact">
+      {/* Contact */}
+      <section className="section-padding bg-white text-black" id="contact">
         <div className="container-custom max-w-4xl">
           <div className="text-center mb-20">
-            <h2 className="text-headline mb-6 text-gradient font-medium">
-              Get In Touch
-            </h2>
-            <p className="text-body-large text-text-secondary">
+            <h2 className="text-headline font-bold mb-6">Get In Touch</h2>
+            <p className="text-body-large text-black/70">
               Ready to be part of India's sustainable maritime future?
             </p>
           </div>
 
-          <Card className="gradient-border p-8 lg:p-12">
+          <Card className="p-8 lg:p-12 bg-stone-200">
             <CardContent className="p-0">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
+                    <label className="block text-body font-medium mb-3">
                       Name *
                     </label>
                     <Input
@@ -1118,7 +1171,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("name", e.target.value)
                       }
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                      className={`h-12 ${
                         formErrors.name ? "border-red-500" : ""
                       }`}
                       placeholder="Your full name"
@@ -1130,7 +1183,7 @@ const Index = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
+                    <label className="block text-body font-medium mb-3">
                       Email *
                     </label>
                     <Input
@@ -1139,7 +1192,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("email", e.target.value)
                       }
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                      className={`h-12 ${
                         formErrors.email ? "border-red-500" : ""
                       }`}
                       placeholder="your.email@company.com"
@@ -1154,7 +1207,7 @@ const Index = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
+                    <label className="block text-body font-medium mb-3">
                       Phone Number *
                     </label>
                     <Input
@@ -1163,7 +1216,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("phone", e.target.value)
                       }
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                      className={`h-12 ${
                         formErrors.phone ? "border-red-500" : ""
                       }`}
                       placeholder="+91 XXXXX XXXXX"
@@ -1175,7 +1228,7 @@ const Index = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-body font-medium mb-3 text-text-primary">
+                    <label className="block text-body font-medium mb-3">
                       Company *
                     </label>
                     <Input
@@ -1183,7 +1236,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("company", e.target.value)
                       }
-                      className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                      className={`h-12 ${
                         formErrors.company ? "border-red-500" : ""
                       }`}
                       placeholder="Your company name"
@@ -1197,7 +1250,7 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <label className="block text-body font-medium mb-3 text-text-primary">
+                  <label className="block text-body font-medium mb-3">
                     Designation *
                   </label>
                   <Input
@@ -1205,7 +1258,7 @@ const Index = () => {
                     onChange={(e) =>
                       handleInputChange("designation", e.target.value)
                     }
-                    className={`bg-surface-elevated border-border/40 text-text-primary h-12 ${
+                    className={`h-12 ${
                       formErrors.designation ? "border-red-500" : ""
                     }`}
                     placeholder="Your job title"
@@ -1218,7 +1271,7 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <label className="block text-body font-medium mb-3 text-text-primary">
+                  <label className="block text-body font-medium mb-3">
                     Message *
                   </label>
                   <Textarea
@@ -1226,7 +1279,7 @@ const Index = () => {
                     onChange={(e) =>
                       handleInputChange("message", e.target.value)
                     }
-                    className={`bg-surface-elevated border-border/40 text-text-primary h-32 resize-none ${
+                    className={`h-32 resize-none ${
                       formErrors.message ? "border-red-500" : ""
                     }`}
                     placeholder="Tell us about your requirements..."
@@ -1241,7 +1294,7 @@ const Index = () => {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full btn-primary h-14 text-lg disabled:opacity-50"
+                  className="w-full h-14 text-lg disabled:opacity-50 bg-green-900 text-white hover:bg-green-800"
                 >
                   {isSubmitting ? (
                     <>
@@ -1261,63 +1314,63 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-surface-elevated border-t border-border/20 section-padding">
+      <footer className="bg-gradient-to-r from-green-300/10 to-green-500/10 section-padding">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div>
               <img
-                src="/lovable-uploads/531242ac-b981-4ac8-9615-867b96127f68.png"
+                src="/assets/logo.png"
                 alt="Neptunus Logo"
-                className="h-12 w-auto mb-6"
+                className="bg-white rounded-lg m-3 h-12 w-auto mb-6"
               />
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-stone-200 leading-relaxed">
                 Pioneering India's carbon-negative future through sustainable
                 ship recycling and circular steel production.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-6 text-text-primary">Services</h4>
-              <ul className="space-y-3 text-text-secondary">
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+              <h4 className="font-semibold mb-6 text-white">Services</h4>
+              <ul className="space-y-3 text-stone-200">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   Ship Recycling
                 </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   Steel Re-Rolling
                 </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   Shipbuilding & Repair
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-6 text-text-primary">Company</h4>
-              <ul className="space-y-3 text-text-secondary">
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+              <h4 className="font-semibold mb-6 text-white">Company</h4>
+              <ul className="space-y-3 text-stone-200">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   About Us
                 </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   Our Team
                 </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   Certifications
                 </li>
-                <li className="hover:text-brand-blue cursor-pointer transition-colors">
+                <li className="hover:text-white cursor-pointer transition-colors">
                   Sustainability
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-6 text-text-primary">Contact</h4>
-              <div className="space-y-4 text-text-secondary">
-                <div className="flex items-center space-x-3 hover:text-brand-blue cursor-pointer transition-colors">
+              <h4 className="font-semibold mb-6 text-white">Contact</h4>
+              <div className="space-y-4 text-stone-200">
+                <div className="flex items-center space-x-3 hover:text-white cursor-pointer transition-colors">
                   <Mail className="w-5 h-5" />
                   <span>info@neptunus.in</span>
                 </div>
-                <div className="flex items-center space-x-3 hover:text-brand-blue cursor-pointer transition-colors">
+                <div className="flex items-center space-x-3 hover:text-white cursor-pointer transition-colors">
                   <Phone className="w-5 h-5" />
                   <span>+91 xxx xxx xxxx</span>
                 </div>
-                <div className="flex items-center space-x-3 hover:text-brand-blue cursor-pointer transition-colors">
+                <div className="flex items-center space-x-3 hover:text-white cursor-pointer transition-colors">
                   <MapPin className="w-5 h-5" />
                   <span>Odisha, India</span>
                 </div>
@@ -1325,10 +1378,10 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Social Media Icons */}
-          <div className="border-t border-border/20 pt-8">
+          {/* Social Media */}
+          <div className="border-t border-white/20 pt-8">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-              <p className="text-text-secondary">
+              <p className="text-stone-200">
                 &copy; 2024 Neptunus Ship Builders and Recyclers. All rights
                 reserved.
               </p>
@@ -1337,33 +1390,33 @@ const Index = () => {
                   href="https://facebook.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <Facebook className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                  <Facebook className="w-5 h-5 text-stone-200 hover:text-white" />
                 </a>
                 <a
                   href="https://twitter.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <Twitter className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                  <Twitter className="w-5 h-5 text-stone-200 hover:text-white" />
                 </a>
                 <a
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <Linkedin className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                  <Linkedin className="w-5 h-5 text-stone-200 hover:text-white" />
                 </a>
                 <a
                   href="https://instagram.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full bg-surface-elevated hover:bg-brand-blue/20 transition-colors"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <Instagram className="w-5 h-5 text-text-secondary hover:text-brand-blue" />
+                  <Instagram className="w-5 h-5 text-stone-200 hover:text-white" />
                 </a>
               </div>
             </div>

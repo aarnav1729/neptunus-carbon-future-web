@@ -1,5 +1,6 @@
 // src/pages/Partners.tsx
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Building,
   Award,
@@ -19,10 +20,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const Partners = () => {
-  // Navbar state
+  // Navbar state (match Services.tsx: always hamburger)
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Shrink navbar on scroll (same threshold as Services.tsx)
   useEffect(() => {
     const onScroll = () => {
       const threshold = window.innerHeight * 0.8;
@@ -59,20 +61,6 @@ const Partners = () => {
       ],
     },
     {
-      name: "JICA (Japan International Cooperation Agency)",
-      type: "International Development",
-      description: "Technical cooperation for sustainable ship recycling practices",
-      logo:
-        "https://images.unsplash.com/photo-1562789639-1e4b1e7a7c56?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      partnership: "Technical Cooperation",
-      scope: "Technology Transfer & Training",
-      benefits: [
-        "Advanced ship dismantling technologies",
-        "Worker safety and training programs",
-        "Environmental protection standards",
-      ],
-    },
-    {
       name: "EU Maritime Partners",
       type: "Regulatory Compliance",
       description: "Collaboration with European partners for EUSSR compliance",
@@ -104,7 +92,8 @@ const Partners = () => {
     },
     {
       name: "Bureau of International Recycling (BIR)",
-      description: "Leading international trade association for recycling industries",
+      description:
+        "Leading international trade association for recycling industries",
       logo:
         "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       focus: "Circular Economy Leadership",
@@ -117,7 +106,8 @@ const Partners = () => {
     },
     {
       name: "International Maritime Organization (IMO)",
-      description: "UN specialized agency for maritime safety and environmental protection",
+      description:
+        "UN specialized agency for maritime safety and environmental protection",
       logo:
         "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
       focus: "Maritime Safety & Environment",
@@ -196,52 +186,39 @@ const Partners = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navbar */}
-      <nav
-        className={`fixed z-50 transition-all duration-1000 ease-out ${
-          navScrolled
-            ? "top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl"
-            : "left-1/2 top-8 -translate-x-1/2 w-auto"
-        }`}
-      >
-        <div className="bg-white flex items-center justify-between py-3 px-4 md:px-6 rounded-full transition-all duration-1000 ease-out">
+      {/* Navbar (Services.tsx style) */}
+      <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
-            className={`w-auto transition-all duration-700 ${
-              navScrolled ? "h-8 md:h-10" : "h-10 md:h-12"
-            }`}
+            className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+
         {mobileMenuOpen && (
-          <div className="absolute mt-2 glass-panel rounded-2xl p-4 w-11/12 left-1/2 -translate-x-1/2">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
-                <a
+                <Link
                   key={label}
-                  href={href}
-                  className={`block text-body transition-colors ${
-                    active
-                      ? "text-primary font-medium"
-                      : "text-text-secondary hover:text-primary"
+                  to={href}
+                  className={`block text-lg ${
+                    active ? "text-primary font-medium" : "hover:text-primary"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {label}
-                </a>
+                </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full"
+                className="mt-2 btn-primary w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -254,61 +231,48 @@ const Partners = () => {
         )}
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-28 pb-8 bg-gradient-to-br from-primary/5 to-secondary/5">
+      {/* Hero Section (green gradient like Services.tsx) */}
+      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-display font-bold text-text-primary mb-4">
+            <h1 className="text-display font-bold text-stone-200 mb-4">
               Partners & Affiliations
             </h1>
-            <p className="text-title text-text-secondary mb-4">
+            <p className="text-title text-stone-200 mb-4">
               Building a global network of partnerships for sustainable ship recycling and circular economy leadership
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">
-                  20+
-                </div>
-                <div className="text-body text-text-secondary">
-                  Strategic Partners
-                </div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">20+</div>
+                <div className="text-body text-stone-200">Strategic Partners</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">
-                  15+
-                </div>
-                <div className="text-body text-text-secondary">
-                  Global Memberships
-                </div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">15+</div>
+                <div className="text-body text-stone-200">Global Memberships</div>
               </div>
               <div className="text-center">
-                <div className="text-title font-bold text-primary mb-2">
-                  100%
-                </div>
-                <div className="text-body text-text-secondary">
-                  Compliance Rate
-                </div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">100%</div>
+                <div className="text-body text-stone-200">Compliance Rate</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Strategic Partners */}
-      <section className="section-padding pt-12 pb-12">
+      {/* Strategic Partners (white section, dark text) */}
+      <section className="section-padding pt-12 pb-12 bg-white text-black">
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
-              Strategic Partners
-            </h2>
-            <p className="text-title text-text-secondary max-w-3xl mx-auto">
+            <h2 className="text-display font-bold text-black mb-2">Strategic Partners</h2>
+            <p className="text-title text-slate-600 max-w-3xl mx-auto">
               Key partnerships enabling our world-class operations and regulatory compliance
             </p>
           </div>
           <div className="grid gap-8">
             {strategicPartners.map((p, idx) => (
-              <Card key={idx} className="elevated-panel overflow-hidden">
+              <Card key={idx} className="elevated-panel overflow-hidden bg-stone-200 text-black">
                 <div className="grid lg:grid-cols-3 gap-0">
+                  {/* Partner logo & meta */}
                   <div className="bg-gradient-to-br from-primary/10 to-secondary/10 p-8 flex justify-center">
                     <div className="text-center">
                       <img
@@ -316,46 +280,36 @@ const Partners = () => {
                         alt={p.name}
                         className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-primary/20"
                       />
-                      <Badge variant="secondary" className="mb-2">
+                      <Badge variant="secondary" className="mb-2 bg-white text-black">
                         {p.type}
                       </Badge>
-                      <h3 className="text-body-large font-bold text-text-primary">
-                        {p.name}
-                      </h3>
+                      <h3 className="text-body-large font-bold">{p.name}</h3>
                     </div>
                   </div>
+
+                  {/* Details */}
                   <div className="lg:col-span-2 p-8">
                     <div className="space-y-6">
-                      <p className="text-body text-text-secondary leading-relaxed">
-                        {p.description}
-                      </p>
+                      <p className="text-body text-black/80 leading-relaxed">{p.description}</p>
                       <div className="grid md:grid-cols-2 gap-4">
                         <div>
-                          <h4 className="text-body font-semibold text-text-primary mb-2">
-                            Partnership:
-                          </h4>
-                          <Badge variant="outline" className="border-primary text-primary">
+                          <h4 className="text-body font-semibold mb-2">Partnership:</h4>
+                          <Badge variant="outline" className="border-black text-black">
                             {p.partnership}
                           </Badge>
                         </div>
                         <div>
-                          <h4 className="text-body font-semibold text-text-primary mb-2">
-                            Scope:
-                          </h4>
-                          <span className="text-body text-text-secondary">
-                            {p.scope}
-                          </span>
+                          <h4 className="text-body font-semibold mb-2">Scope:</h4>
+                          <span className="text-body text-black/80">{p.scope}</span>
                         </div>
                       </div>
-                      <div className="bg-background/50 p-6 rounded-lg">
-                        <h4 className="text-body-large font-semibold text-text-primary mb-4">
-                          Key Benefits:
-                        </h4>
+                      <div className="bg-white p-6 rounded-lg">
+                        <h4 className="text-body-large font-semibold mb-4">Key Benefits:</h4>
                         <div className="space-y-3">
                           {p.benefits.map((b, i2) => (
                             <div key={i2} className="flex items-start">
                               <CheckCircle className="h-4 w-4 text-green-600 mr-3 mt-0.5" />
-                              <span className="text-body text-text-secondary">{b}</span>
+                              <span className="text-body">{b}</span>
                             </div>
                           ))}
                         </div>
@@ -369,20 +323,20 @@ const Partners = () => {
         </div>
       </section>
 
-      {/* Global Memberships */}
-      <section className="py-16 bg-gradient-to-r from-primary/5 to-secondary/5">
+      {/* Global Memberships (green gradient like Services secondary sections) */}
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
+            <h2 className="text-display font-bold text-stone-200 mb-2">
               Global Memberships & Affiliations
             </h2>
-            <p className="text-title text-text-secondary max-w-3xl mx-auto">
+            <p className="text-title text-stone-200 max-w-3xl mx-auto">
               Active membership in leading international organizations
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             {globalMemberships.map((m, idx) => (
-              <Card key={idx} className="glass-panel">
+              <Card key={idx} className="glass-panel overflow-hidden bg-white text-black">
                 <CardHeader>
                   <div className="flex items-center space-x-4 mb-4">
                     <img
@@ -391,29 +345,21 @@ const Partners = () => {
                       className="w-16 h-16 rounded-lg object-cover"
                     />
                     <div>
-                      <CardTitle className="text-body-large text-text-primary">
-                        {m.name}
-                      </CardTitle>
-                      <Badge variant="outline" className="mt-2">
+                      <CardTitle className="text-body-large">{m.name}</CardTitle>
+                      <Badge variant="outline" className="mt-2 border-black text-black">
                         {m.focus}
                       </Badge>
                     </div>
                   </div>
-                  <p className="text-body text-text-secondary">
-                    {m.description}
-                  </p>
+                  <p className="text-body text-black/80">{m.description}</p>
                 </CardHeader>
                 <CardContent>
-                  <h4 className="text-body-large font-semibold text-text-primary mb-4">
-                    Core Principles:
-                  </h4>
+                  <h4 className="text-body-large font-semibold mb-4">Core Principles:</h4>
                   <div className="grid gap-3">
                     {m.principles.map((pr, i3) => (
                       <div key={i3} className="flex items-center">
-                        <Award className="h-4 w-4 text-primary mr-3" />
-                        <span className="text-body text-text-secondary">
-                          {pr}
-                        </span>
+                        <Award className="h-4 w-4 text-black mr-3" />
+                        <span className="text-body text-black/80">{pr}</span>
                       </div>
                     ))}
                   </div>
@@ -424,41 +370,33 @@ const Partners = () => {
         </div>
       </section>
 
-      {/* Local Partners */}
-      <section className="section-padding pt-12 pb-12">
+      {/* Local & Regional Partners (white section) */}
+      <section className="section-padding pt-12 pb-12 bg-white text-black">
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-display font-bold text-text-primary mb-2">
-              Local & Regional Partners
-            </h2>
-            <p className="text-title text-text-secondary max-w-3xl mx-auto">
+            <h2 className="text-display font-bold mb-2">Local & Regional Partners</h2>
+            <p className="text-title text-slate-600 max-w-3xl mx-auto">
               Community and regional collaboration for sustainable growth
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {localPartners.map((p, idx) => (
-              <Card key={idx} className="glass-panel text-center p-6">
+              <Card key={idx} className="glass-panel text-center p-6 bg-stone-200">
                 <div className="mb-6">
-                  <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    {idx === 0 && <Building className="h-8 w-8 text-primary" />}
-                    {idx === 1 && <UsersIcon className="h-8 w-8 text-primary" />}
-                    {idx === 2 && <Lightbulb className="h-8 w-8 text-primary" />}
-                    {idx === 3 && <DollarSign className="h-8 w-8 text-primary" />}
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-300/10 to-green-500/10 flex items-center justify-center mx-auto mb-4">
+                    {idx === 0 && <Building className="h-8 w-8 text-black" />}
+                    {idx === 1 && <UsersIcon className="h-8 w-8 text-black" />}
+                    {idx === 2 && <Lightbulb className="h-8 w-8 text-black" />}
+                    {idx === 3 && <DollarSign className="h-8 w-8 text-black" />}
                   </div>
-                  <h3 className="text-body-large font-bold text-text-primary mb-2">
-                    {p.name}
-                  </h3>
-                  <Badge variant="secondary" className="mb-4">
+                  <h3 className="text-body-large font-bold  text-black">{p.name}</h3>
+                  <Badge variant="secondary" className="mb-4 bg-gradient-to-r from-green-300/10 to-green-500/10 text-white">
                     {p.role}
                   </Badge>
                 </div>
-                <p className="text-body text-text-secondary mb-4">
-                  {p.collaboration}
-                </p>
-                <div className="bg-background/50 p-3 rounded-lg">
-                  <p className="text-caption text-primary font-medium">
-                    {p.impact}
-                  </p>
+                <p className="text-body text-black mb-4">{p.collaboration}</p>
+                <div className="bg-white p-3 rounded-lg">
+                  <p className="text-caption text-black font-medium">{p.impact}</p>
                 </div>
               </Card>
             ))}
@@ -466,18 +404,19 @@ const Partners = () => {
         </div>
       </section>
 
-      {/* Partnership Opportunities */}
-      <section className="py-16 bg-gradient-to-r from-primary to-primary-dark">
+
+      {/* Partnership Opportunities CTA (match Services CTA styling) */}
+      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-headline font-bold text-primary-foreground mb-4">
+            <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">
               Partnership Opportunities
             </h2>
-            <p className="text-title text-primary-foreground/90 mb-6">
+            <p className="text-title text-stone-200 text-primary-foreground/90 mb-6">
               Join our network of partners committed to sustainable maritime transformation
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group">
+              <Button variant="secondary" size="lg" className="group text-white bg-green-900">
                 <a href="/#contact" className="flex items-center">
                   Explore Partnership
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -486,7 +425,7 @@ const Partners = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                className="border-primary-foreground text-white bg-yellow-500 hover:bg-primary-foreground hover:text-primary"
               >
                 <a href="/stakeholders" className="flex items-center">
                   View Benefits

@@ -45,7 +45,7 @@ const Services = () => {
   const services = [
     {
       icon: Ship,
-      title: "Ship Breaking / Ship Recycling",
+      title: "Ship Dismantling / Ship Recycling",
       subtitle: "Sustainable Maritime Vessel Disposal",
       image: "/assets/sbs1.jpeg",
       description:
@@ -181,14 +181,14 @@ const Services = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (always hamburger) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
             className="h-10 md:h-12 w-auto transition-all duration-300"
           />
           <button
-            className="p-2 text-white"
+            className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -232,7 +232,7 @@ const Services = () => {
               Our Services
             </h1>
             <p className="text-title text-stone-200 mb-4">
-              Comprehensive maritime solutions for sustainable ship recycling, green steel production, and energy production
+              Comprehensive maritime solutions for sustainable ship recycling, green steel production, and clean energy generation
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
