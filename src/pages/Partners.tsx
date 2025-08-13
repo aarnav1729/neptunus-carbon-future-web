@@ -18,6 +18,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import ombimg from "@/assets/ombimg.png";
+import igbc from "@/assets/IGBC.png"; 
+import ihm from "@/assets/IHM.jpg";
+import eump from "@/assets/eump.webp"; // Assuming you have an EU Maritime Partners logo image
+import ungc from "@/assets/ungc.png"; // Assuming you have a UNGC logo image
 
 const Partners = () => {
   // Navbar state (match Services.tsx: always hamburger)
@@ -51,7 +56,7 @@ const Partners = () => {
       description:
         "MoU modeled after Alang improvements with JICA collaboration",
       logo:
-        "https://images.unsplash.com/photo-1568992687947-868a62a9f521?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+        ombimg,
       partnership: "Strategic MoU",
       scope: "Maritime Infrastructure Development",
       benefits: [
@@ -64,8 +69,7 @@ const Partners = () => {
       name: "EU Maritime Partners",
       type: "Regulatory Compliance",
       description: "Collaboration with European partners for EUSSR compliance",
-      logo:
-        "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      logo: eump,
       partnership: "Compliance Partnership",
       scope: "EU Ship Recycling Regulation",
       benefits: [
@@ -80,8 +84,7 @@ const Partners = () => {
     {
       name: "UN Global Compact",
       description: "World's largest corporate sustainability initiative",
-      logo:
-        "https://images.unsplash.com/photo-1569025743873-ea3a9ade89f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      logo: ungc,
       focus: "Sustainable Development Goals",
       principles: [
         "Human Rights Protection",
@@ -108,8 +111,7 @@ const Partners = () => {
       name: "International Maritime Organization (IMO)",
       description:
         "UN specialized agency for maritime safety and environmental protection",
-      logo:
-        "https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      logo: ihm,
       focus: "Maritime Safety & Environment",
       principles: [
         "Ship Recycling Standards",
@@ -121,8 +123,7 @@ const Partners = () => {
     {
       name: "India Green Building Council",
       description: "Leading green building certification body in India",
-      logo:
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      logo: igbc,
       focus: "Sustainable Infrastructure",
       principles: [
         "Green Building Standards",

@@ -634,8 +634,8 @@ const Index = () => {
           <source src="/assets/herov.mp4" type="video/mp4" />
         </video>
 
-        {/* Services green gradient veil */}
-        <div className="absolute inset-0 bg-gradient-to-r from-green-300/20 to-green-500/20" />
+        {/* Services green gradient veil 
+        <div className="absolute inset-0 bg-gradient-to-r from-green-300/20 to-green-500/20" />*/}
 
         <div className="relative z-10 text-center max-w-6xl px-4 md:px-8 animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl lg:text-7xl mb-6 md:mb-8 font-bold text-stone-200">
