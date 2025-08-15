@@ -32,6 +32,17 @@ import low1 from "@/assets/low1.jpeg";
 import policy1 from "@/assets/policy1.jpeg";
 import part1 from "@/assets/part1.jpeg";
 import stake1 from "@/assets/stake1.jpeg";
+import team1 from "@/assets/deepak.jpeg";
+import team2 from "@/assets/satish.jpeg";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Index = () => {
   const { toast } = useToast();
@@ -221,7 +232,7 @@ const Index = () => {
       id: "services",
       title: "Ship Recycling & Building",
       subtitle: "Comprehensive Maritime Solutions",
-      image: stake1,
+      image: shipbuild,
       content: [
         {
           subtitle: "Phased Expansion Strategy",
@@ -309,7 +320,7 @@ const Index = () => {
       id: "stakeholders",
       title: "What's In It for You?",
       subtitle: "Holistic Stakeholder Benefits",
-      image: shipbuild,
+      image: stake1,
       content: [
         {
           subtitle: "Phased Expansion Strategy",
@@ -386,68 +397,38 @@ const Index = () => {
       description: "Environmental Management",
       details: "ISO 14001:2015 standard for Environmental Management Systems",
     },
+
+    {
+      name: "The Recycling of Ships Act 2019",
+      logo: "/assets/c8.jpeg",
+      description: "Recycling of Ships Act",
+      details:
+        "The Recycling of Ships Act 2019 for safe ship recycling adherent to Indian Maritime Laws.",
+    },
+
+    {
+      name: "Ship Breaking Code 2013",
+      logo: "/assets/c9.png",
+      description: "Ship Breaking Code",
+      details:
+        "The Ship Breaking Code 2013 issed by the Ministry of Ports, Shipping, and Waterways, Government of India.",
+    },
   ];
 
   const teamMembers = [
     {
-      name: "Rajesh Kumar",
-      position: "CEO & Founder",
-      description: "20+ years in maritime industry",
-      expertise: "Strategic Leadership",
-      image:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      name: "Deepak Pillapalem",
+      position: "Managing Director",
+      image: team1,
       details:
-        "Led multiple successful maritime ventures with focus on sustainable practices. Expert in international maritime law and environmental compliance. Holds MBA from IIM Ahmedabad and B.Tech in Naval Architecture.",
-      achievements: [
-        "Founded 3 successful maritime companies",
-        "Led $500M+ in sustainable infrastructure projects",
-        "Keynote speaker at 50+ international conferences",
-      ],
+        "Deepak Reddy Pillapalem is the Founder and Managing Director of Neptunus Shipbreaking & Recycling Pvt Ltd. With over 20 years of real estate development expertise, he has driven exceptional growth in the sector—channeling his strategic vision into sustainable ship recycling, steel re-rolling, renewable-energy integration, and community-driven partnerships. Under his leadership, Neptunus will become India’s first facility fully compliant with both the EU Ship Recycling Regulation and the Hong Kong Convention. He holds a Bachelor’s degree in Civil Engineering from CBIT Hyderabad and a Master’s degree in Urban Planning from the University of Cleveland. He has secured multimillion-dollar financing, forged strategic partnerships with local cooperatives, and consistently delivers strong returns—driving stakeholder value, uplifting communities, and championing green innovations.",
     },
     {
-      name: "Priya Sharma",
-      position: "CTO",
-      description: "Expert in sustainable technology",
-      expertise: "Technology Innovation",
-      image:
-        "https://images.unsplash.com/photo-1494790108755-2616c273e11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      name: "Satish Burugupalli",
+      position: "Executive Director",
+      image: team2,
       details:
-        "PhD in Environmental Engineering from MIT. Pioneer in green steel production technologies and circular economy solutions. 15+ patents in sustainable manufacturing processes.",
-      achievements: [
-        "15+ patents in green technology",
-        "Published 50+ research papers",
-        "Winner of Green Innovation Award 2023",
-      ],
-    },
-    {
-      name: "Amit Patel",
-      position: "Head of Operations",
-      description: "Specialist in ship recycling",
-      expertise: "Operational Excellence",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      details:
-        "15+ years in ship dismantling operations. Expert in hazardous waste management and safety protocols. Certified in OSHA and ISO 45001 standards.",
-      achievements: [
-        "Zero-accident record for 8 consecutive years",
-        "Reduced operational costs by 35%",
-        "Implemented industry-first safety protocols",
-      ],
-    },
-    {
-      name: "Sunita Rao",
-      position: "Environmental Director",
-      description: "Environmental compliance expert",
-      expertise: "Sustainability",
-      image:
-        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-      details:
-        "Former environmental regulator with deep expertise in maritime environmental protection and carbon footprint reduction. M.Sc. in Environmental Science from JNU.",
-      achievements: [
-        "Reduced carbon emissions by 40%",
-        "Achieved 100% waste recycling rate",
-        "Led environmental compliance for 200+ projects",
-      ],
+        "Satish Burugupalli is the Executive Director of Neptunus Shipbreaking & Recycling, bringing over 15 years of operational leadership in maritime engineering and sustainable infrastructure. He oversees high-impact projects—from greenfield plant expansions to renewable-energy integration—ensuring full compliance with international ship-recycling regulations while delivering on-time, on-budget performance. Satish secures strategic alliances with government agencies and local cooperatives, drives solar-park and waste-heat recovery initiatives to minimize carbon footprints, and champions workforce development programs that uplift surrounding communities.",
     },
   ];
 
@@ -576,7 +557,7 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (exact structure & style from Services.tsx) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -595,14 +576,14 @@ const Index = () => {
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-stone-200 text-black backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary font-medium" : "hover:text-primary"
+                    active ? "text-green-900 font-medium" : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -610,7 +591,7 @@ const Index = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full text-lg"
+                className="mt-2 btn bg-yellow-500 border-black rounded-lg p-2 text-white w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -677,15 +658,15 @@ const Index = () => {
       {/* Certifications (full-width, auto-moving, click to pause + quick view) */}
       <section
         id="certifications"
-        className="section-padding bg-white text-black px-0 pb-6"
+        className="pt-10 pb-10 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]"
       >
         {/* Keep the heading constrained for readability */}
         <div className="container-custom">
           <div className="text-center mb-8">
-            <h2 className="text-headline mb-4 font-bold text-black">
+            <h2 className="text-headline mb-4 font-bold text-white">
               Certifications & Standards
             </h2>
-            <p className="text-body-large text-black/70">
+            <p className="text-body-large text-white/70">
               Maintaining the highest industry standards and compliance
             </p>
           </div>
@@ -947,97 +928,17 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Team Carousel */}
-      <section className="section-padding bg-gradient-to-r from-green-300/10 to-green-500/10">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline font-bold text-stone-200 mb-4">
-              Pillars of Neptunus
-            </h2>
-            <p className="text-body-large text-stone-200/90">
-              Experienced professionals driving sustainable innovation
-            </p>
-          </div>
-
-          <div className="overflow-hidden">
-            <div className="flex animate-scroll-smooth-reverse space-x-8">
-              {[...teamMembers, ...teamMembers].map((member, index) => (
-                <HoverCard key={index}>
-                  <HoverCardTrigger asChild>
-                    <Card className="flex-shrink-0 w-80 hover-lift group cursor-pointer transition-all duration-500 hover:scale-105 bg-white/90">
-                      <CardContent className="p-0">
-                        <div className="relative h-48 overflow-hidden rounded-t-lg">
-                          <img
-                            src={member.image}
-                            alt={member.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                        </div>
-                        <div className="p-6">
-                          <h3 className="text-xl font-bold mb-2 text-black">
-                            {member.name}
-                          </h3>
-                          <p className="text-green-800 font-medium mb-3">
-                            {member.position}
-                          </p>
-                          <p className="text-body text-black/80 mb-4">
-                            {member.description}
-                          </p>
-                          <div className="inline-block px-4 py-2 bg-green-100 rounded-full text-sm text-green-800">
-                            {member.expertise}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-96">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-4">
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-16 h-16 object-cover rounded-full"
-                        />
-                        <div>
-                          <h4 className="font-semibold">{member.name}</h4>
-                          <p className="text-sm text-green-700">
-                            {member.position}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="text-sm text-black/80 leading-relaxed">
-                        {member.details}
-                      </p>
-                      <div>
-                        <h5 className="font-medium mb-2">Key Achievements:</h5>
-                        <ul className="space-y-1">
-                          {member.achievements.map((achievement, idx) => (
-                            <li
-                              key={idx}
-                              className="text-xs text-black/70 flex items-start"
-                            >
-                              <div className="w-1.5 h-1.5 bg-green-700 rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                              {achievement}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Impact Metrics */}
-      <section id="metrics" className="section-padding bg-white text-black">
+      <section
+        id="metrics"
+        className="pt-1 pb-10 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588] text-black"
+      >
         <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline font-bold mb-4">Impact Metrics</h2>
-            <p className="text-body-large text-black/70">
+          <div className="text-center mb-10">
+            <h2 className="text-headline text-white font-bold mb-4 mt-10">
+              Impact Metrics
+            </h2>
+            <p className="text-body-large text-white/70">
               Measurable results driving sustainable change
             </p>
           </div>
@@ -1102,8 +1003,79 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Team Carousel */}
+      <section className="pt-10 pb-5 bg-white">
+        <div className="container-custom">
+          <div className="text-center mb-20">
+            <h2 className="text-headline font-bold text-black mb-4">
+              The Architects of a Greener Future
+            </h2>
+            <p className="text-body-large text-black">
+              Experienced professionals driving sustainable innovation
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {teamMembers.slice(0, 2).map((member, index) => (
+              <Dialog key={index}>
+                <DialogTrigger asChild>
+                  <Card className="hover-lift group cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-white">
+                    <CardContent className="p-0">
+                      <div className="relative h-full overflow-hidden rounded-t-lg">
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        {/* keep a subtle gradient, not a white overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold mb-2 text-black">
+                          {member.name}
+                        </h3>
+                        <p className="text-black font-medium mb-3">
+                          {member.position}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </DialogTrigger>
+
+                {/* Make the modal panel white */}
+                <DialogContent className="max-w-2xl bg-white text-black">
+                  <DialogHeader>
+                    <div className="relative h-80 md:h-96 rounded-t-lg bg-stone-100 overflow-hidden">
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="absolute inset-0 w-full h-full object-contain object-top"
+                      />
+                    </div>
+                  </DialogHeader>
+
+                  <div className="space-y-5">
+                    <p className="text-black leading-relaxed">
+                      {member.details}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex justify-end">
+                    <DialogClose asChild>
+                      <button className="px-4 py-2 rounded-lg bg-green-900 text-white hover:bg-green-800 transition-colors">
+                        Close
+                      </button>
+                    </DialogClose>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Mission & Vision */}
-      <section className="section-padding bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="section-padding bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <Card className="p-12 hover-lift bg-white/95">
@@ -1163,7 +1135,7 @@ const Index = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-body font-medium mb-3">
+                    <label className="block text-body text-black font-medium mb-3">
                       Name *
                     </label>
                     <Input
@@ -1171,7 +1143,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("name", e.target.value)
                       }
-                      className={`h-12 ${
+                      className={`h-12 bg-white text-black placeholder:text-black caret-black ${
                         formErrors.name ? "border-red-500" : ""
                       }`}
                       placeholder="Your full name"
@@ -1183,7 +1155,7 @@ const Index = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-body font-medium mb-3">
+                    <label className="block text-black text-body font-medium mb-3">
                       Email *
                     </label>
                     <Input
@@ -1192,7 +1164,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("email", e.target.value)
                       }
-                      className={`h-12 ${
+                      className={`h-12 bg-white text-black placeholder:text-black caret-black ${
                         formErrors.email ? "border-red-500" : ""
                       }`}
                       placeholder="your.email@company.com"
@@ -1207,7 +1179,7 @@ const Index = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-body font-medium mb-3">
+                    <label className="block text-black text-body font-medium mb-3">
                       Phone Number *
                     </label>
                     <Input
@@ -1216,7 +1188,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("phone", e.target.value)
                       }
-                      className={`h-12 ${
+                      className={`h-12 bg-white text-black placeholder:text-black caret-black ${
                         formErrors.phone ? "border-red-500" : ""
                       }`}
                       placeholder="+91 XXXXX XXXXX"
@@ -1228,7 +1200,7 @@ const Index = () => {
                     )}
                   </div>
                   <div>
-                    <label className="block text-body font-medium mb-3">
+                    <label className="block text-black text-body font-medium mb-3">
                       Company *
                     </label>
                     <Input
@@ -1236,7 +1208,7 @@ const Index = () => {
                       onChange={(e) =>
                         handleInputChange("company", e.target.value)
                       }
-                      className={`h-12 ${
+                      className={`h-12 bg-white text-black placeholder:text-black caret-black ${
                         formErrors.company ? "border-red-500" : ""
                       }`}
                       placeholder="Your company name"
@@ -1250,7 +1222,7 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <label className="block text-body font-medium mb-3">
+                  <label className="block text-body text-black font-medium mb-3">
                     Designation *
                   </label>
                   <Input
@@ -1258,7 +1230,7 @@ const Index = () => {
                     onChange={(e) =>
                       handleInputChange("designation", e.target.value)
                     }
-                    className={`h-12 ${
+                    className={`h-12 bg-white text-black placeholder:text-black caret-black ${
                       formErrors.designation ? "border-red-500" : ""
                     }`}
                     placeholder="Your job title"
@@ -1271,7 +1243,7 @@ const Index = () => {
                 </div>
 
                 <div>
-                  <label className="block text-body font-medium mb-3">
+                  <label className="block text-black text-body font-medium mb-3">
                     Message *
                   </label>
                   <Textarea
@@ -1279,7 +1251,7 @@ const Index = () => {
                     onChange={(e) =>
                       handleInputChange("message", e.target.value)
                     }
-                    className={`h-32 resize-none ${
+                    className={`h-32 resize-none bg-white text-black placeholder:text-black caret-black ${
                       formErrors.message ? "border-red-500" : ""
                     }`}
                     placeholder="Tell us about your requirements..."
@@ -1314,7 +1286,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-green-300/10 to-green-500/10 section-padding">
+      <footer className="bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588] section-padding">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             <div>

@@ -137,7 +137,7 @@ const Blog = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (always hamburger, identical to Services.tsx) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -147,19 +147,23 @@ const Blog = () => {
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-stone-200 text-black backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary font-medium" : "hover:text-primary"
+                    active ? "text-green-900 font-medium" : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -167,7 +171,7 @@ const Blog = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full text-lg"
+                className="mt-2 btn bg-yellow-500 border-black rounded-lg p-2 text-white w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -181,7 +185,7 @@ const Blog = () => {
       </nav>
 
       {/* Hero Section (green gradient like Services) */}
-      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="pt-28 pb-8 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-display font-bold text-stone-200 mb-4">
@@ -274,7 +278,7 @@ const Blog = () => {
       </section>
 
       {/* Categories (on green gradient; cards contrast in white) */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="text-center mb-8">
             <h2 className="text-display font-bold text-stone-200 mb-2">Browse by Category</h2>
@@ -385,7 +389,7 @@ const Blog = () => {
       </section>
 
       {/* Newsletter Signup (CTA styling aligned with Services buttons/colors) */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-headline font-bold text-stone-200 mb-4">

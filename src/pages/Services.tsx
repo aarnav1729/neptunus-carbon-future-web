@@ -181,7 +181,7 @@ const Services = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (always hamburger) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -191,19 +191,23 @@ const Services = () => {
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-stone-200 text-black backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary font-medium" : "hover:text-primary"
+                    active ? "text-green-900 font-medium" : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -211,7 +215,7 @@ const Services = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full text-lg"
+                className="mt-2 btn bg-yellow-500 border-black rounded-lg p-2 text-white w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -225,7 +229,7 @@ const Services = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="pt-28 pb-8 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-display font-bold text-stone-200 mb-4">
@@ -236,12 +240,12 @@ const Services = () => {
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title text-stone-200 font-bold text-primary mb-2">6</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">7</div>
                 <div className="text-body text-stone-200">Core Services</div>
               </div>
               <div className="text-center">
                 <div className="text-title text-stone-200 font-bold text-primary mb-2">500</div>
-                <div className="text-body text-stone-200">Ships Annually</div>
+                <div className="text-body text-stone-200">Ships Annual Capacity</div>
               </div>
               <div className="text-center">
                 <div className="text-title text-stone-200 font-bold text-primary mb-2">100%</div>
@@ -348,7 +352,7 @@ const Services = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">
@@ -358,7 +362,7 @@ const Services = () => {
               Discover how our services can meet your maritime and sustainability needs
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group text-white bg-green-900">
+              <Button variant="secondary" size="lg" className="group text-white border-black bg-green-900">
                 <a href="/#contact" className="flex items-center">
                   Get Quote
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

@@ -100,7 +100,7 @@ const Stakeholders = () => {
       ],
     },
     {
-      name: "Social & COmmunity Infrastructure",
+      name: "Social & Community Infrastructure",
       icon: Users,
       color: "from-green-900/10 to-yellow-500/10",
       emoji: "🏘️",
@@ -113,9 +113,11 @@ const Stakeholders = () => {
       ],
       keyFeatures: [
         "Zero-Accident Pledge",
-        "70% Local Hire Target",
+        "90% Local Hire Target",
         "Training Programs",
         "Community Infrastructure",
+        "Women Empowerment Initiatives",
+        "Skill Development Programs",
       ],
     },
     {
@@ -173,52 +175,13 @@ const Stakeholders = () => {
         "PPP Model",
       ],
     },
-
-    {
-      name: "Women Empowerment Initiatives",
-      icon: Users,
-      color: "from-green-900/10 to-yellow-500/10",
-      emoji: "🏘️",
-      tagline: "Safe jobs, skills development, and community uplift",
-      benefits: [
-        "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
-        "Capacity building: on-site training programs, apprenticeships, and an aspirational '90% local hire' target",
-        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
-        "Pride of place: become part of Odisha's green-industry revolution and global climate story",
-      ],
-      keyFeatures: [
-        "Zero-Accident Pledge",
-        "70% Local Hire Target",
-        "Training Programs",
-        "Community Infrastructure",
-      ],
-    },
-    {
-      name: "Skill Development Programs",
-      icon: Users,
-      color: "from-green-900/10 to-yellow-500/10",
-      emoji: "🏘️",
-      tagline: "Safe jobs, skills development, and community uplift",
-      benefits: [
-        "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
-        "Capacity building: on-site training programs, apprenticeships, and an aspirational '90% local hire' target",
-        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
-        "Pride of place: become part of Odisha's green-industry revolution and global climate story",
-      ],
-      keyFeatures: [
-        "Zero-Accident Pledge",
-        "70% Local Hire Target",
-        "Training Programs",
-        "Community Infrastructure",
-      ],
-    },
   ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (from Services.tsx) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -228,19 +191,23 @@ const Stakeholders = () => {
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-stone-200 text-black backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary font-medium" : "hover:text-primary"
+                    active ? "text-green-900 font-medium" : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -248,7 +215,7 @@ const Stakeholders = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full text-lg"
+                className="mt-2 btn bg-yellow-500 border-black rounded-lg p-2 text-white w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -262,7 +229,7 @@ const Stakeholders = () => {
       </nav>
 
       {/* Hero Section (matching Services color scheme) */}
-      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="pt-28 pb-8 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-display font-bold text-stone-200 mb-4">
@@ -298,10 +265,7 @@ const Stakeholders = () => {
                 {/* Header */}
                 <div className={`lg:col-span-4 bg-gradient-to-br ${group.color} p-8 lg:p-12`}>
                   <div className="space-y-6">
-                    <div className="flex items-center space-x-4">
-                      <div className="text-5xl">{group.emoji}</div>
-                      <group.icon className="h-8 w-8 text-black" />
-                    </div>
+
                     <div>
                       <h2 className="text-headline font-bold text-black mb-3">{group.name}</h2>
                       <p className="text-body-large text-black opacity-90">{group.tagline}</p>
@@ -364,7 +328,7 @@ const Stakeholders = () => {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">

@@ -168,7 +168,7 @@ const Impact = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar from Services.tsx */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -178,18 +178,23 @@ const Impact = () => {
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
+
         {mobileMenuOpen && (
-          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-stone-200 text-black backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary font-medium" : "hover:text-primary"
+                    active ? "text-green-900 font-medium" : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -197,7 +202,7 @@ const Impact = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full text-lg"
+                className="mt-2 btn bg-yellow-500 border-black rounded-lg p-2 text-white w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -211,7 +216,7 @@ const Impact = () => {
       </nav>
 
       {/* Hero */}
-      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="pt-28 pb-8 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-display font-bold text-stone-200 mb-4">
@@ -251,15 +256,15 @@ const Impact = () => {
             {impactMetrics.map((metric, i) => (
               <Card key={i} className="elevated-panel overflow-hidden">
                 <div className="grid lg:grid-cols-3 gap-0">
-                  <div className="bg-gradient-to-br from-primary/10 to-secondary/10 p-8">
+                  <div className="bg-stone-200 p-8">
                     <div className="flex items-center mb-4">
-                      <metric.icon className={`h-8 w-8 ${metric.color} mr-2`} />
-                      <div className="text-2xl font-bold">{metric.value}</div>
+                      <metric.icon className={`h-8 w-8 text-black mr-2`} />
+                      <div className="text-2xl text-black font-bold">{metric.value}</div>
                     </div>
-                    <h3 className="text-title font-bold mb-1">{metric.title}</h3>
-                    <div className="text-body mb-3">{metric.unit}</div>
+                    <h3 className="text-title font-bold text-black mb-1">{metric.title}</h3>
+                    <div className="text-body mb-3 text-black">{metric.unit}</div>
                     <Progress value={metric.progress} className="h-2" />
-                    <div className="text-caption mt-1">{metric.progress}% efficiency</div>
+                    <div className="text-caption mt-1 text-black">{metric.progress}% efficiency</div>
                   </div>
                   <div className="lg:col-span-2 p-8">
                     <p className="text-body mb-4 leading-relaxed">{metric.description}</p>
@@ -280,7 +285,7 @@ const Impact = () => {
       </section>
 
       {/* National Initiatives */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="text-center mb-8">
             <h2 className="text-display font-bold mb-2">Supporting India's National Missions</h2>
@@ -311,7 +316,7 @@ const Impact = () => {
                 </CardHeader>
                 <CardContent className="p-6">
                   <div className="space-y-4">
-                    <div className="bg-gradient-to-r from-green-700 to-green-400 p-4 rounded-lg">
+                    <div className="bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588] p-4 rounded-lg">
                       <h4 className="text-body text-primary font-semibold mb-1">Our Contribution:</h4>
                       <p className="text-body text-primary">{ni.contribution}</p>
                     </div>
@@ -346,7 +351,7 @@ const Impact = () => {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {odishaImpact.map((it, idx) => (
-              <Card key={idx} className="glass-panel bg-gradient-to-r from-green-700 to-green-400 text-center p-4">
+              <Card key={idx} className="glass-panel bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588] text-center p-4">
 
                 <div className="text-body-large font-bold text-primary mb-1">{it.value}</div>
                 <h3 className="text-body text-black font-bold mb-1">{it.metric}</h3>
@@ -364,7 +369,7 @@ const Impact = () => {
                   chains, and community infrastructure."
                 </blockquote>
               </div>
-              <div className="bg-gradient-to-r from-green-700 to-green-400 p-4 rounded-lg">
+              <div className="bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588] p-4 rounded-lg">
                 <div className="grid md:grid-cols-3 gap-4 text-primary text-center">
                   <div>
                     <Award className="h-6 w-6 text-primary mx-auto mb-1" />
@@ -389,7 +394,7 @@ const Impact = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-headline font-bold text-primary mb-4">Join the Impact Revolution</h2>

@@ -55,7 +55,7 @@ const About = () => {
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
       {/* Navbar (identical to Services.tsx) */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
-        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white backdrop-blur-lg shadow-lg ring-1 ring-white/10">
+        <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
             src="/assets/logo.png"
             alt="Neptunus Logo"
@@ -64,7 +64,6 @@ const About = () => {
           <button
             className="p-2 text-black"
             onClick={() => setMobileMenuOpen((o) => !o)}
-            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? (
               <X className="w-5 h-5" />
@@ -75,14 +74,14 @@ const About = () => {
         </div>
 
         {mobileMenuOpen && (
-          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-white/20 backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
+          <div className="absolute mt-2 right-0 w-1/2 rounded-2xl bg-stone-200 text-black backdrop-blur-lg shadow-lg ring-1 ring-white/10 p-4">
             <div className="flex flex-col space-y-3">
               {navLinks.map(({ label, href, active }) => (
                 <Link
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-primary font-medium" : "hover:text-primary"
+                    active ? "text-green-900 font-medium" : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -90,7 +89,7 @@ const About = () => {
                 </Link>
               ))}
               <button
-                className="mt-2 btn-primary w-full text-lg"
+                className="mt-2 btn bg-yellow-500 border-black rounded-lg p-2 text-white w-full text-lg"
                 onClick={() => {
                   setMobileMenuOpen(false);
                   window.location.href = "/#contact";
@@ -104,7 +103,7 @@ const About = () => {
       </nav>
 
       {/* Hero Section (color scheme matched to Services.tsx) */}
-      <section className="pt-28 pb-8 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="pt-28 pb-8 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-display font-bold text-stone-200 mb-4">
@@ -202,7 +201,7 @@ const About = () => {
       </section>
 
       {/* Community Impact Quote (matched gradient + light text like Services) */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-headline font-bold text-stone-200 mb-8">
@@ -217,14 +216,6 @@ const About = () => {
               the thousands of families along Odisha's coastline, Neptunus means
               access to safer jobs, fair wages, and long-term growth."
             </blockquote>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <div className="bg-green-900 text-white px-6 py-3 rounded-lg font-semibold">
-                "Safer jobs, stronger communities—built in Odisha."
-              </div>
-              <div className="bg-yellow-500 text-white px-6 py-3 rounded-lg font-semibold">
-                "Local hands. Global standards"
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -321,10 +312,6 @@ const About = () => {
                             className="absolute inset-0 w-full h-full object-cover rounded-xl"
                           />
 
-                          {/* Corner badge */}
-                          <div className="absolute top-4 left-4 bg-green-900 text-white text-xs px-3 py-1 rounded-full shadow">
-                            {member.position}
-                          </div>
 
                           {/* Hover overlay */}
                           <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -339,7 +326,7 @@ const About = () => {
                             </p>
 
                             {/* Quick view only (kept) */}
-                            <div className="mt-4 flex items-center gap-2 text-white/95">
+                            <div className="mt-4 flex items-center gap-2">
                               <span className="text-sm">Quick view</span>
                               <ChevronDown className="h-4 w-4 translate-y-0 group-hover:translate-y-0.5 transition-transform" />
                             </div>
@@ -365,7 +352,7 @@ const About = () => {
 
                 {/* Quick-view Modal */}
                 <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogContent className="sm:max-w-xl">
+                  <DialogContent className="sm:max-w-xl bg-white text-black">
                     {active && (
                       <>
                         <DialogHeader>
@@ -377,7 +364,7 @@ const About = () => {
                               className="w-14 h-14 rounded-xl object-cover border border-stone-300"
                             />
                             <div>
-                              <div className="text-lg font-semibold">
+                              <div className="text-lg text-black font-semibold">
                                 {active.name}
                               </div>
                               <div className="text-sm text-yellow-700">
@@ -392,7 +379,7 @@ const About = () => {
 
                         {/* Bio */}
                         <div className="space-y-4">
-                          <p className="text-sm text-white leading-relaxed">
+                          <p className="text-sm text-black leading-relaxed">
                             {active.bio}
                           </p>
 
@@ -432,7 +419,7 @@ const About = () => {
       </section>
 
       {/* Call to Action (match Services.tsx styling and button variants) */}
-      <section className="py-16 bg-gradient-to-r from-green-300/10 to-green-500/10">
+      <section className="py-16 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-headline text-stone-200 font-bold text-primary-foreground mb-4">
