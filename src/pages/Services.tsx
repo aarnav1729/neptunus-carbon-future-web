@@ -79,7 +79,10 @@ const Services = () => {
         "Local workforce development",
       ],
       capacity: "5,000 DWT vessels",
-      compliance: ["Climate-Resilient Design", "Modular Construction Standards"],
+      compliance: [
+        "Climate-Resilient Design",
+        "Modular Construction Standards",
+      ],
     },
     {
       icon: Trash2,
@@ -138,7 +141,11 @@ const Services = () => {
         "Reduced transport emissions",
       ],
       capacity: "100 acres",
-      compliance: ["Logistics Standards", "Safety Protocols", "Environmental Guidelines"],
+      compliance: [
+        "Logistics Standards",
+        "Safety Protocols",
+        "Environmental Guidelines",
+      ],
     },
     {
       icon: Wrench,
@@ -160,20 +167,26 @@ const Services = () => {
 
     {
       icon: Wrench,
-      title: "Solar Energy Park",
-      subtitle: "Maritime Maintenance & Repair",
-      image: "/assets/serv2.jpeg",
+      title: "Solar Energy Park", // ← unchanged
+      subtitle: "25 MW Solar Power Park (100 Acres)",
+      image: "/assets/sp.jpg", // ← unchanged
       description:
-        "When ships need care, Neptunus steps in with heart and expertise. Our service quay—backed by 350,000 m³ dredging capacity, four tug/push boats, and eight specialized service craft—offers everything from hull inspections to emergency overhauls.",
+        "Our 25 MW Solar Power Park is a flagship initiative in Neptunus’ renewable energy strategy. Spanning 100 acres, the park is planned for peak output and environmental harmony. Within the 85-acre operational zone, 70 acres host high-efficiency solar arrays and 15 acres form the power infrastructure zone with 4×1500 kVA units and a 33 kV express line. The remaining 15 acres include a 10-acre buffer for safety/operations and 5 acres of landscaped green spaces to promote biodiversity. The grid-like arrangement, optimally oriented to the sun’s path, ensures reliable power for our operations with surplus to the national grid.",
       features: [
-        "350,000 m³ dredging capacity",
-        "4 tug/push boats",
-        "8 specialized service craft",
-        "Hull inspection services",
-        "Emergency overhaul capabilities",
+        "25 MW capacity spanning 100 acres",
+        "70-acre solar panel array with optimal orientation and spacing",
+        "15-acre power infrastructure zone with 4×1500 kVA units & 33 kV express line",
+        "10-acre buffer zone for safety and operational flexibility",
+        "5-acre landscaped green spaces to promote biodiversity",
+        "Advanced tracking systems for maximum output",
+        "Grid-connected with captive consumption integration",
+        "CO₂ emissions reduction equivalent to 40,000+ trees annually",
       ],
-      capacity: "Full maritime services",
-      compliance: ["Maritime Safety Standards", "Emergency Response Protocols"],
+      capacity: "25 MW (100 Acres)",
+      compliance: [
+        "33 kV grid interconnection",
+        "Captive consumption integration",
+      ],
     },
   ];
 
@@ -207,7 +220,9 @@ const Services = () => {
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-green-900 font-medium" : "hover:text-green-900"
+                    active
+                      ? "text-green-900 font-medium"
+                      : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -236,20 +251,31 @@ const Services = () => {
               Our Services
             </h1>
             <p className="text-title text-stone-200 mb-4">
-              Comprehensive maritime solutions for sustainable ship recycling, green steel production, and clean energy generation
+              Comprehensive maritime solutions for sustainable ship recycling,
+              green steel production, and clean energy generation
             </p>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
-                <div className="text-title text-stone-200 font-bold text-primary mb-2">7</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">
+                  7
+                </div>
                 <div className="text-body text-stone-200">Core Services</div>
               </div>
               <div className="text-center">
-                <div className="text-title text-stone-200 font-bold text-primary mb-2">500</div>
-                <div className="text-body text-stone-200">Ships Annual Capacity</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">
+                  500
+                </div>
+                <div className="text-body text-stone-200">
+                  Ships Annual Capacity
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-title text-stone-200 font-bold text-primary mb-2">100%</div>
-                <div className="text-body text-stone-200">Compliant Operations</div>
+                <div className="text-title text-stone-200 font-bold text-primary mb-2">
+                  100%
+                </div>
+                <div className="text-body text-stone-200">
+                  Compliant Operations
+                </div>
               </div>
             </div>
           </div>
@@ -283,9 +309,7 @@ const Services = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent" />
                     <div className="absolute top-6 left-6">
-                      <div className="bg-primary text-primary-foreground p-3 rounded-lg">
-                        <service.icon className="h-6 w-6" />
-                      </div>
+
                     </div>
                   </div>
 
@@ -313,7 +337,10 @@ const Services = () => {
                           <h3 className="text-body-large font-semibold text-black">
                             Key Features
                           </h3>
-                          <Badge variant="secondary" className="bg-white text-black">
+                          <Badge
+                            variant="secondary"
+                            className="bg-white text-black"
+                          >
                             Capacity: {service.capacity}
                           </Badge>
                         </div>
@@ -336,7 +363,11 @@ const Services = () => {
                         </h3>
                         <div className="flex flex-wrap gap-2">
                           {service.compliance.map((c, i3) => (
-                            <Badge key={i3} variant="outline" className="border-black text-black">
+                            <Badge
+                              key={i3}
+                              variant="outline"
+                              className="border-black text-black"
+                            >
                               {c}
                             </Badge>
                           ))}
@@ -359,10 +390,15 @@ const Services = () => {
               Ready to Partner with Us?
             </h2>
             <p className="text-title text-stone-200 text-primary-foreground/90 mb-6">
-              Discover how our services can meet your maritime and sustainability needs
+              Discover how our services can meet your maritime and
+              sustainability needs
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="group text-white border-black bg-green-900">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="group text-white border-black bg-green-900"
+              >
                 <a href="/#contact" className="flex items-center">
                   Get Quote
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
