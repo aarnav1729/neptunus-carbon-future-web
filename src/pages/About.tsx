@@ -43,7 +43,6 @@ const About = () => {
   // Links for mobile menu (mark About active)
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "About", href: "/about", active: true },
     { label: "Services", href: "/services" },
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact" },

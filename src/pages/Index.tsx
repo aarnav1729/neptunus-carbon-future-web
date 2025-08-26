@@ -44,6 +44,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 const Index = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -432,81 +434,70 @@ const Index = () => {
     },
   ];
 
-  const stakeholders = [
+  // Stakeholder tabs (names align with Stakeholders page)
+  const stakeholderTabs = [
     {
-      name: "Ship Owners & Shipping Lines",
-      color: "hsl(204, 94%, 74%)",
-      icon: "🚢",
-      benefits: [
-        "Fast, safe disposal of end-of-life vessels with full IHM and regulatory certification (HKGS, EUSSR)",
-        "40% credit note on new-build contracts—turning sustainable disposal into future savings",
-        "Peace of mind: no more costly reflagging or beaching risks; a single partner for compliant, carbon-friendly recycling",
+      value: "Ship Owners & Shipping Lines",
+      label: "Ship Owners",
+      headline: "Fulfill your EOL vessel goals with ease",
+      copy: "Fast, safe disposal with full IHM & EU/HKC compliance—no beaching risks and a single partner you can trust.",
+      bullets: [
+        "Full IHM & EUSSR certification",
+        "40% credit note on new-build contracts",
       ],
     },
     {
-      name: "Steel Manufacturers & Re-rollers",
-      color: "hsl(180, 100%, 60%)",
-      icon: "⚒️",
-      benefits: [
-        "Guaranteed low-carbon feedstock: secure contracts for millions of tonnes of scrap steel, all traceable via digital chain-of-custody",
-        "One-stop shop: certified dismantling + re-rolling under one roof—streamlining logistics and quality control",
-        "ESG uplift: every tonne you melt reduces your portfolio's carbon footprint via EAF processing",
+      value: "Steel Manufacturers & Re-rollers",
+      label: "Steel Manufacturers",
+      headline: "Reliable low-carbon feedstock, fully traceable",
+      copy: "Certified dismantling + re-rolling under one roof. Digital chain-of-custody and EAF-ready scrap.",
+      bullets: [
+        "Digital chain-of-custody",
+        "Certified quality & EAF processing",
       ],
     },
     {
-      name: "Investors & Financial Institutions",
-      color: "hsl(270, 100%, 60%)",
-      icon: "💼",
-      benefits: [
-        "First-mover advantage: back the world's largest green-steel facility, UN-certified from day one",
-        "Robust returns: lifecycle CO₂-reduction estimates and IRR case studies underpinned by government support",
-        "Guaranteed market: with India's '30% green-steel mandate,' one in three tonnes must be recycled—locking in future buyers",
-        "Strategic hedge: shipping lines face mounting costs to reflag; our solution lets them comply without expense",
-      ],
+      value: "Investors & Financial Institutions",
+      label: "Investors",
+      headline: "Back the green-steel revolution confidently",
+      copy: "UN-aligned standards, government support, and a guaranteed demand tailwind for recycled steel.",
+      bullets: ["UN alignment & policy support", "Strong ESG & market demand"],
     },
     {
-      name: "Local Communities & Workforce",
-      color: "hsl(30, 100%, 50%)",
-      icon: "🏘️",
-      benefits: [
-        "Safe, skilled jobs: cutting-edge equipment, zero-accident pledge, and OSHA-grade protocols",
-        "Capacity building: on-site training programs, apprenticeships, and an aspirational '70% local hire' target",
-        "Community uplift: new schools, affordable housing, and a modern medical clinic—because your well-being powers our progress",
-        "Pride of place: become part of Odisha's green-industry revolution and global climate story",
-      ],
+      value: "Social & Community Infrastructure",
+      label: "Communities",
+      headline: "Create safe jobs and shared prosperity",
+      copy: "Zero-accident pledge, skill development, and community infrastructure that uplifts families.",
+      bullets: ["90% local hire target", "Training & medical facilities"],
     },
     {
-      name: "Regulators & NGOs",
-      color: "hsl(120, 100%, 50%)",
-      icon: "⚖️",
-      benefits: [
-        "Full transparency: real-time environmental dashboards, periodic third-party audits, and public sustainability reports",
-        "Iron-clad compliance: Basel/UNEP alignment, IMO/EU Ship Recycling Regulation, plus local EIA and CRZ clearances",
-        "True partnership: collaborate on best practices and shape a blueprint for safe, circular-economy growth",
-      ],
+      value: "Regulators & NGOs",
+      label: "Regulators & NGOs",
+      headline: "Transparency and compliance by design",
+      copy: "Real-time dashboards, third-party audits, and Basel/UNEP alignment for true accountability.",
+      bullets: ["Dashboards & audits", "Basel/UNEP alignment"],
     },
     {
-      name: "Global Partners & Climate Advocates",
-      color: "hsl(300, 100%, 60%)",
-      icon: "🌍",
-      benefits: [
-        "Leadership showcase: highlight India's circular-economy triumph alongside EU, Japan, and Polish collaborators",
-        "R&D pipelines: co-develop next-gen recycling technologies and green-hydrogen integration",
-        "Storytelling: joint press and thought-leadership platforms to amplify impact and attract co-investment",
-      ],
+      value: "Global Partners & Climate Advocates",
+      label: "Global Partners",
+      headline: "Scale circular impact together",
+      copy: "Co-develop next-gen recycling tech and amplify climate leadership across markets.",
+      bullets: ["R&D collaboration", "Thought leadership"],
     },
     {
-      name: "Government & Policy Makers",
-      color: "hsl(60, 100%, 50%)",
-      icon: "🏛️",
-      benefits: [
-        "New industrial cluster: catalyze Ganjam's transformation into a maritime-green hub, driving rural prosperity",
-        "Budget leverage: tap into ₹1,624 Cr over five years under the Ship-Flagging Subsidy (Union Budget 2021-22)",
-        "Legislative alignment: deliver on the Recycling of Ships Act 2019 (4.5 M LDT capacity by 2024) and Maritime India Vision 2030",
-        "PPP excellence: structured as a DBFOT model with performance-based incentives—sharing risk, reward, and regulatory ease",
-      ],
+      value: "Government & Policy Makers",
+      label: "Policy Makers",
+      headline: "Catalyze an industrial green cluster",
+      copy: "Deliver on national targets with a PPP-ready model, strong compliance, and rural prosperity.",
+      bullets: ["PPP model", "Legislative alignment"],
     },
   ];
+
+  // Reuse your existing images for the collage (3 vertical slices)
+  const collageImages = [stake1, part1, low1];
+
+  // one image per tab (reuse existing imports: stake1, part1, low1)
+  const stakeholderImages = [stake1, part1, low1];
 
   // Slider navigation
   const navigateCards = (direction: "left" | "right") => {
@@ -545,7 +536,6 @@ const Index = () => {
   // Navbar links (Services.tsx parity)
   const navLinks = [
     { label: "Home", href: "/", active: true },
-    { label: "About", href: "/about" },
     { label: "Services", href: "/services" },
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact" },
@@ -583,7 +573,9 @@ const Index = () => {
                   key={label}
                   to={href}
                   className={`block text-lg ${
-                    active ? "text-green-900 font-medium" : "hover:text-green-900"
+                    active
+                      ? "text-green-900 font-medium"
+                      : "hover:text-green-900"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -1003,77 +995,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Team Carousel */}
-      <section className="pt-10 pb-5 bg-white">
-        <div className="container-custom">
-          <div className="text-center mb-20">
-            <h2 className="text-headline font-bold text-black mb-4">
-              The Architects of a Greener Future
-            </h2>
-            <p className="text-body-large text-black">
-              Experienced professionals driving sustainable innovation
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {teamMembers.slice(0, 2).map((member, index) => (
-              <Dialog key={index}>
-                <DialogTrigger asChild>
-                  <Card className="hover-lift group cursor-pointer transition-all duration-300 hover:scale-[1.02] bg-white">
-                    <CardContent className="p-0">
-                      <div className="relative h-full overflow-hidden rounded-t-lg">
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        {/* keep a subtle gradient, not a white overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                      </div>
-                      <div className="p-6">
-                        <h3 className="text-xl font-bold mb-2 text-black">
-                          {member.name}
-                        </h3>
-                        <p className="text-black font-medium mb-3">
-                          {member.position}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </DialogTrigger>
-
-                {/* Make the modal panel white */}
-                <DialogContent className="max-w-2xl bg-white text-black">
-                  <DialogHeader>
-                    <div className="relative h-80 md:h-96 rounded-t-lg bg-stone-100 overflow-hidden">
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="absolute inset-0 w-full h-full object-contain object-top"
-                      />
-                    </div>
-                  </DialogHeader>
-
-                  <div className="space-y-5">
-                    <p className="text-black leading-relaxed">
-                      {member.details}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 flex justify-end">
-                    <DialogClose asChild>
-                      <button className="px-4 py-2 rounded-lg bg-green-900 text-white hover:bg-green-800 transition-colors">
-                        Close
-                      </button>
-                    </DialogClose>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Mission & Vision */}
       <section className="section-padding bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]">
         <div className="container-custom">
@@ -1117,6 +1038,121 @@ const Index = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </section>
+
+      {/* Stakeholder Solutions (tabs + single image, enhanced) */}
+      <section className="py-20 md:py-24 bg-stone-200">
+        <div className="container-custom max-w-6xl">
+          <h2 className="text-headline font-bold text-black text-center mb-8 md:mb-10">
+            Solutions to Power Your Sustainability Goals
+          </h2>
+
+          <Tabs defaultValue={stakeholderTabs[0].value} className="w-full">
+            {/* Pill tabs — mobile scrollable, centered on larger screens */}
+            <TabsList
+              className="
+          mx-auto mb-10 flex max-w-full items-center gap-2 rounded-full bg-white/90 p-1.5 shadow
+          overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+          md:justify-center
+        "
+            >
+              {stakeholderTabs.map((t) => (
+                <TabsTrigger
+                  key={t.value}
+                  value={t.value}
+                  className="
+              whitespace-nowrap rounded-full px-4 py-2 text-sm md:text-base text-black transition
+              hover:bg-stone-100
+              data-[state=active]:bg-green-900 data-[state=active]:text-white data-[state=active]:shadow
+              data-[state=active]:ring-2 data-[state=active]:ring-green-700/30
+            "
+                >
+                  {t.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {/* Panels */}
+            {stakeholderTabs.map((t, i) => (
+              <TabsContent key={t.value} value={t.value} className="mt-0">
+                {/* Image + overlays */}
+                <div className="group relative overflow-hidden rounded-3xl ring-1 ring-stone-300/60 bg-white">
+                  {/* Single responsive image */}
+                  <div className="relative aspect-[16/9] sm:aspect-[18/9] md:aspect-[20/9]">
+                    <img
+                      src={stakeholderImages[i % stakeholderImages.length]}
+                      alt={t.label}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                    {/* subtle vignette for depth */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
+                  </div>
+
+                  {/* Overlay card (desktop) */}
+                  <Card
+                    className="
+              hidden md:block
+              absolute left-6 top-6 lg:left-8 lg:top-8
+              max-w-lg lg:max-w-xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-stone-200
+              rounded-2xl
+            "
+                  >
+                    <CardContent className="p-6 lg:p-7">
+                      <h3 className="text-2xl lg:text-3xl font-bold text-black mb-3 lg:mb-4">
+                        {t.headline}
+                      </h3>
+                      <p className="text-black/80 leading-relaxed mb-5">
+                        {t.copy}
+                      </p>
+
+                      <ul className="space-y-2 mb-6">
+                        {t.bullets.map((b, idx) => (
+                          <li key={idx} className="flex items-start text-black">
+                            <span className="mt-2 mr-2 inline-block h-1.5 w-1.5 rounded-full bg-green-700" />
+                            <span className="text-sm">{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <Button
+                        asChild
+                        className="bg-yellow-500 text-black hover:bg-yellow-600 rounded-xl px-5"
+                      >
+                        <a href="/stakeholders">Explore More</a>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Stacked card (mobile) */}
+                <Card className="mt-4 md:hidden bg-white shadow-lg ring-1 ring-stone-200 rounded-2xl">
+                  <CardContent className="p-5">
+                    <h3 className="text-2xl font-bold text-black mb-3">
+                      {t.headline}
+                    </h3>
+                    <p className="text-black/80 leading-relaxed mb-4">
+                      {t.copy}
+                    </p>
+                    <ul className="space-y-2 mb-6">
+                      {t.bullets.map((b, idx) => (
+                        <li key={idx} className="flex items-start text-black">
+                          <span className="mt-2 mr-2 inline-block h-1.5 w-1.5 rounded-full bg-green-700" />
+                          <span className="text-sm">{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button
+                      asChild
+                      className="w-full bg-yellow-500 text-black hover:bg-yellow-600 rounded-xl"
+                    >
+                      <a href="/stakeholders">Explore More</a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            ))}
+          </Tabs>
         </div>
       </section>
 

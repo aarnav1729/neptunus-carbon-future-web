@@ -35,7 +35,6 @@ const Stakeholders = () => {
 
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
     { label: "Services", href: "/services" },
     { label: "Stakeholders", href: "/stakeholders", active: true },
     { label: "Impact", href: "/impact" },

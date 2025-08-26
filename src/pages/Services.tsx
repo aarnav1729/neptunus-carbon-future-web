@@ -16,6 +16,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 
 const Services = () => {
   // Nav state (always hamburger)
@@ -34,7 +36,6 @@ const Services = () => {
 
   const navLinks = [
     { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
     { label: "Services", href: "/services", active: true },
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact" },
@@ -189,6 +190,8 @@ const Services = () => {
       ],
     },
   ];
+
+  
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
