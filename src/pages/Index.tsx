@@ -804,7 +804,7 @@ const Index = () => {
               Comprehensive solutions for sustainable maritime operations
             </p>
           </div>
-
+{/*
           {/* Rail with scroll snap; wider, padded, peeks on both sides */}
           <div className="relative">
             <div
@@ -918,6 +918,7 @@ const Index = () => {
             ))}
           </div>
         </div>
+*/}
       </section>
 
       {/* Impact Metrics */}
