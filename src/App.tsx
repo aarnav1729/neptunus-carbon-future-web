@@ -3,13 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
-import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useLayoutEffect } from "react";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -33,16 +28,16 @@ const queryClient = new QueryClient();
  *     <Routes>...</Routes>
  *   </BrowserRouter>
  */
+
 const ScrollToTop = () => {
   const location = useLocation();
 
-  useEffect(() => {
-    // SCROLL_RESTORE: ensure new route starts at top
+  useLayoutEffect(() => {
+    // always force to very top-left on route change (including first load)
     window.scrollTo({
       top: 0,
       left: 0,
-      // use "instant" instead of "smooth" for no flicker in prod
-      behavior: "instant" as ScrollBehavior,
+      behavior: "auto", // "auto" = instant jump with no smooth animation
     });
   }, [location.pathname]);
 
@@ -59,6 +54,7 @@ const App = () => (
         <ScrollToTop />
 
         <Routes>
+          {/* HOME loads Index, which starts with the hero video */}
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />

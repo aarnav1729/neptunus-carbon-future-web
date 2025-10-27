@@ -40,7 +40,7 @@ const Impact = () => {
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact", active: true },
     { label: "Blog", href: "/blog" },
-    { label: "Partners", href: "/partners" },
+    
   ];
 
   const impactMetrics = [

@@ -47,7 +47,7 @@ const About = () => {
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact" },
     { label: "Blog", href: "/blog" },
-    { label: "Partners", href: "/partners" },
+    
   ];
 
   return (

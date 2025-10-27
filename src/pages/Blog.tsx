@@ -39,7 +39,7 @@ const Blog = () => {
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact" },
     { label: "Blog", href: "/blog", active: true },
-    { label: "Partners", href: "/partners" },
+   
   ];
 
   const featuredArticle = {

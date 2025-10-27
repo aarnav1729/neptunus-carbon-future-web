@@ -1,5 +1,5 @@
 // src/pages/Index.tsx
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useLayoutEffect, useState, useRef, useMemo } from "react";
 import {
   ChevronDown,
   ArrowRight,
@@ -58,10 +58,12 @@ const Index = () => {
     carbon: 0,
   });
 
-  // Navbar + UI state (match Services.tsx pattern)
+  // Navbar + UI state
   const [navScrolled, setNavScrolled] = useState(false);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // --- CERTIFICATIONS CAROUSEL STATE (kept for reference, but now unused in UI) ---
   const carouselRef = useRef<HTMLDivElement>(null);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const servicesRailRef = useRef<HTMLDivElement>(null);
@@ -73,6 +75,7 @@ const Index = () => {
   const [overlayTextClass, setOverlayTextClass] = useState<
     "text-black" | "text-white"
   >("text-black");
+  // -------------------------------------------------------------------------------
 
   // Contact form
   const [formData, setFormData] = useState({
@@ -89,25 +92,23 @@ const Index = () => {
   const pickTextClassFromBg = (el: HTMLElement | null) => {
     try {
       if (!el) return "text-black";
-      const bg = getComputedStyle(el).backgroundColor; // e.g. "rgb(231, 229, 228)"
+      const bg = getComputedStyle(el).backgroundColor;
       const match = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
       if (!match) return "text-black";
       const [r, g, b] = [Number(match[1]), Number(match[2]), Number(match[3])];
 
-      // sRGB -> relative luminance
       const toLin = (v: number) => {
         const s = v / 255;
         return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
       };
       const L = 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
-      // If background is bright, use dark text; else white text
       return L > 0.5 ? "text-black" : "text-white";
     } catch {
       return "text-black";
     }
   };
 
-  // Handle scroll for navigation (same threshold behavior)
+  // Handle scroll for navigation
   useEffect(() => {
     const handleScroll = () => {
       const heroHeight = window.innerHeight * 0.8;
@@ -117,21 +118,33 @@ const Index = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    // center the middle copy on mount
+  // Center the middle copy of the services rail on mount
+  // Center the middle copy of the services rail on mount (horizontal only, no page jump)
+  useLayoutEffect(() => {
     const rail = servicesRailRef.current;
     if (!rail) return;
+
     const child = rail.children.item(BASE_OFFSET) as HTMLElement | null;
-    if (child) {
-      child.scrollIntoView({
-        behavior: "auto",
-        inline: "center",
-        block: "nearest",
-      });
-    }
+    if (!child) return;
+
+    const railRect = rail.getBoundingClientRect();
+    const childRect = child.getBoundingClientRect();
+
+    // figure out where the child's center sits relative to the rail
+    const childCenter =
+      childRect.left - railRect.left + rail.scrollLeft + childRect.width / 2;
+
+    // scroll so that child's center lines up with the rail's center
+    const targetScrollLeft = childCenter - railRect.width / 2;
+
+    rail.scrollTo({
+      left: targetScrollLeft,
+      behavior: "auto",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Auto-scroll animation for (now hidden) certifications carousel
   useEffect(() => {
     let animationId: number;
     const step = () => {
@@ -342,7 +355,7 @@ const Index = () => {
     },
   ];
 
-  // Certifications carousel data
+  // Certifications carousel data (no longer rendered on page, per request)
   const certifications = [
     {
       name: "HKC – Hong Kong Convention",
@@ -399,7 +412,6 @@ const Index = () => {
       description: "Environmental Management",
       details: "ISO 14001:2015 standard for Environmental Management Systems",
     },
-
     {
       name: "The Recycling of Ships Act 2019",
       logo: "/assets/c8.jpeg",
@@ -407,7 +419,6 @@ const Index = () => {
       details:
         "The Recycling of Ships Act 2019 for safe ship recycling adherent to Indian Maritime Laws.",
     },
-
     {
       name: "Ship Breaking Code 2013",
       logo: "/assets/c9.png",
@@ -434,7 +445,7 @@ const Index = () => {
     },
   ];
 
-  // Stakeholder tabs (names align with Stakeholders page)
+  // Stakeholder tabs
   const stakeholderTabs = [
     {
       value: "Ship Owners & Shipping Lines",
@@ -493,10 +504,8 @@ const Index = () => {
     },
   ];
 
-  // Reuse your existing images for the collage (3 vertical slices)
+  // Reuse your existing images
   const collageImages = [stake1, part1, low1];
-
-  // one image per tab (reuse existing imports: stake1, part1, low1)
   const stakeholderImages = [stake1, part1, low1];
 
   // Slider navigation
@@ -519,33 +528,40 @@ const Index = () => {
   );
 
   useEffect(() => {
-    // whenever index changes, scroll to the middle copy + index
     const rail = servicesRailRef.current;
     if (!rail) return;
+
     const targetIndex = BASE_OFFSET + currentCardIndex;
     const child = rail.children.item(targetIndex) as HTMLElement | null;
-    if (child) {
-      child.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
-    }
+    if (!child) return;
+
+    const railRect = rail.getBoundingClientRect();
+    const childRect = child.getBoundingClientRect();
+
+    const childCenter =
+      childRect.left - railRect.left + rail.scrollLeft + childRect.width / 2;
+
+    const targetScrollLeft = childCenter - railRect.width / 2;
+
+    rail.scrollTo({
+      left: targetScrollLeft,
+      behavior: "smooth",
+    });
   }, [currentCardIndex, BASE_OFFSET]);
 
-  // Navbar links (Services.tsx parity)
+  // Navbar links
   const navLinks = [
     { label: "Home", href: "/", active: true },
     { label: "Services", href: "/services" },
     { label: "Stakeholders", href: "/stakeholders" },
     { label: "Impact", href: "/impact" },
     { label: "Blog", href: "/blog" },
-    { label: "Partners", href: "/partners" },
+    // { label: "Partners", href: "/partners" }, // HIDE_PARTNERS
   ];
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-hidden">
-      {/* Navbar (exact structure & style from Services.tsx) */}
+      {/* Navbar */}
       <nav className="fixed top-0 left-1/2 -translate-x-1/2 w-11/12 max-w-4xl z-50 pt-4 transition-all duration-500 ease-out">
         <div className="flex items-center justify-between py-4 px-6 rounded-2xl bg-stone-200 backdrop-blur-lg shadow-lg ring-1 ring-white/10">
           <img
@@ -596,7 +612,7 @@ const Index = () => {
         )}
       </nav>
 
-      {/* Hero Section (video + Services color scheme overlay) */}
+      {/* Hero Section / Landing view (VIDEO FIRST THING ON SITE) */}
       <div className="relative h-screen flex items-center justify-center">
         <video
           autoPlay
@@ -607,8 +623,7 @@ const Index = () => {
           <source src="/assets/herov.mp4" type="video/mp4" />
         </video>
 
-        {/* Services green gradient veil 
-        <div className="absolute inset-0 bg-gradient-to-r from-green-300/20 to-green-500/20" />*/}
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-green-300/20 to-green-500/20" /> */}
 
         <div className="relative z-10 text-center max-w-6xl px-4 md:px-8 animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl lg:text-7xl mb-6 md:mb-8 font-bold text-stone-200">
@@ -647,12 +662,13 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Certifications (full-width, auto-moving, click to pause + quick view) */}
+      {/* HIDE_CERTIFICATIONS: Certifications carousel and overlay commented out per request
+          (kept here for reference and easy re-enable)
+      {/*
       <section
         id="certifications"
         className="pt-10 pb-10 bg-gradient-to-r from-[#003929] via-[#1b5d3e] to-[#74b588]"
       >
-        {/* Keep the heading constrained for readability */}
         <div className="container-custom">
           <div className="text-center mb-8">
             <h2 className="text-headline mb-4 font-bold text-white">
@@ -664,7 +680,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Edge-to-edge rail */}
         <div className="w-screen max-w-none overflow-hidden">
           <div
             ref={carouselRef}
@@ -674,11 +689,9 @@ const Index = () => {
             {[...certifications, ...certifications].map((cert, index) => (
               <HoverCard key={index}>
                 <HoverCardTrigger asChild>
-                  {/* CARD */}
                   <div
                     className="flex-shrink-0 w-80 h-56 elevated-panel rounded-2xl flex flex-col items-center justify-center cursor-pointer group transition-transform duration-300 hover:scale-105 bg-stone-200"
                     onClick={(e) => {
-                      // Pick best text color from the clicked card's background
                       setOverlayTextClass(pickTextClassFromBg(e.currentTarget));
                       setSelectedCert(cert);
                       setCarouselPaused(true);
@@ -724,7 +737,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Quick View Overlay (click anywhere to resume) */}
         {selectedCert && (
           <div
             className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center px-4"
@@ -735,7 +747,6 @@ const Index = () => {
             role="button"
             aria-label="Close certification quick view"
           >
-            {/* Stop click bubbling inside the panel */}
             <div
               className="max-w-xl w-full rounded-2xl shadow-xl p-6 sm:p-8 bg-stone-200"
               onClick={(e) => e.stopPropagation()}
@@ -791,8 +802,9 @@ const Index = () => {
           </div>
         )}
       </section>
+      */}
 
-      {/* Services – large single-focus card with side peek, tighter spacing after Certifications */}
+      {/* Services – horizontally scrollable cards */}
       <section
         id="services-section"
         className="relative section-padding pt-6 md:pt-8 bg-white text-black"
@@ -804,7 +816,7 @@ const Index = () => {
               Comprehensive solutions for sustainable maritime operations
             </p>
           </div>
-{/*
+
           {/* Rail with scroll snap; wider, padded, peeks on both sides */}
           <div className="relative">
             <div
@@ -823,7 +835,7 @@ const Index = () => {
                         {
                           services: "/services",
                           partners: "/services",
-                          impact: "/partners",
+                          impact: "/impact", // UPDATED: no /partners route
                           policy: "/impact",
                           stakeholders: "/stakeholders",
                         }[service.id] || "/"
@@ -838,7 +850,7 @@ const Index = () => {
                           {
                             services: "/services",
                             partners: "/services",
-                            impact: "/partners",
+                            impact: "/impact", // UPDATED: no /partners route
                             policy: "/impact",
                             stakeholders: "/stakeholders",
                           }[service.id] || "/"
@@ -882,7 +894,7 @@ const Index = () => {
               ))}
             </div>
 
-            {/* Arrows (always visible; inside the padded area) */}
+            {/* Arrows */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-4 md:px-6">
               <button
                 onClick={(e) => {
@@ -918,7 +930,6 @@ const Index = () => {
             ))}
           </div>
         </div>
-*/}
       </section>
 
       {/* Impact Metrics */}
@@ -1042,7 +1053,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stakeholder Solutions (tabs + single image, enhanced) */}
+      {/* Stakeholder Solutions */}
       <section className="py-20 md:py-24 bg-stone-200">
         <div className="container-custom max-w-6xl">
           <h2 className="text-headline font-bold text-black text-center mb-8 md:mb-10">
@@ -1050,24 +1061,24 @@ const Index = () => {
           </h2>
 
           <Tabs defaultValue={stakeholderTabs[0].value} className="w-full">
-            {/* Pill tabs — mobile scrollable, centered on larger screens */}
+            {/* Pill tabs */}
             <TabsList
               className="
-          mx-auto mb-10 flex max-w-full items-center gap-2 rounded-full bg-white/90 p-1.5 shadow
-          overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
-          md:justify-center
-        "
+                mx-auto mb-10 flex max-w-full items-center gap-2 rounded-full bg-white/90 p-1.5 shadow
+                overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden
+                md:justify-center
+              "
             >
               {stakeholderTabs.map((t) => (
                 <TabsTrigger
                   key={t.value}
                   value={t.value}
                   className="
-              whitespace-nowrap rounded-full px-4 py-2 text-sm md:text-base text-black transition
-              hover:bg-stone-100
-              data-[state=active]:bg-green-900 data-[state=active]:text-white data-[state=active]:shadow
-              data-[state=active]:ring-2 data-[state=active]:ring-green-700/30
-            "
+                    whitespace-nowrap rounded-full px-4 py-2 text-sm md:text-base text-black transition
+                    hover:bg-stone-100
+                    data-[state=active]:bg-green-900 data-[state=active]:text-white data-[state=active]:shadow
+                    data-[state=active]:ring-2 data-[state=active]:ring-green-700/30
+                  "
                 >
                   {t.label}
                 </TabsTrigger>
@@ -1086,18 +1097,18 @@ const Index = () => {
                       alt={t.label}
                       className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                     />
-                    {/* subtle vignette for depth */}
+                    {/* subtle vignette */}
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
                   </div>
 
                   {/* Overlay card (desktop) */}
                   <Card
                     className="
-              hidden md:block
-              absolute left-6 top-6 lg:left-8 lg:top-8
-              max-w-lg lg:max-w-xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-stone-200
-              rounded-2xl
-            "
+                      hidden md:block
+                      absolute left-6 top-6 lg:left-8 lg:top-8
+                      max-w-lg lg:max-w-xl bg-white/95 backdrop-blur-md shadow-2xl ring-1 ring-stone-200
+                      rounded-2xl
+                    "
                   >
                     <CardContent className="p-6 lg:p-7">
                       <h3 className="text-2xl lg:text-3xl font-bold text-black mb-3 lg:mb-4">
@@ -1372,17 +1383,23 @@ const Index = () => {
               <h4 className="font-semibold mb-6 text-white">Contact</h4>
               <div className="space-y-4 text-stone-200">
                 <div className="flex items-center space-x-3 hover:text-white cursor-pointer transition-colors">
-                  <Mail className="w-5 h-5" />
-                  <span>info@neptunus.in</span>
+                  <span>deepak@neptunus.in</span>
+                  
                 </div>
+
+                
                 <div className="flex items-center space-x-3 hover:text-white cursor-pointer transition-colors">
-                  <Phone className="w-5 h-5" />
-                  <span>+91 xxx xxx xxxx</span>
+                  
+                  <span>8th floor, IDCO Towers, Janpath, Unit 9, Bhubaneshwar - 751022</span>
                 </div>
+                
+
+                {/* ADDRESS_REMOVED:
                 <div className="flex items-center space-x-3 hover:text-white cursor-pointer transition-colors">
                   <MapPin className="w-5 h-5" />
                   <span>Odisha, India</span>
                 </div>
+                */}
               </div>
             </div>
           </div>

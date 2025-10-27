@@ -39,7 +39,6 @@ const Stakeholders = () => {
     { label: "Stakeholders", href: "/stakeholders", active: true },
     { label: "Impact", href: "/impact" },
     { label: "Blog", href: "/blog" },
-    { label: "Partners", href: "/partners" },
   ];
 
   const stakeholderGroups = [
